@@ -1,93 +1,153 @@
 import React, { useState } from "react";
-import { api, handleError } from "helpers/api";
-import User from "models/User";
-import {useNavigate} from "react-router-dom";
-import { Button } from "components/ui/Button";
-import "styles/views/Login.scss";
-import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
+import styled, { css } from "styled-components";
+import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
+import { store } from "../../store";
+import { fetchUserByUsername } from "../../store/userSlice";
 
-/*
-It is possible to add multiple components inside a single file,
-however be sure not to clutter your files with an endless amount!
-As a rule of thumb, use one file per component and only add small,
-specific components that belong to the main one in the same file.
- */
-const FormField = (props) => {
-  return (
-    <div className="login field">
-      <label className="login label">{props.label}</label>
-      <input
-        className="login input"
-        placeholder="enter here.."
-        value={props.value}
-        onChange={(e) => props.onChange(e.target.value)}
-      />
-    </div>
-  );
-};
 
-FormField.propTypes = {
-  label: PropTypes.string,
-  value: PropTypes.string,
-  onChange: PropTypes.func,
-};
+export const StyledMainContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+`;
 
-const Login = () => {
-  const navigate = useNavigate();
-  const [name, setName] = useState<string>(null);
-  const [username, setUsername] = useState<string>(null);
+export const StyledLoginContainer = styled.div`
+  border: 2px solid #83b271;
+  border-radius: 5px;
+  margin: 100px auto;
+  width: 50vw;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  padding: 50px;
+`;
 
-  const doLogin = async () => {
-    try {
-      const requestBody = JSON.stringify({ username, name });
-      const response = await api.post("/users", requestBody);
+export const StyledLogoContainerLarge = styled.div`
+  height: fit-content;
+  margin: 0 auto 100px auto;
+`;
 
-      // Get the returned user and update a new object.
-      const user = new User(response.data);
+export const StyledForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  justify-content: center;
+`;
 
-      // Store the token into the local storage.
-      localStorage.setItem("token", user.token);
+export const StyledInputField = styled.input<{ backgroundImage?: string , validInput?: boolean}>`
+  font-size: 1.5rem;
+  padding: 0 15px;
+  width: 350px;
+  height: 40px;
+  background-image: url("${props => props.backgroundImage || ""}");
+  border: ${props => props.validInput ? "" : "2px solid red"};
+  margin: 20px auto;
+  border-radius: 5px;
+`;
 
-      // Login successfully worked --> navigate to the route /game in the GameRouter
-      navigate("/game");
-    } catch (error) {
-      alert(
-        `Something went wrong during the login: \n${handleError(error)}`
-      );
+export const StyledPrimaryButton = styled.button<{disabled?: boolean }>`
+  color: #ffffff;
+  font-size: 1.5rem;
+  background-color: #83b271;
+  width: 380px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  margin: 50px auto 5px auto;
+
+  ${props => props.disabled && css`
+    opacity: 0.5;`
+  }
+  
+  &:hover {
+    ${props => !props.disabled && css`
+      cursor: pointer;
+      scale: 0.95;`
     }
-  };
+  }
+`;
+
+export const StyledP = styled.p`
+  font-size: 1rem;
+  margin: 5px auto;
+`;
+
+export const StyledLink = styled.a`
+  color: #83b271;
+  text-decoration: underline;
+  transition: width 0.2s;
+  position: relative;
+
+  &:visited {
+    color: #83b271;
+  }
+  &:hover{
+    cursor: pointer;
+    scale: 0.95;
+  }
+  
+  &:after {
+    content: "";
+    background-color: #000000;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    transition: 0.2s;
+  }
+  &:hover:after {
+    width: 100%;
+  }
+`;
+
+export const StyledError = styled.p`
+  color: #ff0000;
+`;
+
+export default function Login() {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState<string>(null);
+  const [password, setPassword] = useState<string>(null);
+
+  const [error, setError] = useState("");
+
+  function doLogin() {
+    try {
+      store.dispatch(fetchUserByUsername(username));
+    } catch (err) {
+      console.log(err);
+      setError(err.message);
+    }
+  }
 
   return (
-    <BaseContainer>
-      <div className="login container">
-        <div className="login form">
-          <FormField
-            label="Username"
-            value={username}
-            onChange={(un: string) => setUsername(un)}
-          />
-          <FormField
-            label="Name"
-            value={name}
-            onChange={(n) => setName(n)}
-          />
-          <div className="login button-container">
-            <Button
-              disabled={!username || !name}
-              width="100%"
-              onClick={() => doLogin()}
-            >
-              Login
-            </Button>
-          </div>
-        </div>
-      </div>
-    </BaseContainer>
+    <StyledMainContainer>
+      <StyledLoginContainer>
+        <StyledLogoContainerLarge>
+          <LogoSVG style={{height: '100px', maxWidth: "100%"}} />
+        </StyledLogoContainerLarge>
+        <StyledForm onSubmit={doLogin}>
+          <StyledInputField id="username"
+                            type="text"
+                            value={username}
+                            validInput = {true}
+                            placeholder="Username"
+                            onChange={(event) => setUsername(event.target.value)} />
+          <StyledInputField id="password"
+                            type="password"
+                            value={password}
+                            validInput = {true}
+                            placeholder="Password"
+                            onChange={(event) => setPassword(event.target.value)} />
+          <StyledPrimaryButton disabled={!username || !password} type="submit">Login</StyledPrimaryButton>
+          <StyledP>No account yet? <StyledLink onClick={() => navigate("/signUp")}>Sign Up</StyledLink></StyledP>
+          {error && <StyledError>{error}</StyledError>}
+        </StyledForm>
+      </StyledLoginContainer>
+    </StyledMainContainer>
   );
-};
-
-/**
- * You can get access to the history object's properties via the useLocation, useNavigate, useParams, ... hooks.
- */
-export default Login;
+}
