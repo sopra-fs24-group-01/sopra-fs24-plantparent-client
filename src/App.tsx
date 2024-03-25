@@ -8,7 +8,7 @@ import AppRouter from "./components/routing/routers/AppRouter";
  * Overhauled by Kyrill Hux
  * Updated by Marco Leder
  */
-const App = () => {
+function App() {
   return (
     <div>
       <Header height="100" />
