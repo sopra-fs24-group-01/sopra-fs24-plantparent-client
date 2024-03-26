@@ -5,7 +5,6 @@ import { Button } from "components/ui/Button";
 import {useNavigate} from "react-router-dom";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import "styles/views/Game.scss";
 import { User } from "types";
 
 const Player = ({ user }: { user: User }) => (
@@ -91,7 +90,7 @@ const Game = () => {
             </li>
           ))}
         </ul>
-        <Button width="100%" onClick={() => logout()}>
+        <Button >
           Logout
         </Button>
       </div>
