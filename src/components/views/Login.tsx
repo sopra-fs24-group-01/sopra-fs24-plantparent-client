@@ -121,7 +121,7 @@ export default function Login() {
                             value={password}
                             placeholder="Password"
                             onChange={(event) => setPassword(event.target.value)} />
-          <StyledPrimaryButton type="submi">Login</StyledPrimaryButton>
+          <StyledPrimaryButton type="submit">Login</StyledPrimaryButton>
           <StyledP>No account yet? <StyledLink onClick={() => navigate("/signUp")}>Sign Up</StyledLink></StyledP>
         </StyledForm>
       </StyledLoginContainer>
