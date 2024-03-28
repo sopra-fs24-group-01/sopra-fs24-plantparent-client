@@ -1,20 +1,25 @@
 import React from "react";
-import Header from "./components/views/Header";
-import AppRouter from "./components/routing/routers/AppRouter";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import Login from "./components/views/Login";
+import LoginGuard from "./components/routing/routeProtectors/LoginGuard";
+import SignUp from "./components/views/SignUp";
 
-/**
- * Happy coding!
- * React Template by Lucas Pelloni
- * Overhauled by Kyrill Hux
- * Updated by Marco Leder
- */
+
 function App() {
   return (
-    <div>
-      <Header height="100" />
-      <AppRouter />
-    </div>
+    <BrowserRouter>
+      <Routes>
+
+        {/*<Route path="/login" element={<LoginGuard />}>*/}
+          <Route path="/login" element={<Login />} />
+        {/*</Route>*/}
+
+        <Route path="/" element={<Login/>}/>
+        <Route path="/signUp" element={<SignUp/>}/>
+
+      </Routes>
+    </BrowserRouter>
   );
-};
+}
 
 export default App;
