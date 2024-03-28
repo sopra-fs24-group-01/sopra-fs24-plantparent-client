@@ -35,12 +35,13 @@ export const StyledForm = styled.form`
   justify-content: center;
 `;
 
-export const StyledInputField = styled.input<{ backgroundImage?: string }>`
+export const StyledInputField = styled.input<{ backgroundImage?: string , validInput?: boolean}>`
   font-size: 1.5rem;
   padding: 0 15px;
   width: 350px;
   height: 40px;
   background-image: url("${props => props.backgroundImage || ""}");
+  border: ${props => props.validInput ? "" : "2px solid red"};
   margin: 20px auto;
   border-radius: 5px;
 `;
@@ -114,14 +115,16 @@ export default function Login() {
           <StyledInputField id="username"
                             type="text"
                             value={username}
+                            validInput = {true}
                             placeholder="Username"
                             onChange={(event) => setUsername(event.target.value)} />
           <StyledInputField id="password"
                             type="password"
                             value={password}
+                            validInput = {true}
                             placeholder="Password"
                             onChange={(event) => setPassword(event.target.value)} />
-          <StyledPrimaryButton type="submit">Login</StyledPrimaryButton>
+          <StyledPrimaryButton disabled={!username && !password} type="submit">Login</StyledPrimaryButton>
           <StyledP>No account yet? <StyledLink onClick={() => navigate("/signUp")}>Sign Up</StyledLink></StyledP>
         </StyledForm>
       </StyledLoginContainer>
