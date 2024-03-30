@@ -17,7 +17,10 @@ export default function SignUp() {
   const [username, setUsername] = useState<string>(null);
   const [email, setEmail] = useState<string>(null);
   const [password, setPassword] = useState<string>(null);
+  const [confirmPassword, setConfirmPassword] = useState<string>(null);
+
   const [isInputValid, setIsInputValid] = useState<boolean>(true);
+  const [isValidPWConfirm, setIsValidPWConfirm] = useState<boolean>(true);
   const [error, setError] = useState("");
 
   const dispatch = useDispatch();
@@ -47,11 +50,11 @@ export default function SignUp() {
     setIsInputValid(re.test(email));
   }
 
-  console.log(!username && !password && !email);
-  console.log(isInputValid);
-  console.log(email);
-  console.log(username);
-  console.log(password);
+  function validateConfirmPassword(cpw: string) {
+    const passwordsMatch = password === cpw;
+    console.log(passwordsMatch);
+    setIsValidPWConfirm(passwordsMatch);
+  }
 
   return (
     <StyledMainContainer>
@@ -79,8 +82,15 @@ export default function SignUp() {
                             validInput={true}
                             placeholder="Password"
                             onChange={(event) => setPassword(event.target.value)} />
-          <StyledPrimaryButton disabled={!isInputValid && !username && !password && !email} type="submit">Sign
-            Up</StyledPrimaryButton>
+          <StyledInputField id="confirm-password"
+                            type="password"
+                            value={confirmPassword}
+                            validInput={isValidPWConfirm}
+                            placeholder="Confirm password"
+                            onBlur={(event) => validateConfirmPassword(event.target.value)}
+                            onChange={(event) => setConfirmPassword(event.target.value)} />
+          <StyledPrimaryButton disabled={!isInputValid || !username || !password || !confirmPassword || !email || !isValidPWConfirm}
+                               type="submit">Sign Up</StyledPrimaryButton>
           <StyledP>Already have an account? <StyledLink onClick={() => navigate("/login")}>Sign
             In</StyledLink></StyledP>
           {error && <StyledError>{error}</StyledError>}

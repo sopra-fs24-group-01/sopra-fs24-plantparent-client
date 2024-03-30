@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import { store } from "../../store";
 import { fetchUserByUsername } from "../../store/userSlice";
@@ -48,7 +48,7 @@ export const StyledInputField = styled.input<{ backgroundImage?: string , validI
   border-radius: 5px;
 `;
 
-export const StyledPrimaryButton = styled.button`
+export const StyledPrimaryButton = styled.button<{disabled?: boolean }>`
   color: #ffffff;
   font-size: 1.5rem;
   background-color: #83b271;
@@ -57,11 +57,17 @@ export const StyledPrimaryButton = styled.button`
   border-radius: 10px;
   border: none;
   margin: 50px auto 5px auto;
+
+  ${props => props.disabled && css`
+    opacity: 0.5;`
+  }
   
-  &:hover{
-    cursor: pointer;
-    scale: 0.95;
-  } 
+  &:hover {
+    ${props => !props.disabled && css`
+      cursor: pointer;
+      scale: 0.95;`
+    }
+  }
 `;
 
 export const StyledP = styled.p`
@@ -137,7 +143,7 @@ export default function Login() {
                             validInput = {true}
                             placeholder="Password"
                             onChange={(event) => setPassword(event.target.value)} />
-          <StyledPrimaryButton disabled={!username && !password} type="submit">Login</StyledPrimaryButton>
+          <StyledPrimaryButton disabled={!username || !password} type="submit">Login</StyledPrimaryButton>
           <StyledP>No account yet? <StyledLink onClick={() => navigate("/signUp")}>Sign Up</StyledLink></StyledP>
           {error && <StyledError>{error}</StyledError>}
         </StyledForm>

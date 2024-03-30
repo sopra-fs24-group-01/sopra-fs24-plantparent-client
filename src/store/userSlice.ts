@@ -66,4 +66,4 @@ interface RootState {
 export const selectAllUsers = (state: RootState) => state.users.entities;
 
 export const selectUserById = (state: RootState, id: number) =>
-  state.users.entities.find((user) => user.id == id);
+  state.users.entities.find((user) => user.id === id);
