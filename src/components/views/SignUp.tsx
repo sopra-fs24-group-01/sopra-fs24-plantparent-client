@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import {
   StyledError,
@@ -15,7 +14,6 @@ import { registerUser } from "../../store/userSlice";
 
 
 export default function SignUp() {
-  const userId = uuidv4();
   const [username, setUsername] = useState<string>(null);
   const [email, setEmail] = useState<string>(null);
   const [password, setPassword] = useState<string>(null);
@@ -29,7 +27,6 @@ export default function SignUp() {
     console.log("Sign up for user with user name " + username);
 
     const user = {
-      id: userId,
       firstName: "",
       lastName: "",
       username: username,
