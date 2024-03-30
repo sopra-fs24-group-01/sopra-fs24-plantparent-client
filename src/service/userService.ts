@@ -37,3 +37,14 @@ export function getUser(userId: string): Promise<User> {
       console.log(error);
     });
 }
+
+export function getUserByUsername(username: string): Promise<User> {
+  return fetch(baseurl + "users/username/" + username)
+    .then(response => response.json())
+    .then(data => {
+      return data
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}

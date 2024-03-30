@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
+import { store } from "../../store";
+import { fetchUserByUsername } from "../../store/userSlice";
 
 
 export const StyledMainContainer = styled.div`
@@ -105,8 +107,15 @@ export default function Login() {
   const [username, setUsername] = useState<string>(null);
   const [password, setPassword] = useState<string>(null);
 
+  const [error, setError] = useState("");
+
   function doLogin() {
-    console.log("Login for user with user name " + username);
+    try {
+      store.dispatch(fetchUserByUsername(username));
+    } catch (err) {
+      console.log(err);
+      setError(err.message);
+    }
   }
 
   return (
@@ -130,6 +139,7 @@ export default function Login() {
                             onChange={(event) => setPassword(event.target.value)} />
           <StyledPrimaryButton disabled={!username && !password} type="submit">Login</StyledPrimaryButton>
           <StyledP>No account yet? <StyledLink onClick={() => navigate("/signUp")}>Sign Up</StyledLink></StyledP>
+          {error && <StyledError>{error}</StyledError>}
         </StyledForm>
       </StyledLoginContainer>
     </StyledMainContainer>
