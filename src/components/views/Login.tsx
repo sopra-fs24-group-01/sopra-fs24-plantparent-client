@@ -96,6 +96,10 @@ export const StyledLink = styled.a`
   }
 `;
 
+export const StyledError = styled.p`
+  color: #ff0000;
+`;
+
 export default function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState<string>(null);

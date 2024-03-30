@@ -1,12 +1,15 @@
 import {createAsyncThunk, createSlice,} from '@reduxjs/toolkit';
-import { getAllUsers } from "../service/userService";
+import { createUser, getAllUsers } from "../service/userService";
+import { User } from "../types";
 
 interface IUserState {
   entities: any[];
+  loggedInUser: User | null;
   status: string;
 }
 const initialState: IUserState = {
   entities: [],
+  loggedInUser: null,
   status: 'idle'
 };
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
@@ -19,7 +22,13 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
 export const usersSlice = createSlice({
   name: 'users',
   initialState,
-  reducers: {},
+  reducers: {
+    registerUser: (state, action) => {
+      const newUser = action.payload;
+      createUser(newUser).then();
+      state.loggedInUser = newUser;
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchUsers.pending, (state, {payload}) => {
@@ -34,6 +43,9 @@ export const usersSlice = createSlice({
       })
   }
 })
+
+export const {registerUser} = usersSlice.actions
+
 
 export default usersSlice.reducer
 
