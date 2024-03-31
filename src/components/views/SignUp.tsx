@@ -61,13 +61,6 @@ export default function SignUp() {
     const re = /\S+@\S+\.\S+/;
     setIsInputValid(re.test(email));
   }
-
-  console.log(!username && !password && !email);
-  console.log(isInputValid);
-  console.log(email);
-  console.log(username);
-  console.log(password);
-
   return (
     <StyledMainContainer>
       <StyledLoginContainer>
