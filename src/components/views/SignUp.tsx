@@ -56,6 +56,11 @@ export default function SignUp() {
     setIsValidPWConfirm(passwordsMatch);
   }
 
+  function validateEmail(email: string) {
+    // eslint-disable-next-line no-useless-escape
+    const re = /\S+@\S+\.\S+/;
+    setIsInputValid(re.test(email));
+  }
   return (
     <StyledMainContainer>
       <StyledLoginContainer>
