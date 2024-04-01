@@ -69,6 +69,7 @@ export default function createPlant() {
                             validInput={true}
                             placeholder="Care Instructions"
                             onChange={(event) => setCareInstructions(event.target.value)} />
+          <label htmlFor="lastWateringDate">Last Watering Date</label>
           <StyledInputField id="lastWateringDate"
                             type="date"
                             value={lastWateringDate}
@@ -76,10 +77,10 @@ export default function createPlant() {
                             placeholder="Last Watering Date"
                             onChange={(event) => setLastWateringDate(event.target.value)} />
           <StyledInputField id="wateringInterval"
-                            type="date"
+                            type="number"
                             value={wateringInterval}
                             validInput={true}
-                            placeholder="Watering Interval"
+                            placeholder="Watering Interval (in days)"
                             onChange={(event) => setWateringInterval(event.target.value)} />
           <StyledPrimaryButton disabled={!plantName || !species}
                                type="submit">Create Plant</StyledPrimaryButton>
