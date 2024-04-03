@@ -1,16 +1,17 @@
-import React from "react";
-import {Navigate, Outlet} from "react-router-dom";
-import PropTypes from "prop-types";
+import React from 'react';
+import { connect } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 
-export const LoginGuard = () => {
-  if (!localStorage.getItem("token")) {
-    
-    return <Outlet />;
+const LoginGuard = ({ loggedInUser, children }) => {
+  if (!loggedInUser) {
+    return <Navigate to="/login" />;
   }
-  
-  return <Navigate to="/game" replace />;
+
+  return children;
 };
 
-LoginGuard.propTypes = {
-  children: PropTypes.node
-}
+const mapStateToProps = (state) => ({
+  loggedInUser: state.users.loggedInUser,
+});
+
+export default connect(mapStateToProps)(LoginGuard);
