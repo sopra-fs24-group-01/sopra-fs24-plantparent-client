@@ -20,10 +20,16 @@ function App() {
         {/* All other views are only accessible by authenticated users */}
         <LoginGuard guestOnly={false}>
           <Route path="/" element={<Home/>}/>
+        </LoginGuard>
+
+        <LoginGuard guestOnly={false}>
           <Route path="/signUp" element={<SignUp/>}/>
+        </LoginGuard>
+
+        <LoginGuard guestOnly={false}>
           <Route path="/plantCreation" element={<CreatePlant/>}/>
         </LoginGuard>
-        
+
       </Routes>
     </BrowserRouter>
   );
