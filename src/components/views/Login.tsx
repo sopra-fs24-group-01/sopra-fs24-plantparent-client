@@ -128,7 +128,7 @@ export default function Login() {
     <StyledMainContainer>
       <StyledLoginContainer>
         <StyledLogoContainerLarge>
-          <LogoSVG style={{height: '100px', maxWidth: "100%"}} />
+          <LogoSVG style={{height: "100px", maxWidth: "100%"}} />
         </StyledLogoContainerLarge>
         <StyledForm onSubmit={doLogin}>
           <StyledInputField id="username"

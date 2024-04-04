@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSlice,} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice,} from "@reduxjs/toolkit";
 import { createPlant, getAllPlants, getPlantByPlantName } from "../service/plantService";
 import { Plant } from "../types";
 
@@ -10,24 +10,26 @@ interface IPlantState {
 const initialState: IPlantState = {
   entities: [],
   loggedInPlant: null,
-  status: 'idle'
+  status: "idle"
 };
-export const fetchPlants = createAsyncThunk('plants/fetchPlants', async () => {
+
+export const fetchPlants = createAsyncThunk("plants/fetchPlants", async () => {
 
   const data = await getAllPlants();
   console.log(data);
+
   return data
 })
 
 export const fetchPlantByPlantName = createAsyncThunk(
-  'plants/fetchPlantByPlantName',
+  "plants/fetchPlantByPlantName",
   async (plantName: string) => {
     return await getPlantByPlantName(plantName);
   }
 );
 
 export const plantsSlice = createSlice({
-  name: 'plants',
+  name: "plant",
   initialState,
   reducers: {
     registerPlant: (state, action) => {
@@ -39,14 +41,14 @@ export const plantsSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(fetchPlants.pending, (state, {payload}) => {
-        state.status = 'loading'
+        state.status = "loading"
       })
       .addCase(fetchPlants.fulfilled, (state, {payload}) => {
-        state.status = 'succeeded'
+        state.status = "succeeded"
         state.entities = payload;
       })
       .addCase(fetchPlants.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = "failed";
       })
       .addCase(fetchPlantByPlantName.fulfilled, (state, {payload}) => {
         state.loggedInPlant = payload;

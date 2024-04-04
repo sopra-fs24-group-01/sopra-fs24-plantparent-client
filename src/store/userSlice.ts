@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSlice,} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice,} from "@reduxjs/toolkit";
 import { createUser, getAllUsers, getUserByUsername } from "../service/userService";
 import { User } from "../types";
 
@@ -10,24 +10,26 @@ interface IUserState {
 const initialState: IUserState = {
   entities: [],
   loggedInUser: null,
-  status: 'idle'
+  status: "idle"
 };
-export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
+
+export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
 
   const data = await getAllUsers();
   console.log(data);
+
   return data
 })
 
 export const fetchUserByUsername = createAsyncThunk(
-  'users/fetchUserByUsername',
+  "users/fetchUserByUsername",
   async (username: string) => {
     return await getUserByUsername(username);
   }
 );
 
 export const usersSlice = createSlice({
-  name: 'users',
+  name: "users",
   initialState,
   reducers: {
     registerUser: (state, action) => {
@@ -39,14 +41,14 @@ export const usersSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(fetchUsers.pending, (state, {payload}) => {
-        state.status = 'loading'
+        state.status = "loading"
       })
       .addCase(fetchUsers.fulfilled, (state, {payload}) => {
-        state.status = 'succeeded'
+        state.status = "succeeded"
         state.entities = payload;
       })
       .addCase(fetchUsers.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = "failed";
       })
       .addCase(fetchUserByUsername.fulfilled, (state, {payload}) => {
         state.loggedInUser = payload;

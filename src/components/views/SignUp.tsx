@@ -37,7 +37,7 @@ export default function SignUp() {
     };
     try {
       await dispatch(registerUser(user));
-      navigate(`/`);
+      navigate("/");
     } catch (err) {
       console.log(err);
       setError(err.message);

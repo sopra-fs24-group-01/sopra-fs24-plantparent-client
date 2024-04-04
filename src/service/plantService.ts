@@ -15,9 +15,9 @@ export function getAllPlants(): Promise<Plant[]> {
 
 export function createPlant(plant: Plant) {
   return fetch(baseurl + "plants", {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json"
     },
     body: JSON.stringify(plant)
   })

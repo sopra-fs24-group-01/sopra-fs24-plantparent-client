@@ -12,23 +12,23 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* The login view is only accessible by guests, e.g. unauthenticated users */}
-        <LoginGuard guestOnly={true}>
-          <Route path="/login" element={<Login/>}/>
-        </LoginGuard>
+        {/* The login/signup view is only accessible by guests, e.g. unauthenticated users */}
+        <Route path="/login" element={<LoginGuard guestOnly={true}/>}>
+          <Route path="/login" element={<Login/>} />
+        </Route>
+
+        <Route path="/signUp" element={<LoginGuard guestOnly={true}/>}>
+          <Route path="/signUp" element={<SignUp/>} />
+        </Route>
 
         {/* All other views are only accessible by authenticated users */}
-        <LoginGuard guestOnly={false}>
-          <Route path="/" element={<Home/>}/>
-        </LoginGuard>
+        <Route path="/" element={<LoginGuard guestOnly={false}/>}>
+          <Route path="/" element={<Home/>} />
+        </Route>
 
-        <LoginGuard guestOnly={false}>
-          <Route path="/signUp" element={<SignUp/>}/>
-        </LoginGuard>
-
-        <LoginGuard guestOnly={false}>
-          <Route path="/plantCreation" element={<CreatePlant/>}/>
-        </LoginGuard>
+        <Route path="/plantCreation" element={<LoginGuard guestOnly={false}/>}>
+          <Route path="/plantCreation" element={<CreatePlant/>} />
+        </Route>
 
       </Routes>
     </BrowserRouter>
