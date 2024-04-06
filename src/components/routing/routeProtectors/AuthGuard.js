@@ -4,15 +4,15 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAppSelector } from "../../../hooks";
 import { selectLoggedInUser } from "../../../store/userSlice";
 
-export const LoginGuard = () => {
+export const AuthGuard = () => {
   const loggedInUser = useAppSelector(selectLoggedInUser);
   if (loggedInUser) {
-    return <Outlet />;
+    return <Navigate to="/" replace />;
   };
 
-  return <Navigate to="/login" replace/>;
+  return <Outlet />;
 }
 
-LoginGuard.propTypes = {
+AuthGuard.propTypes = {
   children: PropTypes.node,
 };

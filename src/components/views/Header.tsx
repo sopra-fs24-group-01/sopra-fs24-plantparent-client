@@ -85,30 +85,31 @@ function Header() {
 
   const today = new Date();
   const options = {
-    weekday: 'long', // Display the day of the week as a full text (Monday)
-    day: 'numeric',  // Display the day of the month (2-digit)
-    month: 'numeric', // Display the month as a number (2-digit)
-    year: 'numeric',  // Display the year (4-digit)
+    weekday: "long", // Display the day of the week as a full text (Monday)
+    day: "numeric",  // Display the day of the month (2-digit)
+    month: "numeric", // Display the month as a number (2-digit)
+    year: "numeric",  // Display the year (4-digit)
   };
 
-  const formattedDate = today.toLocaleDateString('de-DE', options);
+  const formattedDate = today.toLocaleDateString("de-DE", options);
 
 
   return (
     <StyledHeaderContainer>
-        <StyledLogoContainerHeader onClick={() => navigate("/")}>
-          <LogoSVG style={{height: '100%', maxWidth: '100%'}} />
-        </StyledLogoContainerHeader>
-      <StyledNavLink active={pathname === '/'} onClick={() => navigate("/")}>Home</StyledNavLink>
-      <StyledNavLink active={pathname === '/myPlants'} onClick={() => navigate("/myPlants")}>My Plants</StyledNavLink>
+      <StyledLogoContainerHeader onClick={() => navigate("/")}>
+        <LogoSVG style={{height: "100%", maxWidth: "100%"}} />
+      </StyledLogoContainerHeader>
+      <StyledNavLink active={pathname === "/"} onClick={() => navigate("/")}>Home</StyledNavLink>
+      <StyledNavLink active={pathname === "/myPlants"} onClick={() => navigate("/myPlants")}>My Plants</StyledNavLink>
       <StyledDateHeader>{formattedDate}</StyledDateHeader>
-      <StyledIconContainer onClick={() => navigate('/profile')}>
-        <ProfileSVG style={{width: '50px', height: '50px'}} />
+      <StyledIconContainer onClick={() => navigate("/profile")}>
+        <ProfileSVG style={{width: "50px", height: "50px"}} />
       </StyledIconContainer>
       <StyledIconContainer>
-        <BellSVG style={{width: '50px', height: '50px'}} />
+        <BellSVG style={{width: "50px", height: "50px"}} />
       </StyledIconContainer>
     </StyledHeaderContainer>
   )
 }
+
 export default Header;

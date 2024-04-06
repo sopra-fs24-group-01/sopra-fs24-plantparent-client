@@ -37,7 +37,7 @@ export default function createPlant() {
     };
     try {
       await dispatch(registerPlant(plant));
-      navigate(`/`);
+      navigate("/");
     } catch (err) {
       console.log(err);
       setError(err.message);
