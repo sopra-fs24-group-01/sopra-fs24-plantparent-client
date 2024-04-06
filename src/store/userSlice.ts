@@ -69,3 +69,5 @@ export const selectAllUsers = (state: RootState) => state.users.entities;
 
 export const selectUserById = (state: RootState, id: number) =>
   state.users.entities.find((user) => user.id === id);
+
+export const selectLoggedInUser = (state: RootState) => state.users.loggedInUser;
