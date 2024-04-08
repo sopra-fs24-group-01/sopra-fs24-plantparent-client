@@ -3,7 +3,6 @@ import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import { ReactComponent as ProfileSVG } from "../../assets/person-circle.svg";
 import { ReactComponent as BellSVG } from "../../assets/bell-fill.svg";
 import styled, { css } from "styled-components";
-import { StyledLogoContainerLarge } from "./Login";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const StyledHeaderContainer = styled.div`

@@ -2,20 +2,20 @@ import { Plant } from "../types";
 
 const mockPlant1: Plant = {
   plantName: "Plant",
-  species: "Species",
-  careInstructions: "Care Instructions",
+  species: "I am a really special plant. My species is: SpecialSpecies. I love water and sun, and get upset when my needs are not met... Beware!",
+  careInstructions: "Water 2X a week, and fertilizer once a month.",
   lastWateringDate: "2024-04-06",
-  wateringInterval: 3,
+  wateringInterval: 3.5,
   nextWateringDate: "2024-04-10"
 };
 
 const mockPlant2: Plant = {
   plantName: "Plant2",
-  species: "Species2",
-  careInstructions: "Care Instructions2",
-  lastWateringDate: "2024-04-06",
-  wateringInterval: 3,
-  nextWateringDate: "2024-04-10"
+  species: "I am an ordinary plant. My species is: OrdinarySpecies. I am easy to take care of, and I am very low maintenance. I am the perfect plant for beginners!",
+  careInstructions: "Water 1X a week, and fertilizer twice a year.",
+  lastWateringDate: "2024-04-07",
+  wateringInterval: 7,
+  nextWateringDate: "2024-06-14"
 };
 
 
