@@ -37,13 +37,13 @@ export const StyledForm = styled.form`
   justify-content: center;
 `;
 
-export const StyledInputField = styled.input<{ backgroundImage?: string , validInput?: boolean}>`
+export const StyledInputField = styled.input<{ $backgroundImage?: string, $validInput?: boolean}>`
   font-size: 1.5rem;
   padding: 0 15px;
   width: 350px;
   height: 40px;
-  background-image: url("${props => props.backgroundImage || ""}");
-  border: ${props => props.validInput ? "" : "2px solid red"};
+  background-image: url("${props => props.$backgroundImage || ""}");
+  border: ${props => props.$validInput !== false ? "" : "2px solid red"};
   margin: 20px auto;
   border-radius: 5px;
 `;
@@ -110,8 +110,8 @@ export const StyledError = styled.p`
 
 export default function Login() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState<string>(null);
-  const [password, setPassword] = useState<string>(null);
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const [error, setError] = useState("");
 
@@ -134,13 +134,13 @@ export default function Login() {
           <StyledInputField id="username"
                             type="text"
                             value={username}
-                            validInput = {true}
+                            $validInput={true}
                             placeholder="Username"
                             onChange={(event) => setUsername(event.target.value)} />
           <StyledInputField id="password"
                             type="password"
                             value={password}
-                            validInput = {true}
+                            $validInput={true}
                             placeholder="Password"
                             onChange={(event) => setPassword(event.target.value)} />
           <StyledPrimaryButton disabled={!username || !password} type="submit">Login</StyledPrimaryButton>

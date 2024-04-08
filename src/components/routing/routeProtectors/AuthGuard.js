@@ -8,10 +8,10 @@ export const AuthGuard = () => {
   const loggedInUser = useAppSelector(selectLoggedInUser);
   if (loggedInUser) {
     return <Navigate to="/" replace />;
-  };
+  }
 
   return <Outlet />;
-}
+};
 
 AuthGuard.propTypes = {
   children: PropTypes.node,

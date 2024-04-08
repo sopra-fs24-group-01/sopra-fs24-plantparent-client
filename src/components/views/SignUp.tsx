@@ -66,26 +66,26 @@ export default function SignUp() {
           <StyledInputField id="username"
                             type="text"
                             value={username}
-                            validInput={true}
+                            $validInput={true}
                             placeholder="Username"
                             onChange={(event) => setUsername(event.target.value)} />
           <StyledInputField id="email"
                             type="text"
                             value={email}
-                            validInput={isInputValid}
+                            $validInput={isInputValid}
                             placeholder="Email"
                             onBlur={(event) => validateEmail(event.target.value)}
                             onChange={(event) => setEmail(event.target.value)} />
           <StyledInputField id="password"
                             type="password"
                             value={password}
-                            validInput={true}
+                            $validInput={true}
                             placeholder="Password"
                             onChange={(event) => setPassword(event.target.value)} />
           <StyledInputField id="confirm-password"
                             type="password"
                             value={confirmPassword}
-                            validInput={isValidPWConfirm}
+                            $validInput={isValidPWConfirm}
                             placeholder="Confirm password"
                             onBlur={(event) => validateConfirmPassword(event.target.value)}
                             onChange={(event) => setConfirmPassword(event.target.value)} />

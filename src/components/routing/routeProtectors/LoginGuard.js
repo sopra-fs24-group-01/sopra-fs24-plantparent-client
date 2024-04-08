@@ -8,10 +8,10 @@ export const LoginGuard = () => {
   const loggedInUser = useAppSelector(selectLoggedInUser);
   if (loggedInUser) {
     return <Outlet />;
-  };
+  }
 
-  return <Navigate to="/login" replace/>;
-}
+  return <Navigate to="/login" replace />;
+};
 
 LoginGuard.propTypes = {
   children: PropTypes.node,

@@ -54,32 +54,32 @@ export default function createPlant() {
           <StyledInputField id="plantName"
                             type="text"
                             value={plantName}
-                            validInput={true}
+                            $validInput={true}
                             placeholder="Plant Name"
                             onChange={(event) => setPlantName(event.target.value)} />
           <StyledInputField id="species"
                             type="text"
                             value={species}
-                            validInput={true}
+                            $validInput={true}
                             placeholder="Species"
                             onChange={(event) => setSpecies(event.target.value)} />
           <StyledInputField id="careInstructions"
                             type="text"
                             value={careInstructions}
-                            validInput={true}
+                            $validInput={true}
                             placeholder="Care Instructions"
                             onChange={(event) => setCareInstructions(event.target.value)} />
           <label htmlFor="lastWateringDate">Last Watering Date</label>
           <StyledInputField id="lastWateringDate"
                             type="date"
                             value={lastWateringDate}
-                            validInput={true}
+                            $validInput={true}
                             placeholder="Last Watering Date"
                             onChange={(event) => setLastWateringDate(event.target.value)} />
           <StyledInputField id="wateringInterval"
                             type="number"
                             value={wateringInterval}
-                            validInput={true}
+                            $validInput={true}
                             placeholder="Watering Interval (in days)"
                             onChange={(event) => setWateringInterval(event.target.value)} />
           <StyledPrimaryButton disabled={!plantName || !species}
