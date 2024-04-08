@@ -1,5 +1,24 @@
 import { Plant } from "../types";
 
+const mockPlant1: Plant = {
+  plantName: "Plant",
+  species: "Species",
+  careInstructions: "Care Instructions",
+  lastWateringDate: "2024-04-06",
+  wateringInterval: 3,
+  nextWateringDate: "2024-04-10"
+};
+
+const mockPlant2: Plant = {
+  plantName: "Plant2",
+  species: "Species2",
+  careInstructions: "Care Instructions2",
+  lastWateringDate: "2024-04-06",
+  wateringInterval: 3,
+  nextWateringDate: "2024-04-10"
+};
+
+
 const baseurl = process.env.REACT_APP_USER_BASEURL;
 
 export function getAllPlants(): Promise<Plant[]> {
@@ -10,6 +29,11 @@ export function getAllPlants(): Promise<Plant[]> {
     })
     .catch(error => {
       console.log(error)
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve([mockPlant1, mockPlant2]);
+        }, 1000); // Simulate a 1 second delay
+      });
     })
 }
 
