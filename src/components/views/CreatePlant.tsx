@@ -4,21 +4,22 @@ import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import {
   StyledError,
   StyledForm,
-  StyledInputField, StyledLink,
+  StyledInputField,
   StyledLoginContainer,
   StyledLogoContainerLarge,
-  StyledMainContainer, StyledP, StyledPrimaryButton,
+  StyledMainContainer, StyledPrimaryButton,
 } from "./Login";
 import { useDispatch } from "react-redux";
-import { registerPlant } from "../../store/plantSlice";
+import { createPlant } from "../../service/plantService";
+import { Plant } from "../../types";
 
 
-export default function createPlant() {
-  const [plantName, setPlantName] = useState<string>(null);
-  const [species, setSpecies] = useState<string>(null);
-  const [careInstructions, setCareInstructions] = useState<string>(null);
-  const [lastWateringDate, setLastWateringDate] = useState<string>(null);
-  const [wateringInterval, setWateringInterval] = useState<string>(null);
+export default function CreatePlant() {
+  const [plantName, setPlantName] = useState<string>("");
+  const [species, setSpecies] = useState<string>("");
+  const [careInstructions, setCareInstructions] = useState<string>("");
+  const [lastWateringDate, setLastWateringDate] = useState<string>("");
+  const [wateringInterval, setWateringInterval] = useState<number>(null);
   const [error, setError] = useState("");
 
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ export default function createPlant() {
   async function doCreatePlant() {
     console.log("Creation for plant with plant name " + plantName);
 
-    const plant = {
+    const plant: Plant = {
       plantName: plantName,
       species: species,
       careInstructions: careInstructions,
@@ -36,7 +37,7 @@ export default function createPlant() {
       nextWateringDate: lastWateringDate + wateringInterval,
     };
     try {
-      await dispatch(registerPlant(plant));
+      await createPlant(plant);
       navigate("/");
     } catch (err) {
       console.log(err);

@@ -1,11 +1,16 @@
 export type User = {
-  username: string;
-  name: string;
   id: number;
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
 };
 
 export type Plant = {
-  name: string;
-  id: number;
-  userId: number;
+  plantName:string;
+  species: string;
+  careInstructions: string;
+  lastWateringDate: string;
+  wateringInterval: number;
+  nextWateringDate: string;
 };
