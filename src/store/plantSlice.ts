@@ -1,43 +1,24 @@
 import {createAsyncThunk, createSlice,} from "@reduxjs/toolkit";
-import { createPlant, getAllPlants, getPlantByPlantName } from "../service/plantService";
-import { Plant } from "../types";
+import { getAllPlants } from "../service/plantService";
 
 interface IPlantState {
   entities: any[];
-  loggedInPlant: Plant | null;
   status: string;
 }
 const initialState: IPlantState = {
   entities: [],
-  loggedInPlant: null,
   status: "idle"
 };
 
 export const fetchPlants = createAsyncThunk("plants/fetchPlants", async () => {
 
-  const data = await getAllPlants();
-  console.log(data);
-
-  return data
+  return await getAllPlants();
 })
-
-export const fetchPlantByPlantName = createAsyncThunk(
-  "plants/fetchPlantByPlantName",
-  async (plantName: string) => {
-    return await getPlantByPlantName(plantName);
-  }
-);
 
 export const plantsSlice = createSlice({
   name: "plant",
   initialState,
-  reducers: {
-    registerPlant: (state, action) => {
-      const newPlant = action.payload;
-      createPlant(newPlant).then();
-      state.loggedInPlant = newPlant;
-    }
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
       .addCase(fetchPlants.pending, (state, {payload}) => {
@@ -50,14 +31,8 @@ export const plantsSlice = createSlice({
       .addCase(fetchPlants.rejected, (state, action) => {
         state.status = "failed";
       })
-      .addCase(fetchPlantByPlantName.fulfilled, (state, {payload}) => {
-        state.loggedInPlant = payload;
-      })
   }
 })
-
-export const {registerPlant} = plantsSlice.actions
-
 
 export default plantsSlice.reducer
 
