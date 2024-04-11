@@ -20,6 +20,8 @@ export default function CreatePlant() {
   const [careInstructions, setCareInstructions] = useState<string>("");
   const [lastWateringDate, setLastWateringDate] = useState<string>("");
   const [wateringInterval, setWateringInterval] = useState<number>(null);
+  const [lastCaringDate, setLastCaringDate] = useState<string>("");
+  const [caringInterval, setCaringInterval] = useState<number>(null);
   const [error, setError] = useState("");
 
   const dispatch = useDispatch();
@@ -35,6 +37,9 @@ export default function CreatePlant() {
       lastWateringDate: lastWateringDate,
       wateringInterval: wateringInterval,
       nextWateringDate: lastWateringDate + wateringInterval,
+      lastCaringDate: lastCaringDate,
+      caringInterval: caringInterval,
+      nextCaringDate: lastCaringDate + caringInterval
     };
     try {
       await createPlant(plant);
@@ -83,6 +88,18 @@ export default function CreatePlant() {
                             $validInput={true}
                             placeholder="Watering Interval (in days)"
                             onChange={(event) => setWateringInterval(event.target.value)} />
+          <StyledInputField id="lastCaringDate"
+                            type="date"
+                            value={lastCaringDate}
+                            $validInput={true}
+                            placeholder="Last Caring Date"
+                            onChange={(event) => setLastCaringDate(event.target.value)} />
+          <StyledInputField id="caringInterval"
+                            type="number"
+                            value={caringInterval}
+                            $validInput={true}
+                            placeholder="Caring Interval (in days)"
+                            onChange={(event) => setCaringInterval(event.target.value)} />
           <StyledPrimaryButton disabled={!plantName || !species}
                                type="submit">Create Plant</StyledPrimaryButton>
           {error && <StyledError>{error}</StyledError>}

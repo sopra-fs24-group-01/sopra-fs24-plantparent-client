@@ -13,4 +13,7 @@ export type Plant = {
   lastWateringDate: string;
   wateringInterval: number;
   nextWateringDate: string;
+  lastCaringDate: string;
+  caringInterval: number;
+  nextCaringDate: string;
 };

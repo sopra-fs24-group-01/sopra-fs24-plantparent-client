@@ -6,7 +6,10 @@ const mockPlant1: Plant = {
   careInstructions: "Water 2X a week, and fertilizer once a month.",
   lastWateringDate: "2024-04-06",
   wateringInterval: 3.5,
-  nextWateringDate: "2024-04-10"
+  nextWateringDate: "2024-04-10",
+  lastCaringDate: "2024-03-26",
+  caringInterval: 30,
+  nextCaringDate: "2024-04-26"
 };
 
 const mockPlant2: Plant = {
@@ -15,7 +18,10 @@ const mockPlant2: Plant = {
   careInstructions: "Water 1X a week, and fertilizer twice a year.",
   lastWateringDate: "2024-04-07",
   wateringInterval: 7,
-  nextWateringDate: "2024-06-14"
+  nextWateringDate: "2024-06-14",
+  lastCaringDate: "2024-03-26",
+  caringInterval: 182.5,
+  nextCaringDate: "2024-09-25"
 };
 
 
