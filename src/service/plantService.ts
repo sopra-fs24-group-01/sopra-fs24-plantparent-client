@@ -11,7 +11,7 @@ const mockPlant1: Plant = {
   lastCaringDate: "2024-03-26",
   caringInterval: 30,
   nextCaringDate: "2024-04-26",
-  owner: 1
+  owner: 1,
 };
 
 const mockPlant2: Plant = {
@@ -25,7 +25,7 @@ const mockPlant2: Plant = {
   lastCaringDate: "2024-03-26",
   caringInterval: 182.5,
   nextCaringDate: "2024-09-25",
-  owner: 1
+  owner: 1,
 };
 
 
@@ -35,29 +35,29 @@ export function getAllPlants(): Promise<Plant[]> {
   return fetch(baseurl + "plants/")
     .then(response => response.json())
     .then(data => {
-      return data
+      return data;
     })
     .catch(error => {
-      console.log(error)
+      console.log(error);
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve([mockPlant1, mockPlant2]);
         }, 1000); // Simulate a 1 second delay
       });
-    })
+    });
 }
 
 export function createPlant(plant: Plant) {
   return fetch(baseurl + "plants", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(plant)
+    body: JSON.stringify(plant),
   })
     .then(response => response.json())
     .catch(error => {
-      console.log(error)
+      console.log(error);
     });
 }
 
@@ -65,7 +65,7 @@ export function getPlant(plantId: string): Promise<Plant> {
   return fetch(baseurl + "users/" + plantId)
     .then(response => response.json())
     .then(data => {
-      return data
+      return data;
     })
     .catch(error => {
       console.log(error);
@@ -76,7 +76,35 @@ export function getPlantByPlantName(plantName: string): Promise<Plant> {
   return fetch(baseurl + "plants/plantName/" + plantName)
     .then(response => response.json())
     .then(data => {
-      return data
+      return data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+export function waterPlant(plantId: number) {
+  return fetch(baseurl + "plants/" + plantId + "/water", {
+    method: "POST",
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+export function careForPlant(plantId: number) {
+  return fetch(baseurl + "plants/" + plantId + "/care", {
+    method: "POST",
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
     })
     .catch(error => {
       console.log(error);
