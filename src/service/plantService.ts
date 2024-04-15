@@ -1,6 +1,7 @@
 import { Plant } from "../types";
 
 const mockPlant1: Plant = {
+  plantId: 1,
   plantName: "Plant",
   species: "I am a really special plant. My species is: SpecialSpecies. I love water and sun, and get upset when my needs are not met... Beware!",
   careInstructions: "Water 2X a week, and fertilizer once a month.",
@@ -9,10 +10,12 @@ const mockPlant1: Plant = {
   nextWateringDate: "2024-04-10",
   lastCaringDate: "2024-03-26",
   caringInterval: 30,
-  nextCaringDate: "2024-04-26"
+  nextCaringDate: "2024-04-26",
+  owner: 1
 };
 
 const mockPlant2: Plant = {
+  plantId: 2,
   plantName: "Plant2",
   species: "I am an ordinary plant. My species is: OrdinarySpecies. I am easy to take care of, and I am very low maintenance. I am the perfect plant for beginners!",
   careInstructions: "Water 1X a week, and fertilizer twice a year.",
@@ -21,7 +24,8 @@ const mockPlant2: Plant = {
   nextWateringDate: "2024-06-14",
   lastCaringDate: "2024-03-26",
   caringInterval: 182.5,
-  nextCaringDate: "2024-09-25"
+  nextCaringDate: "2024-09-25",
+  owner: 1
 };
 
 

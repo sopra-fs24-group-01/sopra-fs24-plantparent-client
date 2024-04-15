@@ -7,6 +7,7 @@ export type User = {
 };
 
 export type Plant = {
+  plantId: number;
   plantName:string;
   species: string;
   careInstructions: string;
@@ -16,4 +17,5 @@ export type Plant = {
   lastCaringDate: string;
   caringInterval: number;
   nextCaringDate: string;
+  owner: number;
 };

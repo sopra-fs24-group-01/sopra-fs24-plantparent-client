@@ -12,9 +12,12 @@ import {
 import { useDispatch } from "react-redux";
 import { createPlant } from "../../service/plantService";
 import { Plant } from "../../types";
+import { selectLoggedInUser } from "../../store/userSlice";
+import { useAppSelector } from "../../hooks";
 
 
 export default function CreatePlant() {
+  const user = useAppSelector(selectLoggedInUser);
   const [plantName, setPlantName] = useState<string>("");
   const [species, setSpecies] = useState<string>("");
   const [careInstructions, setCareInstructions] = useState<string>("");
@@ -31,6 +34,8 @@ export default function CreatePlant() {
     console.log("Creation for plant with plant name " + plantName);
 
     const plant: Plant = {
+      plantId: null,
+      owner: user.id,
       plantName: plantName,
       species: species,
       careInstructions: careInstructions,
