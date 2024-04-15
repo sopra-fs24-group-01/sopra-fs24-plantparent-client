@@ -27,6 +27,7 @@ const StyledMainContainerContainer = styled.div`
   width: 80vw;
   height: calc(100vh - 80px);
   margin-top: 79px;
+  overflow-y: auto;
 `;
 
 function Home() {

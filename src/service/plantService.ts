@@ -2,7 +2,7 @@ import { Plant } from "../types";
 
 const mockPlant1: Plant = {
   plantId: 1,
-  plantName: "Plant",
+  plantName: "Plant1",
   species: "I am a really special plant. My species is: SpecialSpecies. I love water and sun, and get upset when my needs are not met... Beware!",
   careInstructions: "Water 2X a week, and fertilizer once a month.",
   lastWateringDate: "2024-04-06",
@@ -28,6 +28,64 @@ const mockPlant2: Plant = {
   owner: 1,
 };
 
+const mockPlant3: Plant = {
+  plantId: 3,
+  plantName: "Plant3",
+  species: "I am a tropical plant. My species is: TropicalSpecies. I love humidity and indirect light.",
+  careInstructions: "Water 2X a week, and mist daily.",
+  lastWateringDate: "2024-04-08",
+  wateringInterval: 3.5,
+  nextWateringDate: "2024-04-12",
+  lastCaringDate: "2024-03-28",
+  caringInterval: 30,
+  nextCaringDate: "2024-04-28",
+  owner: 1,
+};
+
+const mockPlant4: Plant = {
+  plantId: 4,
+  plantName: "Plant4",
+  species: "I am a desert plant. My species is: DesertSpecies. I love sunlight and don't need much water.",
+  careInstructions: "Water 1X a month, and place in direct sunlight.",
+  lastWateringDate: "2024-04-01",
+  wateringInterval: 30,
+  nextWateringDate: "2024-05-01",
+  lastCaringDate: "2024-03-01",
+  caringInterval: 365,
+  nextCaringDate: "2025-03-01",
+  owner: 1,
+};
+
+const mockPlant5: Plant = {
+  plantId: 5,
+  plantName: "Plant5",
+  species: "I am a vine plant. My species is: VineSpecies. I love climbing and need a support to grow.",
+  careInstructions: "Water 1X a week, and provide a trellis or support.",
+  lastWateringDate: "2024-04-07",
+  wateringInterval: 7,
+  nextWateringDate: "2024-04-14",
+  lastCaringDate: "2024-03-14",
+  caringInterval: 30,
+  nextCaringDate: "2024-04-14",
+  owner: 1,
+};
+
+const mockPlant6: Plant = {
+  plantId: 6,
+  plantName: "Plant6",
+  species: "I am a flowering plant. My species is: FloweringSpecies. I bloom beautiful flowers when taken care of properly.",
+  careInstructions: "Water 2X a week, and provide plenty of indirect light.",
+  lastWateringDate: "2024-04-08",
+  wateringInterval: 3.5,
+  nextWateringDate: "2024-04-12",
+  lastCaringDate: "2024-03-28",
+  caringInterval: 30,
+  nextCaringDate: "2024-04-28",
+  owner: 1,
+};
+
+const mockPlants: Plant[] = [mockPlant1, mockPlant2, mockPlant3, mockPlant4, mockPlant5, mockPlant6];
+
 
 const baseurl = process.env.REACT_APP_USER_BASEURL;
 
@@ -41,7 +99,7 @@ export function getAllPlants(): Promise<Plant[]> {
       console.log(error);
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve([mockPlant1, mockPlant2]);
+          resolve(mockPlants);
         }, 1000); // Simulate a 1 second delay
       });
     });
