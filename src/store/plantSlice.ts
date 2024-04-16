@@ -1,71 +1,61 @@
-import {createAsyncThunk, createSlice,} from "@reduxjs/toolkit";
-import { createPlant, getAllPlants, getPlantByPlantName } from "../service/plantService";
-import { Plant } from "../types";
+import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
+import { getAllPlants } from "../service/plantService";
 
 interface IPlantState {
   entities: any[];
-  loggedInPlant: Plant | null;
   status: string;
 }
+
 const initialState: IPlantState = {
   entities: [],
-  loggedInPlant: null,
-  status: "idle"
+  status: "idle",
 };
 
 export const fetchPlants = createAsyncThunk("plants/fetchPlants", async () => {
 
-  const data = await getAllPlants();
-  console.log(data);
-
-  return data
-})
-
-export const fetchPlantByPlantName = createAsyncThunk(
-  "plants/fetchPlantByPlantName",
-  async (plantName: string) => {
-    return await getPlantByPlantName(plantName);
-  }
-);
+  return await getAllPlants();
+});
 
 export const plantsSlice = createSlice({
   name: "plant",
   initialState,
-  reducers: {
-    registerPlant: (state, action) => {
-      const newPlant = action.payload;
-      createPlant(newPlant).then();
-      state.loggedInPlant = newPlant;
-    }
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(fetchPlants.pending, (state, {payload}) => {
-        state.status = "loading"
+      .addCase(fetchPlants.pending, (state, { payload }) => {
+        state.status = "loading";
       })
-      .addCase(fetchPlants.fulfilled, (state, {payload}) => {
-        state.status = "succeeded"
+      .addCase(fetchPlants.fulfilled, (state, { payload }) => {
+        state.status = "succeeded";
         state.entities = payload;
       })
       .addCase(fetchPlants.rejected, (state, action) => {
         state.status = "failed";
-      })
-      .addCase(fetchPlantByPlantName.fulfilled, (state, {payload}) => {
-        state.loggedInPlant = payload;
-      })
-  }
-})
+      });
+  },
+});
 
-export const {registerPlant} = plantsSlice.actions
-
-
-export default plantsSlice.reducer
+export default plantsSlice.reducer;
 
 interface RootState {
   plants: ReturnType<typeof plantsSlice.reducer>;
 }
 
-export const selectAllPlants = (state: RootState) => state.plants.entities;
+export const selectAllPlants = createSelector(
+  [(state: RootState) => state.plants.entities],
+  (entities) => {
+    return [...entities].sort((a, b) => {
+      const aNextCaringDate = new Date(a.nextCaringDate);
+      const bNextCaringDate = new Date(b.nextCaringDate);
+      const aNextWateringDate = new Date(a.nextWateringDate);
+      const bNextWateringDate = new Date(b.nextWateringDate);
+      if ((aNextCaringDate < bNextCaringDate) || (aNextWateringDate < bNextWateringDate)) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+  });
 
 export const selectPlantById = (state: RootState, id: number) =>
   state.plants.entities.find((plant) => plant.id === id);

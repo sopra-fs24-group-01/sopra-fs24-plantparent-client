@@ -3,7 +3,6 @@ import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import { ReactComponent as ProfileSVG } from "../../assets/person-circle.svg";
 import { ReactComponent as BellSVG } from "../../assets/bell-fill.svg";
 import styled, { css } from "styled-components";
-import { StyledLogoContainerLarge } from "./Login";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const StyledHeaderContainer = styled.div`
@@ -26,13 +25,13 @@ const StyledLogoContainerHeader = styled.div`
   }
 `;
 
-const StyledNavLink = styled.div<{active?: boolean}>`
+const StyledNavLink = styled.div<{$active?: boolean}>`
   font-size: 2rem;
   font-weight: bold;
   color: #83b271;
   margin: auto 25px auto 25px;
   
-  ${props => props.active && css`
+  ${props => props.$active && css`
     text-decoration: underline;
   `}
 
@@ -99,8 +98,8 @@ function Header() {
       <StyledLogoContainerHeader onClick={() => navigate("/")}>
         <LogoSVG style={{height: "100%", maxWidth: "100%"}} />
       </StyledLogoContainerHeader>
-      <StyledNavLink active={pathname === "/"} onClick={() => navigate("/")}>Home</StyledNavLink>
-      <StyledNavLink active={pathname === "/myPlants"} onClick={() => navigate("/myPlants")}>My Plants</StyledNavLink>
+      <StyledNavLink $active={pathname === "/"} onClick={() => navigate("/")}>Home</StyledNavLink>
+      <StyledNavLink $active={pathname === "/myPlants"} onClick={() => navigate("/myPlants")}>My Plants</StyledNavLink>
       <StyledDateHeader>{formattedDate}</StyledDateHeader>
       <StyledIconContainer onClick={() => navigate("/profile")}>
         <ProfileSVG style={{width: "50px", height: "50px"}} />

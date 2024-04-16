@@ -4,21 +4,27 @@ import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import {
   StyledError,
   StyledForm,
-  StyledInputField, StyledLink,
+  StyledInputField,
   StyledLoginContainer,
   StyledLogoContainerLarge,
-  StyledMainContainer, StyledP, StyledPrimaryButton,
+  StyledMainContainer, StyledPrimaryButton,
 } from "./Login";
 import { useDispatch } from "react-redux";
-import { registerPlant } from "../../store/plantSlice";
+import { createPlant } from "../../service/plantService";
+import { Plant } from "../../types";
+import { selectLoggedInUser } from "../../store/userSlice";
+import { useAppSelector } from "../../hooks";
 
 
-export default function createPlant() {
-  const [plantName, setPlantName] = useState<string>(null);
-  const [species, setSpecies] = useState<string>(null);
-  const [careInstructions, setCareInstructions] = useState<string>(null);
-  const [lastWateringDate, setLastWateringDate] = useState<string>(null);
-  const [wateringInterval, setWateringInterval] = useState<string>(null);
+export default function CreatePlant() {
+  const user = useAppSelector(selectLoggedInUser);
+  const [plantName, setPlantName] = useState<string>("");
+  const [species, setSpecies] = useState<string>("");
+  const [careInstructions, setCareInstructions] = useState<string>("");
+  const [lastWateringDate, setLastWateringDate] = useState<string>("");
+  const [wateringInterval, setWateringInterval] = useState<number>(null);
+  const [lastCaringDate, setLastCaringDate] = useState<string>("");
+  const [caringInterval, setCaringInterval] = useState<number>(null);
   const [error, setError] = useState("");
 
   const dispatch = useDispatch();
@@ -27,16 +33,21 @@ export default function createPlant() {
   async function doCreatePlant() {
     console.log("Creation for plant with plant name " + plantName);
 
-    const plant = {
+    const plant: Plant = {
+      plantId: null,
+      owner: user.id,
       plantName: plantName,
       species: species,
       careInstructions: careInstructions,
       lastWateringDate: lastWateringDate,
       wateringInterval: wateringInterval,
       nextWateringDate: lastWateringDate + wateringInterval,
+      lastCaringDate: lastCaringDate,
+      caringInterval: caringInterval,
+      nextCaringDate: lastCaringDate + caringInterval
     };
     try {
-      await dispatch(registerPlant(plant));
+      await createPlant(plant);
       navigate("/");
     } catch (err) {
       console.log(err);
@@ -54,34 +65,46 @@ export default function createPlant() {
           <StyledInputField id="plantName"
                             type="text"
                             value={plantName}
-                            validInput={true}
+                            $validInput={true}
                             placeholder="Plant Name"
                             onChange={(event) => setPlantName(event.target.value)} />
           <StyledInputField id="species"
                             type="text"
                             value={species}
-                            validInput={true}
+                            $validInput={true}
                             placeholder="Species"
                             onChange={(event) => setSpecies(event.target.value)} />
           <StyledInputField id="careInstructions"
                             type="text"
                             value={careInstructions}
-                            validInput={true}
+                            $validInput={true}
                             placeholder="Care Instructions"
                             onChange={(event) => setCareInstructions(event.target.value)} />
           <label htmlFor="lastWateringDate">Last Watering Date</label>
           <StyledInputField id="lastWateringDate"
                             type="date"
                             value={lastWateringDate}
-                            validInput={true}
+                            $validInput={true}
                             placeholder="Last Watering Date"
                             onChange={(event) => setLastWateringDate(event.target.value)} />
           <StyledInputField id="wateringInterval"
                             type="number"
                             value={wateringInterval}
-                            validInput={true}
+                            $validInput={true}
                             placeholder="Watering Interval (in days)"
                             onChange={(event) => setWateringInterval(event.target.value)} />
+          <StyledInputField id="lastCaringDate"
+                            type="date"
+                            value={lastCaringDate}
+                            $validInput={true}
+                            placeholder="Last Caring Date"
+                            onChange={(event) => setLastCaringDate(event.target.value)} />
+          <StyledInputField id="caringInterval"
+                            type="number"
+                            value={caringInterval}
+                            $validInput={true}
+                            placeholder="Caring Interval (in days)"
+                            onChange={(event) => setCaringInterval(event.target.value)} />
           <StyledPrimaryButton disabled={!plantName || !species}
                                type="submit">Create Plant</StyledPrimaryButton>
           {error && <StyledError>{error}</StyledError>}

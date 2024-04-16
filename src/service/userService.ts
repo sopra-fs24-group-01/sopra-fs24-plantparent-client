@@ -3,7 +3,7 @@ import { User } from "../types";
 const baseurl = process.env.REACT_APP_USER_BASEURL;
 
 export function getAllUsers(): Promise<User[]> {
-  return fetch(baseurl + "users/")
+  return fetch(baseurl + "users")
     .then(response => response.json())
     .then(data => {
       return data
