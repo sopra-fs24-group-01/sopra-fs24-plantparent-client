@@ -120,11 +120,25 @@ export function createPlant(plant: Plant) {
 }
 
 export function getPlant(plantId: string): Promise<Plant> {
-  return fetch(baseurl + "users/" + plantId)
+  return fetch(baseurl + "plants/" + plantId)
     .then(response => response.json())
     .then(data => {
       return data;
     })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+export function updatePlant(plant: Plant) {
+  return fetch(baseurl + "plants/" + plant.plantId, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(plant),
+  })
+    .then(response => response.json())
     .catch(error => {
       console.log(error);
     });
