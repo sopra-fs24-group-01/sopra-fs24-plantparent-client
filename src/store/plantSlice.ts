@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { getAllPlants } from "../service/plantService";
+import { getAllPlants, getPlantsForUser } from "../service/plantService";
 
 interface IPlantState {
   entities: any[];
@@ -12,8 +12,12 @@ const initialState: IPlantState = {
 };
 
 export const fetchPlants = createAsyncThunk("plants/fetchPlants", async () => {
-
   return await getAllPlants();
+});
+
+export const fetchPlantOfUser = createAsyncThunk("plants/fetchPlantOfUser", async (userId: number) => {
+  console.log(userId);
+  return await getPlantsForUser(userId);
 });
 
 export const plantsSlice = createSlice({
@@ -22,14 +26,14 @@ export const plantsSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(fetchPlants.pending, (state, { payload }) => {
+      .addCase(fetchPlantOfUser.pending, (state, { payload }) => {
         state.status = "loading";
       })
-      .addCase(fetchPlants.fulfilled, (state, { payload }) => {
+      .addCase(fetchPlantOfUser.fulfilled, (state, { payload }) => {
         state.status = "succeeded";
         state.entities = payload;
       })
-      .addCase(fetchPlants.rejected, (state, action) => {
+      .addCase(fetchPlantOfUser.rejected, (state, action) => {
         state.status = "failed";
       });
   },

@@ -44,7 +44,8 @@ export default function CreatePlant() {
       nextWateringDate: lastWateringDate + wateringInterval,
       lastCaringDate: lastCaringDate,
       caringInterval: caringInterval,
-      nextCaringDate: lastCaringDate + caringInterval
+      nextCaringDate: lastCaringDate + caringInterval,
+      caretakers: []
     };
     try {
       await createPlant(plant);

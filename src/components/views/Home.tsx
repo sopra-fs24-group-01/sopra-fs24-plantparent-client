@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "./Header";
 import styled from "styled-components";
-import { store } from "../../store";
-import { fetchPlants, selectAllPlants } from "../../store/plantSlice";
+import { fetchPlantOfUser, selectAllPlants } from "../../store/plantSlice";
 import { useAppSelector } from "../../hooks";
 import PlantComponent from "./PlantComponent";
+import { selectLoggedInUser } from "../../store/userSlice";
+import { store } from "../../store";
 
-store.dispatch(fetchPlants());
 
 const StyledMainContainer = styled.div`
   width: 100vw;
@@ -31,18 +31,29 @@ const StyledMainContainerContainer = styled.div`
 `;
 
 function Home() {
+  const loggedInUser = useAppSelector(selectLoggedInUser);
+  const plantsStatus = useAppSelector(state => state.plants.status);
+  useEffect(() => {
+    console.log(loggedInUser);
+    if (loggedInUser !== null) {
+      store.dispatch(fetchPlantOfUser(loggedInUser.id));
+    }
+  }, [loggedInUser]);
+
   const plants = useAppSelector(selectAllPlants);
   return (
     <>
       <Header />
-      <StyledMainContainer>
-        <StyledSideBar />
-        <StyledMainContainerContainer>
-          {plants.map(plant => (
-            <PlantComponent key={plant.plantName} plant={plant}/>
-          ))}
-        </StyledMainContainerContainer>
-      </StyledMainContainer>
+      {plantsStatus === "loading" ? <div>Loading...</div> :
+        <StyledMainContainer>
+          <StyledSideBar />
+          <StyledMainContainerContainer>
+            {plants.map(plant => (
+              <PlantComponent key={plant.plantName} plant={plant} />
+            ))}
+          </StyledMainContainerContainer>
+        </StyledMainContainer>
+      }
     </>
   );
 }
