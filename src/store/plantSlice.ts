@@ -12,7 +12,7 @@ const initialState: IPlantState = {
 };
 
 export const fetchPlants = createAsyncThunk("plants/fetchPlants", async () => {
-
+  console.log("Fetching plants");
   return await getAllPlants();
 });
 
@@ -28,6 +28,7 @@ export const plantsSlice = createSlice({
       .addCase(fetchPlants.fulfilled, (state, { payload }) => {
         state.status = "succeeded";
         state.entities = payload;
+        console.log("Plants loaded");
       })
       .addCase(fetchPlants.rejected, (state, action) => {
         state.status = "failed";
@@ -57,5 +58,7 @@ export const selectAllPlants = createSelector(
     });
   });
 
-export const selectPlantById = (state: RootState, id: number) =>
-  state.plants.entities.find((plant) => plant.id === id);
+export const selectPlantById = (state: RootState, id: number) => {
+  console.log(state.plants.entities);
+  return state.plants.entities.find((plant) => plant.plantId === id);
+}
