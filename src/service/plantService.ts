@@ -129,6 +129,7 @@ export function getPlantsForUser(userId: number): Promise<Plant[]> {
 
   return Promise.all([ownedPlantsPromise, caredForPlantsPromise])
     .then(([ownedPlants, caredForPlants]) => [...ownedPlants, ...caredForPlants]);
+  // return new Promise<Plant[]>(resolve => resolve(mockPlants));
 }
 
 export function createPlant(plant: Plant) {

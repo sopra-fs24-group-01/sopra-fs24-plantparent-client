@@ -6,6 +6,8 @@ import { useAppSelector } from "../../hooks";
 import PlantComponent from "./PlantComponent";
 import { selectLoggedInUser } from "../../store/userSlice";
 import { store } from "../../store";
+import { StyledPrimaryButton } from "./Login";
+import { useNavigate } from "react-router-dom";
 
 
 const StyledMainContainer = styled.div`
@@ -28,6 +30,8 @@ const StyledMainContainerContainer = styled.div`
   height: calc(100vh - 80px);
   margin-top: 79px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 `;
 
 function Home() {
@@ -41,6 +45,7 @@ function Home() {
   }, [loggedInUser]);
 
   const plants = useAppSelector(selectAllPlants);
+  const navigate = useNavigate();
   return (
     <>
       <Header />
@@ -48,9 +53,12 @@ function Home() {
         <StyledMainContainer>
           <StyledSideBar />
           <StyledMainContainerContainer>
-            {plants.map(plant => (
+            {plants.length < 1 ? <div>You have no plants yet. Create one!</div> : plants.map(plant => (
               <PlantComponent key={plant.plantName} plant={plant} />
             ))}
+            <StyledPrimaryButton
+              disabled={false}
+              onClick={() => navigate("/plantCreation")}>Create new plant</StyledPrimaryButton>
           </StyledMainContainerContainer>
         </StyledMainContainer>
       }
