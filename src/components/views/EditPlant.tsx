@@ -90,31 +90,6 @@ export default function EditPlant() {
                             $validInput={true}
                             placeholder="Care Instructions"
                             onChange={(event) => setCareInstructions(event.target.value)} />
-          <label htmlFor="lastWateringDate">Last Watering Date</label>
-          <StyledInputField id="lastWateringDate"
-                            type="date"
-                            value={plant.lastWateringDate}
-                            $validInput={true}
-                            placeholder="Last Watering Date"
-                            onChange={(event) => setLastWateringDate(event.target.value)} />
-          <StyledInputField id="wateringInterval"
-                            type="number"
-                            value={plant.wateringInterval}
-                            $validInput={true}
-                            placeholder="Watering Interval (in days)"
-                            onChange={(event) => setWateringInterval(Number(event.target.value))} />
-          <StyledInputField id="lastCaringDate"
-                            type="date"
-                            value={plant.lastCaringDate}
-                            $validInput={true}
-                            placeholder="Last Caring Date"
-                            onChange={(event) => setLastCaringDate(event.target.value)} />
-          <StyledInputField id="caringInterval"
-                            type="number"
-                            value={plant.caringInterval}
-                            $validInput={true}
-                            placeholder="Caring Interval (in days)"
-                            onChange={(event) => setCaringInterval(Number(event.target.value))} />
           <StyledPrimaryButton disabled={!plantName || !species}
                                type="submit">Save Changes</StyledPrimaryButton>
           {error && <StyledError>{error}</StyledError>}

@@ -93,6 +93,7 @@ export default function CreatePlant() {
                             $validInput={true}
                             placeholder="Watering Interval (in days)"
                             onChange={(event) => setWateringInterval(event.target.value)} />
+          <label htmlFor="lastCaringDate">Last Caring Date</label>
           <StyledInputField id="lastCaringDate"
                             type="date"
                             value={lastCaringDate}
