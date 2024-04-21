@@ -32,6 +32,7 @@ export const plantsSlice = createSlice({
       .addCase(fetchPlantOfUser.fulfilled, (state, { payload }) => {
         state.status = "succeeded";
         state.entities = payload;
+        console.log("Plants loaded");
       })
       .addCase(fetchPlantOfUser.rejected, (state, action) => {
         state.status = "failed";
@@ -61,5 +62,7 @@ export const selectAllPlants = createSelector(
     });
   });
 
-export const selectPlantById = (state: RootState, id: number) =>
-  state.plants.entities.find((plant) => plant.id === id);
+export const selectPlantById = (state: RootState, id: number) => {
+  console.log(state.plants.entities);
+  return state.plants.entities.find((plant) => plant.plantId === id);
+}
