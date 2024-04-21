@@ -23,9 +23,9 @@ export default function CreatePlant() {
   const [species, setSpecies] = useState<string>("");
   const [careInstructions, setCareInstructions] = useState<string>("");
   const [lastWateringDate, setLastWateringDate] = useState<string>("");
-  const [wateringInterval, setWateringInterval] = useState<number>(null);
+  const [wateringInterval, setWateringInterval] = useState<number>(0);
   const [lastCaringDate, setLastCaringDate] = useState<string>("");
-  const [caringInterval, setCaringInterval] = useState<number>(null);
+  const [caringInterval, setCaringInterval] = useState<number>(0);
   const [error, setError] = useState("");
 
   const dispatch = useDispatch();

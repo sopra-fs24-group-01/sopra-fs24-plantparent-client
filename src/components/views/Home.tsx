@@ -38,7 +38,6 @@ function Home() {
   const loggedInUser = useAppSelector(selectLoggedInUser);
   const plantsStatus = useAppSelector(state => state.plants.status);
   useEffect(() => {
-    console.log(loggedInUser);
     if (loggedInUser !== null) {
       store.dispatch(fetchPlantOfUser(loggedInUser.id));
     }
@@ -58,7 +57,7 @@ function Home() {
             ))}
             <StyledPrimaryButton
               disabled={false}
-              onClick={() => navigate("/plantCreation")}>Create new plant</StyledPrimaryButton>
+              onClick={() => navigate("/createPlant")}>Create new plant</StyledPrimaryButton>
           </StyledMainContainerContainer>
         </StyledMainContainer>
       }
