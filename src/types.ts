@@ -1,9 +1,10 @@
 export type User = {
-  id: number;
+  id?: number;
   username: string;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
+  password: string;
 };
 
 export type Plant = {
@@ -18,4 +19,5 @@ export type Plant = {
   caringInterval: number;
   nextCaringDate: string;
   owner: number;
+  caretakers: number[];
 };
