@@ -14,6 +14,7 @@ import { createPlant } from "../../service/plantService";
 import { Plant } from "../../types";
 import { selectLoggedInUser } from "../../store/userSlice";
 import { useAppSelector } from "../../hooks";
+import Header from "./Header";
 
 
 export default function CreatePlant() {
@@ -44,7 +45,8 @@ export default function CreatePlant() {
       nextWateringDate: lastWateringDate + wateringInterval,
       lastCaringDate: lastCaringDate,
       caringInterval: caringInterval,
-      nextCaringDate: lastCaringDate + caringInterval
+      nextCaringDate: lastCaringDate + caringInterval,
+      caretakers: [],
     };
     try {
       await createPlant(plant);
@@ -56,61 +58,64 @@ export default function CreatePlant() {
   }
 
   return (
-    <StyledMainContainer>
-      <StyledLoginContainer>
-        <StyledLogoContainerLarge>
-          <LogoSVG style={{ height: "100px", maxWidth: "100%" }} />
-        </StyledLogoContainerLarge>
-        <StyledForm onSubmit={doCreatePlant}>
-          <StyledInputField id="plantName"
-                            type="text"
-                            value={plantName}
-                            $validInput={true}
-                            placeholder="Plant Name"
-                            onChange={(event) => setPlantName(event.target.value)} />
-          <StyledInputField id="species"
-                            type="text"
-                            value={species}
-                            $validInput={true}
-                            placeholder="Species"
-                            onChange={(event) => setSpecies(event.target.value)} />
-          <StyledInputField id="careInstructions"
-                            type="text"
-                            value={careInstructions}
-                            $validInput={true}
-                            placeholder="Care Instructions"
-                            onChange={(event) => setCareInstructions(event.target.value)} />
-          <label htmlFor="lastWateringDate">Last Watering Date</label>
-          <StyledInputField id="lastWateringDate"
-                            type="date"
-                            value={lastWateringDate}
-                            $validInput={true}
-                            placeholder="Last Watering Date"
-                            onChange={(event) => setLastWateringDate(event.target.value)} />
-          <StyledInputField id="wateringInterval"
-                            type="number"
-                            value={wateringInterval}
-                            $validInput={true}
-                            placeholder="Watering Interval (in days)"
-                            onChange={(event) => setWateringInterval(event.target.value)} />
-          <label htmlFor="lastCaringDate">Last Caring Date</label>
-          <StyledInputField id="lastCaringDate"
-                            type="date"
-                            value={lastCaringDate}
-                            $validInput={true}
-                            placeholder="Last Caring Date"
-                            onChange={(event) => setLastCaringDate(event.target.value)} />
-          <StyledInputField id="caringInterval"
-                            type="number"
-                            value={caringInterval}
-                            $validInput={true}
-                            placeholder="Caring Interval (in days)"
-                            onChange={(event) => setCaringInterval(event.target.value)} />
-          <StyledPrimaryButton disabled={!plantName || !species}
-                               type="submit">Create Plant</StyledPrimaryButton>
-          {error && <StyledError>{error}</StyledError>}
-        </StyledForm>
-      </StyledLoginContainer>
-    </StyledMainContainer>
+     <>
+      <Header />
+        <StyledMainContainer>
+          <StyledLoginContainer>
+            <StyledLogoContainerLarge>
+              <LogoSVG style={{ height: "100px", maxWidth: "100%" }} />
+            </StyledLogoContainerLarge>
+            <StyledForm onSubmit={doCreatePlant}>
+              <StyledInputField id="plantName"
+                                type="text"
+                                value={plantName}
+                                $validInput={true}
+                                placeholder="Plant Name"
+                                onChange={(event) => setPlantName(event.target.value)} />
+              <StyledInputField id="species"
+                                type="text"
+                                value={species}
+                                $validInput={true}
+                                placeholder="Species"
+                                onChange={(event) => setSpecies(event.target.value)} />
+              <StyledInputField id="careInstructions"
+                                type="text"
+                                value={careInstructions}
+                                $validInput={true}
+                                placeholder="Care Instructions"
+                                onChange={(event) => setCareInstructions(event.target.value)} />
+              <label htmlFor="lastWateringDate">Last Watering Date</label>
+              <StyledInputField id="lastWateringDate"
+                                type="date"
+                                value={lastWateringDate}
+                                $validInput={true}
+                                placeholder="Last Watering Date"
+                                onChange={(event) => setLastWateringDate(event.target.value)} />
+              <StyledInputField id="wateringInterval"
+                                type="number"
+                                value={wateringInterval}
+                                $validInput={true}
+                                placeholder="Watering Interval (in days)"
+                                onChange={(event) => setWateringInterval(event.target.value)} />
+              <label htmlFor="lastCaringDate">Last Caring Date</label>
+              <StyledInputField id="lastCaringDate"
+                                type="date"
+                                value={lastCaringDate}
+                                $validInput={true}
+                                placeholder="Last Caring Date"
+                                onChange={(event) => setLastCaringDate(event.target.value)} />
+              <StyledInputField id="caringInterval"
+                                type="number"
+                                value={caringInterval}
+                                $validInput={true}
+                                placeholder="Caring Interval (in days)"
+                                onChange={(event) => setCaringInterval(event.target.value)} />
+              <StyledPrimaryButton disabled={!plantName || !species}
+                                   type="submit">Create Plant</StyledPrimaryButton>
+              {error && <StyledError>{error}</StyledError>}
+            </StyledForm>
+          </StyledLoginContainer>
+        </StyledMainContainer>
+      </>
   );
 }

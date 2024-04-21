@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import { store } from "../../store";
-import { fetchUserByUsername } from "../../store/userSlice";
+import { fetchUserByUsername, loginUser, userError } from "../../store/userSlice";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 
 
 export const StyledMainContainer = styled.div`
@@ -115,12 +116,17 @@ export default function Login() {
 
   const [error, setError] = useState("");
 
-  function doLogin() {
+  const dispatch = useAppDispatch();
+  const errorMsg = useAppSelector(userError);
+
+  async function doLogin(event: React.FormEvent) {
+    event.preventDefault();
     try {
-      store.dispatch(fetchUserByUsername(username));
+      const user = {username: username, password: password};
+      await dispatch(loginUser(user)).unwrap();
     } catch (err) {
       console.log(err);
-      setError(err.message);
+      setError(errorMsg);
     }
   }
 

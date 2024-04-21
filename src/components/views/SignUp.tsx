@@ -9,38 +9,40 @@ import {
   StyledLogoContainerLarge,
   StyledMainContainer, StyledP, StyledPrimaryButton,
 } from "./Login";
-import { useDispatch } from "react-redux";
-import { registerUser } from "../../store/userSlice";
+import { registerUser, userError } from "../../store/userSlice";
+import { User } from "../../types";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 
 
 export default function SignUp() {
-  const [username, setUsername] = useState<string>(null);
-  const [email, setEmail] = useState<string>(null);
-  const [password, setPassword] = useState<string>(null);
-  const [confirmPassword, setConfirmPassword] = useState<string>(null);
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
 
   const [isInputValid, setIsInputValid] = useState<boolean>(true);
   const [isValidPWConfirm, setIsValidPWConfirm] = useState<boolean>(true);
   const [error, setError] = useState("");
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const errorMsg = useAppSelector(userError);
 
-  async function doSignUp() {
+  async function doSignUp(event: React.FormEvent) {
+    event.preventDefault();
     console.log("Sign up for user with user name " + username);
 
-    const user = {
-      firstName: "",
-      lastName: "",
+    const user: User = {
       username: username,
       email: email,
+      password: password
     };
     try {
-      await dispatch(registerUser(user));
+      await dispatch(registerUser(user)).unwrap();
       navigate("/");
     } catch (err) {
       console.log(err);
-      setError(err.message);
+      setError(errorMsg);
     }
   }
 
