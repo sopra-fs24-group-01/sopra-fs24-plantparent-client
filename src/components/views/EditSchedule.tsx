@@ -63,7 +63,8 @@ export default function EditPlant() {
       nextWateringDate: nextWateringDate,
       lastCaringDate: plant.lastCaringDate,
       caringInterval: caringInterval,
-      nextCaringDate: nextCaringDate
+      nextCaringDate: nextCaringDate,
+      caretakers: plant.caretakers,
     };
     try {
       await updatePlant(new_plant);
