@@ -5,7 +5,6 @@ import { fetchPlantOfUser, selectAllPlants, selectPlantById } from "../../store/
 import { useAppSelector } from "../../hooks";
 import { selectLoggedInUser } from "../../store/userSlice";
 import { store } from "../../store";
-import { StyledPrimaryButton } from "./Login";
 import { useNavigate, useParams } from "react-router-dom";
 import { calculateDifferenceInDays, isInThePast } from "helpers/util";
 import { Plant } from "types";
@@ -17,38 +16,64 @@ import { ReactComponent as BandaidSVG } from "../../assets/bandaid.svg";
 import { ReactComponent as CheckSVG } from "../../assets/check-circle.svg";
 import { ReactComponent as CheckFillSVG } from "../../assets/check-circle-fill.svg";
 import { ReactComponent as ImagePlaceholderSVG } from "../../assets/image_placeholder.svg";
-import { parseISO } from "date-fns";
+import { formatDistance, parseISO } from "date-fns";
 import { careForPlant, waterPlant } from "service/plantService";
 import PlantComponent from "./PlantComponent";
+import { Modal } from "./PopupMsgComponent";
 
+const StyledPrimaryButton = styled.button<{disabled?: boolean }>`
+  color: #ffffff;
+  font-size: 1.5rem;
+  background-color: #83b271;
+  width: 200px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  margin-left: 50px auto 5px auto;
 
+  ${props => props.disabled && css`
+    opacity: 0.5;`
+  }
+  
+  &:hover {
+    ${props => !props.disabled && css`
+      cursor: pointer;
+      scale: 0.95;`
+    }
+  }
+`;
+
+const ScheduleIconsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
 const StyledMainContainer = styled.div`
-    width: 100vw;
+    width: 80vw;
     height: 100vh;
+    margin-top: 79px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 `;
 
 const StyledPlantProfileContainer = styled.div`
-    width: 20vw;
-    height: 100vh;
     display: flex;
     flex-direction: column;
 `;
 
 const StyledPlantProfileHeader = styled.div`
-    width: 20vw;
-    height: 100vh;
+    width: 80vw;
+    height: 10vh;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 `;
 
 const StyledPlantProfileDetails = styled.div`
-    width: 20vw;
-    height: 100vh;
     display: flex;
     flex-direction: row;
+    justify-content: center;
 `;
 
 const StyledPlantImageContainer = styled.div`
@@ -57,6 +82,7 @@ const StyledPlantImageContainer = styled.div`
     flex-direction: column;
     width: fit-content;
     margin-right: 25px;
+    margin-left: 25px;
 `;
 
 const StyledScheduleIconsContainer = styled.div`
@@ -101,7 +127,7 @@ const StyledMoodContainer = styled.div`
 
 const StyledPlantTitle = styled.div`
   color: #83b271;
-  font-size: 2rem;
+  font-size: 4rem;
   margin: 0 auto;
 `;
 
@@ -164,6 +190,58 @@ const StyledGreenText = styled.span`
   font-style: italic;
 `;
 
+function Schedule({ plantId, text, date, svg, watering }: {
+  plantId: number,
+  text: string,
+  date: string,
+  svg: ReactElement,
+  watering: boolean
+}) {
+  const [day, setDay] = useState(0);
+  const [modal, setModal] = useState<boolean>(false);
+  const past = isInThePast(date);
+  const dateObject = parseISO(date);
+  const now = new Date();
+
+  useState(() => {
+    setDay(calculateDifferenceInDays(date));
+  });
+
+  function action() {
+    if (watering) {
+      waterPlant(plantId).then();
+      console.log("watering");
+    } else {
+      careForPlant(plantId).then();
+      console.log("caring");
+    }
+    setModal(false);
+  }
+
+  return (
+    <>
+      {modal && <Modal setModal={setModal} action={action}
+                       text={`Are you sure you ${watering ? "watered" : "cared for"} the plant?`} />}
+      <StyledScheduleContainer>
+        <StyledSchedule>
+          {text}
+        </StyledSchedule>
+        <ScheduleIconsContainer>
+          <CaringSVGContainer>
+            {svg}
+            <CaringDay $past={past}>{past ? "" : "+"}{day}</CaringDay>
+          </CaringSVGContainer>
+          <CaringSVGContainer $hover={true} onClick={() => setModal(true)}>
+            {past ?
+              <CheckFillSVG style={{ width: "40px", height: "40px", color: "#83b271" }} /> :
+              <CheckSVG style={{ width: "40px", height: "40px", color: "#83b271" }} />}
+          </CaringSVGContainer>
+        </ScheduleIconsContainer>
+      </StyledScheduleContainer>
+    </>
+  );
+}
+
 export default function PlantView() {
   // get the logged in user from the store
   const user = useAppSelector(selectLoggedInUser);
@@ -174,47 +252,41 @@ export default function PlantView() {
   const { plantId } = useParams<{ plantId: string }>();
   // get the plant from the store
   const plant = useAppSelector(state => selectPlantById(state, Number(plantId)));
-  
-  useEffect(() => {
-    console.log(user);
-    if (user !== null) {
-      store.dispatch(fetchPlantOfUser(user.id));
-    }
-  }, [user]);
 
-  const plants = useAppSelector(selectAllPlants);
   const navigate = useNavigate();
   return (
     <>
       <Header />
       {plantStatus === "loading" ? <div>Loading...</div> :
         <StyledMainContainer>
-            <StyledPlantProfileContainer>
-                <StyledPlantProfileHeader>
-                    <StyledPlantTitle>{plant.plantName}</StyledPlantTitle>
-                    <StyledPrimaryButton onClick={() => navigate("/plants")}>Add Caretaker</StyledPrimaryButton>
-                </StyledPlantProfileHeader>
-                <StyledPlantProfileDetails>
-                    <StyledPlantImageContainer>
-                        <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />
-                    </StyledPlantImageContainer>
-                    <StyledScheduleIconsContainer>
-                        <StyledScheduleIconContainer>
-                            <DropSVG style={{ width: "30px", height: "30px" }} />
-                            <StyledSchedule>
-                                <StyledGreenText>Next watering:</StyledGreenText> {plant.nextWateringDate}
-                            </StyledSchedule>
-                        </StyledScheduleIconContainer>
-                        <StyledScheduleIconContainer>
-                            <BandaidSVG style={{ width: "30px", height: "30px" }} />
-                            <StyledSchedule>
-                                <StyledGreenText>Next caring:</StyledGreenText> {plant.nextCaringDate}
-                            </StyledSchedule>
-                        </StyledScheduleIconContainer>
-                    </StyledScheduleIconsContainer>
-                </StyledPlantProfileDetails>
-            </StyledPlantProfileContainer>
-        </StyledMainContainer>
+          <StyledPlantProfileContainer>
+              <StyledPlantProfileHeader>
+                  <StyledPlantTitle>{plant.plantName}</StyledPlantTitle>
+                  <StyledPrimaryButton onClick={() => navigate("/plants")}>Add Caretaker</StyledPrimaryButton>
+              </StyledPlantProfileHeader>
+              <StyledPlantProfileDetails>
+                  <StyledPlantImageContainer>
+                      <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />
+                  </StyledPlantImageContainer>
+                  <StyledScheduleIconsContainer>
+                      <StyledScheduleIconContainer>
+                        <Schedule plantId={plant.plantId} text={"Water"} date={plant.nextWateringDate}
+                                  svg={<DropSVG style={{ color: "#00beff", width: "50px", height: "50px" }} />}
+                                  watering={true} />
+                      </StyledScheduleIconContainer>
+                      <StyledScheduleIconContainer>
+                        <Schedule plantId={plant.plantId} text={"Care"} date={plant.nextCaringDate}
+                                  svg={<BandaidSVG style={{ color: "#ffaf00", width: "50px", height: "50px" }} />}
+                                  watering={false} />
+                      </StyledScheduleIconContainer>
+                  </StyledScheduleIconsContainer>
+              </StyledPlantProfileDetails>
+          </StyledPlantProfileContainer>
+        <StyledPlantDescription>{plant.species}</StyledPlantDescription>
+        <StyledDividerSmall />
+        <StyledPlantDescription>{plant.careInstructions}</StyledPlantDescription>
+        <StyledDividerSmall style={{ marginBottom: "auto" }} />
+      </StyledMainContainer>
       }
     </>
   );

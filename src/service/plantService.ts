@@ -127,9 +127,9 @@ export function getPlantsForUser(userId: number): Promise<Plant[]> {
       mockPlants.filter(plant => plant.caretakers.includes(userId));
     });
 
-  return Promise.all([ownedPlantsPromise, caredForPlantsPromise])
-    .then(([ownedPlants, caredForPlants]) => [...ownedPlants, ...caredForPlants]);
-  // return new Promise<Plant[]>(resolve => resolve(mockPlants));
+  //return Promise.all([ownedPlantsPromise, caredForPlantsPromise])
+  //  .then(([ownedPlants, caredForPlants]) => [...ownedPlants, ...caredForPlants]);
+  return new Promise<Plant[]>(resolve => resolve(mockPlants));
 }
 
 export function createPlant(plant: Plant) {
