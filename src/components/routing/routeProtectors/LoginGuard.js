@@ -1,21 +1,23 @@
 import React from "react";
-import {Navigate, Outlet} from "react-router-dom";
 import PropTypes from "prop-types";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAppSelector } from "../../../hooks";
+import { getLoggedInDate, logOutUser, selectLoggedInUser } from "../../../store/appSlice";
 
-/**
- *
- * Another way to export directly your functional component is to write 'export const' 
- * instead of 'export default' at the end of the file.
- */
 export const LoginGuard = () => {
-  if (!localStorage.getItem("token")) {
-    
+  const loggedInUser = useAppSelector(selectLoggedInUser);
+  if (loggedInUser) {
+    const date = new Date();
+    const loggedInDate = new Date(useAppSelector(getLoggedInDate));    // log out if more than 7 days have passed since the user logged in
+    if (loggedInDate && (date.getTime() - loggedInDate.getTime() > (1000 * 60 * 60 * 24 * 7))) {
+      useAppSelector(logOutUser);
+      return <Navigate to="/login" replace />;
+    }
     return <Outlet />;
   }
-  
-  return <Navigate to="/game" replace />;
+  return <Navigate to="/login" replace />;
 };
 
 LoginGuard.propTypes = {
-  children: PropTypes.node
-}
+  children: PropTypes.node,
+};

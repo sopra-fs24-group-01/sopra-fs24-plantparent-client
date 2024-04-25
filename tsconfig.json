@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "jsx": "react",
+    "esModuleInterop": true
   },
   "include": [
-    "src"
+    "src",
+    ".src/custom.d.ts"
   ]
 }

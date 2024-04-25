@@ -1,28 +1,114 @@
 import React from "react";
-import {ReactLogo} from "../ui/ReactLogo";
-import PropTypes from "prop-types";
-import "../../styles/views/Header.scss";
+import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
+import { ReactComponent as ProfileSVG } from "../../assets/person-circle.svg";
+import { ReactComponent as BellSVG } from "../../assets/bell-fill.svg";
+import styled, { css } from "styled-components";
+import { useNavigate, useLocation } from "react-router-dom";
 
-/**
- * This is an example of a Functional and stateless component (View) in React. Functional components are not classes and thus don't handle internal state changes.
- * Conceptually, components are like JavaScript functions. They accept arbitrary inputs (called “props”) and return React elements describing what should appear on the screen.
- * They are reusable pieces, and think about each piece in isolation.
- * Functional components have to return always something. However, they don't need a "render()" method.
- * https://react.dev/learn/your-first-component and https://react.dev/learn/passing-props-to-a-component 
- * @FunctionalComponent
- */
-const Header = props => (
-  <div className="header container" style={{height: props.height}}>
-    <h1 className="header title">PlantParent</h1>
-    <ReactLogo width="60px" height="60px"/>
-  </div>
-);
+const StyledHeaderContainer = styled.div`
+  width: 100vw;
+  height: 75px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  border-bottom: 1px solid #000000;
+  padding-bottom: 5px;
+`;
 
-Header.propTypes = {
-  height: PropTypes.string,
-};
+const StyledLogoContainerHeader = styled.div`
+  max-width: 200px;
+  margin-right: 50px;
+  
+  &:hover {
+    cursor: pointer;
+  }
+`;
 
-/**
- * Don't forget to export your component!
- */
+const StyledNavLink = styled.div<{$active?: boolean}>`
+  font-size: 2rem;
+  font-weight: bold;
+  color: #83b271;
+  margin: auto 25px auto 25px;
+  
+  ${props => props.$active && css`
+    text-decoration: underline;
+  `}
+
+  &:hover{
+    cursor: pointer;
+    scale: 0.95;
+    text-decoration: none;
+  }
+
+  &:after {
+    content: "";
+    background-color: #83b271;
+    position: absolute;
+    bottom: 1px;
+    left: 0;
+    height: 3px;
+    width: 0;
+    transition: 0.2s;
+  }
+  &:hover:after {
+    width: 100%;
+  }
+`;
+
+const StyledDateHeader = styled.div`
+  margin: auto;
+  font-size: 2rem;
+  font-weight: bold;
+`;
+
+const StyledIconContainer = styled.div`
+  max-width: 75px;
+  max-height: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 25px;
+  
+  &:hover {
+    cursor: pointer;
+    scale: 0.95;
+  }
+`;
+
+function Header() {
+  const location = useLocation();
+  const pathname = location.pathname;
+
+  const navigate = useNavigate();
+
+  const today = new Date();
+  const options = {
+    weekday: "long", // Display the day of the week as a full text (Monday)
+    day: "numeric",  // Display the day of the month (2-digit)
+    month: "numeric", // Display the month as a number (2-digit)
+    year: "numeric",  // Display the year (4-digit)
+  };
+
+  const formattedDate = today.toLocaleDateString("de-DE", options);
+
+
+  return (
+    <StyledHeaderContainer>
+      <StyledLogoContainerHeader onClick={() => navigate("/")}>
+        <LogoSVG style={{height: "100%", maxWidth: "100%"}} />
+      </StyledLogoContainerHeader>
+      <StyledNavLink $active={pathname === "/"} onClick={() => navigate("/")}>Home</StyledNavLink>
+      <StyledNavLink $active={pathname === "/myPlants"} onClick={() => navigate("/myPlants")}>My Plants</StyledNavLink>
+      <StyledDateHeader>{formattedDate}</StyledDateHeader>
+      <StyledIconContainer onClick={() => navigate("/profile")}>
+        <ProfileSVG style={{width: "50px", height: "50px"}} />
+      </StyledIconContainer>
+      <StyledIconContainer>
+        <BellSVG style={{width: "50px", height: "50px"}} />
+      </StyledIconContainer>
+    </StyledHeaderContainer>
+  )
+}
+
 export default Header;
