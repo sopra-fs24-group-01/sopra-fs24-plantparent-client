@@ -49,80 +49,55 @@ const ScheduleIconsContainer = styled.div`
 `;
 
 const StyledMainContainer = styled.div`
-    width: 80vw;
-    height: 100vh;
-    margin-top: 79px;
-    display: flex;
-    flex-direction: column;
+  width: 60vw;
+  height: fit-content;
+  margin-top: 85px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
 `;
 
 const StyledPlantProfileContainer = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;
 
 const StyledPlantProfileHeader = styled.div`
-    width: 80vw;
-    height: 10vh;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+  height: 10vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const StyledPlantProfileDetails = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
 const StyledPlantImageContainer = styled.div`
-    display: flex;
-    justify-content: right;
-    flex-direction: column;
-    width: fit-content;
-    margin-right: 25px;
-    margin-left: 25px;
+  display: flex;
+  justify-content: right;
+  flex-direction: column;
+  width: fit-content;
+  margin-right: 25px;
+  margin-left: 25px;
 `;
 
 const StyledScheduleIconsContainer = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
 `;
 
 const StyledScheduleIconContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    margin: 5px;
-`;
-
-const StyledMainContainerContainer = styled.div`
-  width: 80vw;
-  height: calc(100vh - 80px);
-  margin-top: 79px;
-  overflow-y: auto;
   display: flex;
-  flex-direction: column;
-`;
-
-const StyledPlantComponentContainer = styled.div`
-  display: flex;
-  align-items: center;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
   margin: 5px;
-  padding: 15px;
-  border-radius: 10px;
-  border: 2px solid #83b271;
-  height: 250px;
-  position: relative;
-`;
-
-const StyledMoodContainer = styled.div`
-  position: absolute;
-  top: 8px;
-  right: 8px;
 `;
 
 const StyledPlantTitle = styled.div`
@@ -131,23 +106,15 @@ const StyledPlantTitle = styled.div`
   margin: 0 auto;
 `;
 
-const StyledPlantMainInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  font-size: 1.25rem;
-  align-items: flex-start;
-  height: 100%;
-  width: 100%;
-`;
-
 const StyledDividerSmall = styled.hr`
   width: 100px;
   border-top: 3px solid #83b271;
-  margin-left: 0;
+  margin-left: auto;
 `;
 
 const StyledPlantDescription = styled.div`
-  padding-right: 50px;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
 `;
 
 const StyledScheduleContainer = styled.div`
@@ -160,7 +127,6 @@ const StyledSchedule = styled.div`
   font-size: 1.5rem;
   margin-bottom: 15px;
 `;
-
 
 const CaringSVGContainer = styled.div<{ $hover?: boolean }>`
   position: relative;
@@ -185,9 +151,43 @@ const CaringDay = styled.div<{ $past: boolean }>`
   font-size: 1rem;
 `;
 
-const StyledGreenText = styled.span`
-  color: #83b271;
-  font-style: italic;
+const StyledCalendarTitle = styled.div`
+  font-size: 3rem;
+  margin: 15px auto;
+  color: #000000;
+`;
+
+const StyledCaringContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: left;
+`;
+
+const StyledIndividualCaringContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 30px;
+`;
+
+const StyledCaringImageContainer = styled.div`
+  display: flex;
+  justify-content: right;
+  flex-direction: column;
+  width: fit-content;
+  margin-right: 100px;
+  margin-left: 25px;
+`;
+
+const StyledCaringTextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const StyledIndividualCaringText = styled.div`
+  font-size: 1.5rem;
+  margin-left: 10px;
 `;
 
 function Schedule({ plantId, text, date, svg, watering }: {
@@ -281,12 +281,36 @@ export default function PlantView() {
                       </StyledScheduleIconContainer>
                   </StyledScheduleIconsContainer>
               </StyledPlantProfileDetails>
-          </StyledPlantProfileContainer>
-        <StyledPlantDescription>{plant.species}</StyledPlantDescription>
-        <StyledDividerSmall />
-        <StyledPlantDescription>{plant.careInstructions}</StyledPlantDescription>
-        <StyledDividerSmall style={{ marginBottom: "auto" }} />
-      </StyledMainContainer>
+            </StyledPlantProfileContainer>
+          <StyledDividerSmall />
+          <StyledPlantDescription>{plant.species}</StyledPlantDescription>
+          <StyledDividerSmall />
+          <StyledPlantDescription>{plant.careInstructions}</StyledPlantDescription>
+          <StyledDividerSmall style={{ marginBottom: "auto" }} />
+          <StyledCalendarTitle>Caring Schedule</StyledCalendarTitle>
+          <StyledCaringContainer>
+            <StyledIndividualCaringContainer>
+              <StyledCaringImageContainer>
+                <DropSVG style={{ color: "#00beff", width: "50px", height: "50px" }} />
+              </StyledCaringImageContainer>
+              <StyledCaringTextContainer>
+                <StyledIndividualCaringText>Last Watering Date: {plant.lastWateringDate}</StyledIndividualCaringText>
+                <StyledIndividualCaringText>Next Watering Date: {plant.nextWateringDate}</StyledIndividualCaringText>
+                <StyledIndividualCaringText>Watering Interval: {plant.wateringInterval} Days</StyledIndividualCaringText>
+              </StyledCaringTextContainer>
+            </StyledIndividualCaringContainer>
+            <StyledIndividualCaringContainer>
+              <StyledCaringImageContainer>
+                <BandaidSVG style={{ color: "#ffaf00", width: "50px", height: "50px" }} />
+              </StyledCaringImageContainer>
+              <StyledCaringTextContainer>
+                <StyledIndividualCaringText>Last Caring Date: {plant.lastCaringDate}</StyledIndividualCaringText>
+                <StyledIndividualCaringText>Next Caring Date: {plant.nextCaringDate}</StyledIndividualCaringText>
+                <StyledIndividualCaringText>Caring Interval: {plant.caringInterval} Days</StyledIndividualCaringText>
+              </StyledCaringTextContainer>
+            </StyledIndividualCaringContainer>
+          </StyledCaringContainer>
+        </StyledMainContainer>
       }
     </>
   );
