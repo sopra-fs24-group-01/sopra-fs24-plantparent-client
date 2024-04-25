@@ -12,3 +12,7 @@ export function calculateDifferenceInDays(date: string) {
   const differenceInTime = currentDate.getTime() - givenDate.getTime();
   return Math.ceil(differenceInTime / (1000 * 60 * 60 * 25)) * - 1;
 }
+
+export function formatDate(date: string) {
+    return new Date(date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })
+}

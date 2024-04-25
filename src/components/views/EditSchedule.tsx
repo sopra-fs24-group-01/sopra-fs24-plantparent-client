@@ -12,8 +12,7 @@ import {
 import { useDispatch } from "react-redux";
 import { Plant } from "../../types";
 import { useAppSelector } from "../../hooks";
-import { store } from "../../store";
-import { selectLoggedInUser, selectPlantById } from "../../store/appSlice";
+import { getStatus, selectLoggedInUser, selectPlantById } from "../../store/appSlice";
 import { updatePlant } from "../../service/appService";
 
 
@@ -21,27 +20,18 @@ export default function EditPlant() {
   // get the logged in user from the store
   const user = useAppSelector(selectLoggedInUser);
   // get the status of the plants from the store
-  const plantStatus = useAppSelector(state => state.plants.status);
+  const appStatus = useAppSelector(getStatus);
   
   // capture the plantId from the URL
   const { plantId } = useParams<{ plantId: string }>();
   // get the plant from the store
   const plant = useAppSelector(state => selectPlantById(state, Number(plantId)));
 
-  const [nextWateringDate, setNextWateringDate] = useState<string>("");
-  const [nextCaringDate, setNextCaringDate] = useState<string>("");
-  const [wateringInterval, setWateringInterval] = useState<number>(null);
-  const [caringInterval, setCaringInterval] = useState<number>(null);
+  const [nextWateringDate, setNextWateringDate] = useState<string>(plant.nextWateringDate);
+  const [nextCaringDate, setNextCaringDate] = useState<string>(plant.nextCaringDate);
+  const [wateringInterval, setWateringInterval] = useState<number>(plant.wateringInterval);
+  const [caringInterval, setCaringInterval] = useState<number>(plant.caringInterval);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    if(plantStatus === "succeeded") {
-      setNextWateringDate(plant.nextWateringDate);
-      setNextCaringDate(plant.nextCaringDate);
-      setWateringInterval(plant.wateringInterval);
-      setCaringInterval(plant.caringInterval);
-    }
-  }, [plantStatus]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -71,7 +61,7 @@ export default function EditPlant() {
   }
 
   return (
-    plantStatus !== "succeeded" ? <div>Loading...</div> :
+    appStatus !== "succeeded" ? <div>Loading...</div> :
     <StyledMainContainer>
       <StyledLoginContainer>
         <StyledLogoContainerLarge>
@@ -106,8 +96,11 @@ export default function EditPlant() {
                             $validInput={true}
                             placeholder="Caring Interval (in days)"
                             onChange={(event) => setCaringInterval(Number(event.target.value))} />
-          <StyledPrimaryButton disabled={!nextWateringDate || !wateringInterval || !nextCaringDate || !wateringInterval || user.id !== plant.owner}
+          <StyledPrimaryButton disabled={
+            (nextWateringDate === "" || wateringInterval === null || nextCaringDate === "" || false)
+            || (nextWateringDate === plant.nextWateringDate && wateringInterval === plant.wateringInterval && nextCaringDate === plant.nextCaringDate && caringInterval === plant.caringInterval)}
                                type="submit">Save Changes</StyledPrimaryButton>
+          <StyledPrimaryButton onClick={() => navigate("/plant/" + plantId)}>Cancel</StyledPrimaryButton>
           {error && <StyledError>{error}</StyledError>}
         </StyledForm>
       </StyledLoginContainer>

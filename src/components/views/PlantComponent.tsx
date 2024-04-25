@@ -10,11 +10,10 @@ import { ReactComponent as DropSVG } from "../../assets/droplet-half.svg";
 import { ReactComponent as BandaidSVG } from "../../assets/bandaid.svg";
 import { ReactComponent as CheckSVG } from "../../assets/check-circle.svg";
 import { ReactComponent as CheckFillSVG } from "../../assets/check-circle-fill.svg";
-import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
 import { Modal } from "./PopupMsgComponent";
 import { formatDistance, parseISO } from "date-fns";
-import { careForPlant, waterPlant } from "../../service/appService";
 import { useNavigate } from "react-router-dom";
+import { careForPlant, waterPlant } from "../../service/appService";
 
 
 const StyledPlantComponentContainer = styled.div`
@@ -43,7 +42,7 @@ const StyledMoodContainer = styled.div`
   right: 8px;
 `;
 
-const StyledPlantTitle = styled.div`
+export const StyledPlantTitle = styled.div`
   color: #83b271;
   font-size: 2rem;
   margin: 0 auto;
@@ -85,21 +84,9 @@ const StyledSchedule = styled.div`
   margin-bottom: 15px;
 `;
 
-const ScheduleIconsContainer = styled.div`
+export const ScheduleIconsContainer = styled.div`
   display: flex;
   flex-direction: row;
-`;
-
-const StyledEditPlantContainer = styled.div`
-  position: absolute;
-  top: 5px;
-  left: 8px;
-  color: #83b271;
-  
-  &:hover {
-    cursor: pointer;
-    color: #4f7343;
-  }
 `;
 
 const CaringSVGContainer = styled.div<{ $hover?: boolean }>`
@@ -131,12 +118,13 @@ const StyledGreenText = styled.span`
 `;
 
 
-function Schedule({ plantId, text, date, svg, watering }: {
+export function Schedule({ plantId, text, date, svg, watering, showText = true }: {
   plantId: number,
   text: string,
   date: string,
   svg: ReactElement,
-  watering: boolean
+  watering: boolean,
+  showText?: boolean
 }) {
   const [day, setDay] = useState(0);
   const [modal, setModal] = useState<boolean>(false);
@@ -164,9 +152,11 @@ function Schedule({ plantId, text, date, svg, watering }: {
       {modal && <Modal setModal={setModal} action={action}
                        text={`Are you sure you ${watering ? "watered" : "cared for"} the plant?`} />}
       <StyledScheduleContainer>
-        <StyledSchedule>
-          {text} <StyledGreenText title={date}>{formatDistance(date, now, { addSuffix: true })}</StyledGreenText>
-        </StyledSchedule>
+        {showText &&
+          <StyledSchedule>
+            {text} <StyledGreenText title={date}>{formatDistance(date, now, { addSuffix: true })}</StyledGreenText>
+          </StyledSchedule>
+        }
         <ScheduleIconsContainer>
           <CaringSVGContainer>
             {svg}
@@ -198,9 +188,6 @@ export default function PlantComponent({ plant }: { plant: Plant }) {
 
   return (
     <StyledPlantComponentContainer>
-      <StyledEditPlantContainer onClick={() => navigate("/editPlant/" + plant.plantId)}>
-        <EditPlantSVG style={{ width: "35px", height: "35px" }} />
-      </StyledEditPlantContainer>
       <StyledMoodContainer>
         {mood === "happy" && <HappyFaceSVG style={{ color: "#83b271", width: "50px", height: "50px" }} />}
         {mood === "neutral" && <NeutralFaceSVG style={{ color: "orange", width: "50px", height: "50px" }} />}

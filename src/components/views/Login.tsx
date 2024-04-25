@@ -113,7 +113,7 @@ export default function Login() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState<any>();
 
   const dispatch = useAppDispatch();
   const errorMsg = useAppSelector(appError);

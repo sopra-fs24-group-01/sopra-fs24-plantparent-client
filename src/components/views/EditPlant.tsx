@@ -30,8 +30,6 @@ export default function EditPlant() {
   const [careInstructions, setCareInstructions] = useState<string>(plant.careInstructions);
   const [error, setError] = useState("");
 
-
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   async function doEditPlant() {
