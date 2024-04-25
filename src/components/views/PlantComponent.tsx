@@ -114,7 +114,7 @@ const CaringDay = styled.div<{ $past: boolean }>`
   bottom: 0;
   right: 0;
   color: ${props => props.$past ? "red" : "green"};
-  font-size: 1rem;
+  font-size: 1.5rem;
 `;
 
 const StyledGreenText = styled.span`

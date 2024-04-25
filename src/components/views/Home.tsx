@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "./Header";
 import styled from "styled-components";
-import { useAppSelector } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import PlantComponent from "./PlantComponent";
 import { StyledPrimaryButton } from "./Login";
 import { useNavigate } from "react-router-dom";
-import { getStatus, selectAllPlants } from "../../store/appSlice";
+import { getStatus, getUserDataById, loginUser, selectAllPlants, selectLoggedInUser } from "../../store/appSlice";
 
 
 const StyledMainContainer = styled.div`
@@ -33,10 +33,17 @@ const StyledMainContainerContainer = styled.div`
 `;
 
 function Home() {
+  const user = useAppSelector(selectLoggedInUser);
   const status = useAppSelector(getStatus);
 
-  const plants = useAppSelector(selectAllPlants);
+  const plants: any[] = useAppSelector(selectAllPlants);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getUserDataById(user.id));
+  }, [])
+
   return (
     <>
       <Header />

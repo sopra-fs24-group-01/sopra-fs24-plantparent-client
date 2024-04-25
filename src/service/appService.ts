@@ -16,6 +16,18 @@ export function login(user: {username: string, password: string}): Promise<User>
     });
 }
 
+export function getUserById(userId: number): Promise<User> {
+  return fetch(baseurl + "users/" + userId)
+    .then(response => response.json())
+    .then(data => {
+      return data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+
+}
+
 export function createUser(user: User) {
   return fetch(baseurl + "users", {
     method: "POST",
