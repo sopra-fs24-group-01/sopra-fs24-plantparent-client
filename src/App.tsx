@@ -8,6 +8,7 @@ import Home from "./components/views/Home";
 import CreatePlant from "./components/views/CreatePlant";
 import EditPlant from "components/views/EditPlant";
 import EditSchedule from "components/views/EditSchedule";
+import PlantView from "components/views/PlantView";
 
 
 function App() {
@@ -39,6 +40,10 @@ function App() {
 
         <Route path="/editSchedule/:plantId" element={<LoginGuard/>}>
           <Route path="/editSchedule/:plantId" element={<EditSchedule/>} />
+        </Route>
+
+        <Route path="/plant/:plantId" element={<LoginGuard/>}>
+          <Route path="/plant/:plantId" element={<PlantView/>} />
         </Route>
 
       </Routes>
