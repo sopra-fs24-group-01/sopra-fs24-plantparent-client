@@ -1,13 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Header from "./Header";
 import styled from "styled-components";
-import { fetchPlantOfUser, selectAllPlants } from "../../store/plantSlice";
 import { useAppSelector } from "../../hooks";
 import PlantComponent from "./PlantComponent";
-import { selectLoggedInUser } from "../../store/userSlice";
-import { store } from "../../store";
 import { StyledPrimaryButton } from "./Login";
 import { useNavigate } from "react-router-dom";
+import { getStatus, selectAllPlants } from "../../store/appSlice";
 
 
 const StyledMainContainer = styled.div`
@@ -35,20 +33,14 @@ const StyledMainContainerContainer = styled.div`
 `;
 
 function Home() {
-  const loggedInUser = useAppSelector(selectLoggedInUser);
-  const plantsStatus = useAppSelector(state => state.plants.status);
-  useEffect(() => {
-    if (loggedInUser !== null) {
-      store.dispatch(fetchPlantOfUser(loggedInUser.id));
-    }
-  }, [loggedInUser]);
+  const status = useAppSelector(getStatus);
 
   const plants = useAppSelector(selectAllPlants);
   const navigate = useNavigate();
   return (
     <>
       <Header />
-      {plantsStatus === "loading" ? <div>Loading...</div> :
+      {status === "loading" ? <div>Loading...</div> :
         <StyledMainContainer>
           <StyledSideBar />
           <StyledMainContainerContainer>
