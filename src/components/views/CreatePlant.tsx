@@ -10,15 +10,12 @@ import {
   StyledMainContainer, StyledPrimaryButton,
 } from "./Login";
 import { useDispatch } from "react-redux";
-import { createPlant } from "../../service/plantService";
 import { Plant } from "../../types";
-import { selectLoggedInUser } from "../../store/userSlice";
-import { useAppSelector } from "../../hooks";
 import Header from "./Header";
+import { createPlant } from "../../service/appService";
 
 
 export default function CreatePlant() {
-  const user = useAppSelector(selectLoggedInUser);
   const [plantName, setPlantName] = useState<string>("");
   const [species, setSpecies] = useState<string>("");
   const [careInstructions, setCareInstructions] = useState<string>("");
@@ -28,7 +25,6 @@ export default function CreatePlant() {
   const [caringInterval, setCaringInterval] = useState<number>(0);
   const [error, setError] = useState("");
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   async function doCreatePlant() {
@@ -36,7 +32,6 @@ export default function CreatePlant() {
 
     const plant: Plant = {
       plantId: null,
-      owner: user.id,
       plantName: plantName,
       species: species,
       careInstructions: careInstructions,
@@ -46,7 +41,6 @@ export default function CreatePlant() {
       lastCaringDate: lastCaringDate,
       caringInterval: caringInterval,
       nextCaringDate: lastCaringDate + caringInterval,
-      caretakers: [],
     };
     try {
       await createPlant(plant);

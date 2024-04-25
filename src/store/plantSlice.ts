@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { getAllPlants, getPlantsForUser } from "../service/plantService";
+import { getAllPlants } from "../service/plantService";
 
 interface IPlantState {
   entities: any[];
@@ -15,10 +15,10 @@ export const fetchPlants = createAsyncThunk("plants/fetchPlants", async () => {
   return await getAllPlants();
 });
 
-export const fetchPlantOfUser = createAsyncThunk("plants/fetchPlantOfUser", async (userId: number) => {
-  console.log(userId);
-  return await getPlantsForUser(userId);
-});
+// export const fetchPlantOfUser = createAsyncThunk("plants/fetchPlantOfUser", async (userId: number) => {
+//   console.log(userId);
+//   return await getPlantsForUser(userId);
+// });
 
 export const plantsSlice = createSlice({
   name: "plant",
@@ -26,15 +26,15 @@ export const plantsSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(fetchPlantOfUser.pending, (state, { payload }) => {
+      .addCase(fetchPlants.pending, (state, { payload }) => {
         state.status = "loading";
       })
-      .addCase(fetchPlantOfUser.fulfilled, (state, { payload }) => {
+      .addCase(fetchPlants.fulfilled, (state, { payload }) => {
         state.status = "succeeded";
         state.entities = payload;
         console.log("Plants loaded");
       })
-      .addCase(fetchPlantOfUser.rejected, (state, action) => {
+      .addCase(fetchPlants.rejected, (state, action) => {
         state.status = "failed";
       });
   },

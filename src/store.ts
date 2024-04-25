@@ -1,20 +1,18 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import usersReducer from './store/userSlice'
 import { persistStore, persistReducer } from 'redux-persist';
-import plantReducer from './store/plantSlice'
+import appReducer from './store/appSlice'
 import storage from "redux-persist/lib/storage";
 
 const loggedInUserPersistConfig = {
-  key: 'loggedInUser',
+  key: 'appData',
   storage,
 }
 
-const persistedLoggedInUserReducer = persistReducer(loggedInUserPersistConfig, usersReducer);
+const persistedLoggedInUserReducer = persistReducer(loggedInUserPersistConfig, appReducer);
 
 
 const rootReducer = combineReducers({
-  users: persistedLoggedInUserReducer,
-  plants: plantReducer,
+  appData: persistedLoggedInUserReducer,
 });
 
 export const store = configureStore({
