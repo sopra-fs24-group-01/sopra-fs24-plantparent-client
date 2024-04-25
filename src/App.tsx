@@ -9,6 +9,7 @@ import CreatePlant from "./components/views/CreatePlant";
 import EditPlant from "components/views/EditPlant";
 import EditSchedule from "components/views/EditSchedule";
 import PlantView from "components/views/PlantView";
+import MyPlants from "./components/views/MyPlants";
 
 
 function App() {
@@ -28,6 +29,10 @@ function App() {
         {/* All other views are only accessible by authenticated users */}
         <Route path="/" element={<LoginGuard/>}>
           <Route path="/" element={<Home/>} />
+        </Route>
+
+        <Route path="/myPlants" element={<LoginGuard/>}>
+          <Route path="/myPlants" element={<MyPlants/>} />
         </Route>
 
         <Route path="/createPlant" element={<LoginGuard/>}>

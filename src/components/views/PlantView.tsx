@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./Header";
 import styled, { css } from "styled-components";
 import { useAppSelector } from "../../hooks";
@@ -6,15 +6,19 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ReactComponent as DropSVG } from "../../assets/droplet-half.svg";
 import { ReactComponent as BandaidSVG } from "../../assets/bandaid.svg";
 import { ReactComponent as ImagePlaceholderSVG } from "../../assets/image_placeholder.svg";
-import { getStatus, selectLoggedInUser, selectPlantById } from "../../store/appSlice";
-import { StyledPrimaryButton } from "./Login";
+import { getStatus, selectLoggedInUser } from "../../store/appSlice";
 import { Schedule, StyledPlantTitle } from "./PlantComponent";
-import { formatDate } from "../../helpers/util";
+import { formatDate, isInThePast } from "../../helpers/util";
 import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
 import PropTypes from "prop-types";
 import { CaretakerSelectorComponent } from "./CaretakerSelectorComponent";
 import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
 import { CaretakerComponent } from "./CaretakerComponent";
+import { PlantFull } from "../../types";
+import { getPlantById } from "../../service/appService";
+import { ReactComponent as HappyFaceSVG } from "../../assets/emoji-smile-fill.svg";
+import { ReactComponent as NeutralFaceSVG } from "../../assets/emoji-neutral-fill.svg";
+import { ReactComponent as AngryFaceSVG } from "../../assets/emoji-dizzy-fill.svg";
 
 
 const StyledMainContainer = styled.div`
@@ -171,6 +175,12 @@ const StyledAddCaretakerContainer = styled.div`
   }
 `;
 
+const StyledMoodContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 function TextContainer({ svg, children }) {
   return (
     <StyledIndividualCaringContainer>
@@ -194,10 +204,38 @@ export default function PlantView() {
   const user = useAppSelector(selectLoggedInUser);
   const appStatus = useAppSelector(getStatus);
   const { plantId } = useParams<{ plantId: string }>();
-  const plant = useAppSelector(state => selectPlantById(state, Number(plantId)));
+  const [plant, setPlant] = useState<PlantFull | null>(null);
   const navigate = useNavigate();
   const [showSelectCaretakers, setShowSelectCaretakers] = useState<boolean>(false);
   const [reloadCaretakers, setReloadCaretakers] = useState<boolean>(false);
+  const [mood, setMood] = useState<string>("happy");
+
+  useEffect(() => {
+    async function fetchPlant() {
+      const fetchedPlant = await getPlantById(Number(plantId));
+      setPlant(fetchedPlant);
+    }
+
+    fetchPlant();
+  }, [plantId]);
+
+  useEffect(() => {
+    if (plant) {
+      // next watering date or next caring date in the past
+      if ((isInThePast(plant.nextWateringDate) && !isInThePast(plant.nextCaringDate)) ||
+        (!isInThePast(plant.nextWateringDate) && isInThePast(plant.nextCaringDate))) {
+        setMood("neutral");
+      }
+      // next watering date and next caring date in the past
+      if (isInThePast(plant.nextWateringDate) && isInThePast(plant.nextCaringDate)) {
+        setMood("angry");
+      }
+    }
+  }, [plant]);
+
+  if (!plant) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -224,6 +262,11 @@ export default function PlantView() {
               <StyledPlantImageContainer>
                 <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />
               </StyledPlantImageContainer>
+              <StyledMoodContainer>
+                {mood === "happy" && <HappyFaceSVG style={{ color: "#83b271", width: "75px", height: "75px" }} />}
+                {mood === "neutral" && <NeutralFaceSVG style={{ color: "orange", width: "75px", height: "75px" }} />}
+                {mood === "angry" && <AngryFaceSVG style={{ color: "red", width: "75px", height: "75px" }} />}
+              </StyledMoodContainer>
               <StyledScheduleIconsContainer>
                 <StyledScheduleIconContainer>
                   <Schedule plantId={plant.plantId} userId={user.id} text={"Water"} date={plant.nextWateringDate}

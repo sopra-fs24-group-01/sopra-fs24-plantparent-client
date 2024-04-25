@@ -150,6 +150,24 @@ export const selectAllPlants = createSelector(
     });
   });
 
+export const selectOwnedPlants = createSelector(
+  [
+    (state: RootState) => state.appData.plantsOwned
+  ],
+  (plantsOwned) => {
+    return [...plantsOwned].sort((a, b) => {
+      const aNextCaringDate = new Date(a.nextCaringDate);
+      const bNextCaringDate = new Date(b.nextCaringDate);
+      const aNextWateringDate = new Date(a.nextWateringDate);
+      const bNextWateringDate = new Date(b.nextWateringDate);
+      if ((aNextCaringDate < bNextCaringDate) || (aNextWateringDate < bNextWateringDate)) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+  });
+
 export const selectPlantById = (state: RootState, id: number) => {
   return selectAllPlants(state).find((plant) => plant.plantId === id);
 };

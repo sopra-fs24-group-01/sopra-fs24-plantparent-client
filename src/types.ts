@@ -34,3 +34,25 @@ export type PlantFull = {
   owner: User;
   caretakers: User[];
 };
+
+export type PlantSimple = {
+  plantId: number;
+  plantName:string;
+  species: string;
+  careInstructions: string;
+  lastWateringDate: string;
+  wateringInterval: number;
+  nextWateringDate: string;
+  lastCaringDate: string;
+  caringInterval: number;
+  nextCaringDate: string;
+  owner: UserSimple;
+  caretakers: UserSimple[];
+}
+
+export type UserSimple = {
+  id?: number;
+  username: string;
+  email: string;
+  password: string;
+};

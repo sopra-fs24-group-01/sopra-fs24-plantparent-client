@@ -74,7 +74,7 @@ export function CaretakerComponent({ plantId, setShowSelectCaretakers, reloadCar
   }
 
   useEffect(() => {
-    getCaretakers().then((users) => console.log(users));
+    getCaretakers().then();
   }, []);
 
   useEffect(() => {
