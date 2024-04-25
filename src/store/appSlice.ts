@@ -116,7 +116,7 @@ export const selectAllPlants = createSelector(
   });
 
 export const selectPlantById = (state: RootState, id: number) => {
-  return selectAllPlants(state).find((plant) => plant.id === id);
+  return selectAllPlants(state).find((plant) => plant.plantId === id);
 }
 
 export const logOutUser = (state: RootState) => {

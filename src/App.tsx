@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./components/views/Login";
 import { LoginGuard } from "./components/routing/routeProtectors/LoginGuard";
 import { AuthGuard } from "./components/routing/routeProtectors/AuthGuard";
@@ -8,8 +8,6 @@ import Home from "./components/views/Home";
 import CreatePlant from "./components/views/CreatePlant";
 import EditPlant from "components/views/EditPlant";
 import EditSchedule from "components/views/EditSchedule";
-import { useAppSelector } from "./hooks";
-import { getLoggedInDate, logOutUser } from "./store/appSlice";
 
 
 function App() {

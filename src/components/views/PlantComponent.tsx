@@ -10,9 +10,11 @@ import { ReactComponent as DropSVG } from "../../assets/droplet-half.svg";
 import { ReactComponent as BandaidSVG } from "../../assets/bandaid.svg";
 import { ReactComponent as CheckSVG } from "../../assets/check-circle.svg";
 import { ReactComponent as CheckFillSVG } from "../../assets/check-circle-fill.svg";
+import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
 import { Modal } from "./PopupMsgComponent";
 import { formatDistance, parseISO } from "date-fns";
 import { careForPlant, waterPlant } from "../../service/appService";
+import { useNavigate } from "react-router-dom";
 
 
 const StyledPlantComponentContainer = styled.div`
@@ -32,7 +34,7 @@ const StyledPlantImageContainer = styled.div`
   justify-content: right;
   flex-direction: column;
   width: fit-content;
-  margin-right: 25px;
+  margin: 15px 25px 5px 5px;
 `;
 
 const StyledMoodContainer = styled.div`
@@ -45,6 +47,12 @@ const StyledPlantTitle = styled.div`
   color: #83b271;
   font-size: 2rem;
   margin: 0 auto;
+  text-decoration: underline;
+
+  &:hover {
+    cursor: pointer;
+    color: #4f7343;
+  }
 `;
 
 const StyledPlantMainInfo = styled.div`
@@ -80,6 +88,18 @@ const StyledSchedule = styled.div`
 const ScheduleIconsContainer = styled.div`
   display: flex;
   flex-direction: row;
+`;
+
+const StyledEditPlantContainer = styled.div`
+  position: absolute;
+  top: 5px;
+  left: 8px;
+  color: #83b271;
+  
+  &:hover {
+    cursor: pointer;
+    color: #4f7343;
+  }
 `;
 
 const CaringSVGContainer = styled.div<{ $hover?: boolean }>`
@@ -164,6 +184,7 @@ function Schedule({ plantId, text, date, svg, watering }: {
 }
 
 export default function PlantComponent({ plant }: { plant: Plant }) {
+  const navigate = useNavigate();
   let mood = "happy";
   // next watering date or next caring date in the past
   if ((isInThePast(plant.nextWateringDate) && !isInThePast(plant.nextCaringDate)) ||
@@ -177,6 +198,9 @@ export default function PlantComponent({ plant }: { plant: Plant }) {
 
   return (
     <StyledPlantComponentContainer>
+      <StyledEditPlantContainer onClick={() => navigate("/editPlant/" + plant.plantId)}>
+        <EditPlantSVG style={{ width: "35px", height: "35px" }} />
+      </StyledEditPlantContainer>
       <StyledMoodContainer>
         {mood === "happy" && <HappyFaceSVG style={{ color: "#83b271", width: "50px", height: "50px" }} />}
         {mood === "neutral" && <NeutralFaceSVG style={{ color: "orange", width: "50px", height: "50px" }} />}
@@ -184,7 +208,7 @@ export default function PlantComponent({ plant }: { plant: Plant }) {
       </StyledMoodContainer>
       <StyledPlantImageContainer>
         <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />
-        <StyledPlantTitle>{plant.plantName}</StyledPlantTitle>
+        <StyledPlantTitle onClick={() => navigate("/plant/" + plant.plantId)}>{plant.plantName}</StyledPlantTitle>
       </StyledPlantImageContainer>
       <StyledPlantMainInfo>
         <StyledPlantDescription>{plant.species}</StyledPlantDescription>
