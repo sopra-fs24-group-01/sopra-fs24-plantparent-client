@@ -19,3 +19,18 @@ export type Plant = {
   caringInterval: number;
   nextCaringDate: string;
 };
+
+export type PlantFull = {
+  plantId: number;
+  plantName:string;
+  species: string;
+  careInstructions: string;
+  lastWateringDate: string;
+  wateringInterval: number;
+  nextWateringDate: string;
+  lastCaringDate: string;
+  caringInterval: number;
+  nextCaringDate: string;
+  owner: User;
+  caretakers: User[];
+};

@@ -1,4 +1,4 @@
-import { Plant, User } from "../types";
+import { Plant, PlantFull, User } from "../types";
 
 const baseurl = process.env.REACT_APP_BACKEND_BASEURL;
 
@@ -75,6 +75,18 @@ export function updatePlant(plant: Plant) {
     });
 }
 
+export function getPlantById(plantId: number): Promise<PlantFull> {
+  return fetch(baseurl + "plants/" + plantId)
+    .then(response => response.json())
+    .then(data => {
+      return data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+
+}
+
 export function waterPlant(plantId: number) {
   return fetch(baseurl + "plants/" + plantId + "/water", {
     method: "POST",
@@ -102,3 +114,35 @@ export function careForPlant(plantId: number) {
       console.log(error);
     });
 }
+
+export function addCaretaker(plantId: number, userId: number) {
+  return fetch(baseurl + "plants/" + plantId + "/caretakers", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ "caretakerId": userId }),
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+export function removeCaretaker(plantId: number, userId: number) {
+  return fetch(baseurl + "plants/" + plantId + "/caretakers/" + userId, {
+    method: "DELETE",
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }

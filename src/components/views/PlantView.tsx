@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "./Header";
 import styled, { css } from "styled-components";
 import { useAppSelector } from "../../hooks";
@@ -12,6 +12,8 @@ import { Schedule, StyledPlantTitle } from "./PlantComponent";
 import { formatDate } from "../../helpers/util";
 import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
 import PropTypes from "prop-types";
+import { CaretakerSelectorComponent } from "./CaretakerSelectorComponent";
+import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
 
 
 const StyledMainContainer = styled.div`
@@ -153,7 +155,22 @@ const StyledEditScheduleContainer = styled.span`
   }
 `;
 
-function TextContainer({svg,  children }) {
+const StyledAddCaretakerContainer = styled.div`
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 1rem;
+
+  &:hover {
+    cursor: pointer;
+    color: #4f7343 !important;
+  }
+`;
+
+function TextContainer({ svg, children }) {
   return (
     <StyledIndividualCaringContainer>
       <StyledCaringImageContainer>
@@ -173,29 +190,31 @@ TextContainer.propTypes = {
 
 
 export default function PlantView() {
-  // get the logged in user from the store
-  const user = useAppSelector(selectLoggedInUser);
-  // get the status of the plants from the store
   const appStatus = useAppSelector(getStatus);
-
-  // capture the plantId from the URL
   const { plantId } = useParams<{ plantId: string }>();
-  // get the plant from the store
   const plant = useAppSelector(state => selectPlantById(state, Number(plantId)));
-
   const navigate = useNavigate();
+  const [showSelectCaretakers, setShowSelectCaretakers] = useState<boolean>(false);
+
   return (
     <>
       <Header />
       {appStatus === "loading" ? <div>Loading...</div> :
         <StyledMainContainer>
+          {showSelectCaretakers && <CaretakerSelectorComponent plantId={plantId} />}
           <StyledEditPlantContainer onClick={() => navigate("/editPlant/" + plant.plantId)}>
             <EditPlantSVG style={{ width: "35px", height: "35px" }} />
           </StyledEditPlantContainer>
           <StyledPlantProfileContainer>
             <StyledPlantProfileHeader>
               <StyledPlantTitle $underline={false}>{plant.plantName}</StyledPlantTitle>
-              <StyledPrimaryButton onClick={() => navigate("/plants")}>Add Caretaker</StyledPrimaryButton>
+              <StyledAddCaretakerContainer>
+                <AddUserSVG onClick={() => setShowSelectCaretakers(!showSelectCaretakers)}
+                            style={{ color: "#83b271", width: "60px", height: "60px", margin: "auto" }} />
+                <div>Add Caretaker</div>
+              </StyledAddCaretakerContainer>
+
+              {/*<StyledPrimaryButton onClick={() => setShowSelectCaretakers(!showSelectCaretakers)}>Add Caretaker</StyledPrimaryButton>*/}
             </StyledPlantProfileHeader>
             <StyledPlantProfileDetails>
               <StyledPlantImageContainer>
@@ -228,7 +247,8 @@ export default function PlantView() {
             </StyledEditScheduleContainer>
           </StyledCalendarTitle>
           <StyledCaringContainer>
-            <TextContainer svg={<DropSVG style={{ color: "#00beff", width: "50px", height: "50px", margin: "auto" }} />}>
+            <TextContainer
+              svg={<DropSVG style={{ color: "#00beff", width: "50px", height: "50px", margin: "auto" }} />}>
               <StyledIndividualCaringText><StyledSmallText>Last Watering
                 Date:</StyledSmallText> {formatDate(plant.lastWateringDate)}</StyledIndividualCaringText>
               <StyledIndividualCaringText><StyledSmallText>Next Watering
@@ -236,7 +256,8 @@ export default function PlantView() {
               <StyledIndividualCaringText><StyledSmallText>Watering
                 Interval:</StyledSmallText> every {plant.wateringInterval} day(s)</StyledIndividualCaringText>
             </TextContainer>
-            <TextContainer svg={<BandaidSVG style={{ color: "#ffaf00", width: "50px", height: "50px", margin: "auto" }} />}>
+            <TextContainer
+              svg={<BandaidSVG style={{ color: "#ffaf00", width: "50px", height: "50px", margin: "auto" }} />}>
               <StyledIndividualCaringText><StyledSmallText>Last Caring
                 Date:</StyledSmallText> {formatDate(plant.lastCaringDate)}</StyledIndividualCaringText>
               <StyledIndividualCaringText><StyledSmallText>Next Caring

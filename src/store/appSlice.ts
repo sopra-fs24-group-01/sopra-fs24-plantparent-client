@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { login } from "../service/appService";
+import { getPlantById, login } from "../service/appService";
 import { Plant, User } from "../types";
 import { createUser } from "../service/userService";
 
@@ -46,6 +46,13 @@ export const loginUser = createAsyncThunk(
   },
 );
 
+export const updatePlant = createAsyncThunk(
+  "plants/updatePlant",
+  async (plantId: number) => {
+    return await getPlantById(plantId);
+  },
+);
+
 export const appSlice = createSlice({
   name: "appData",
   initialState,
@@ -82,7 +89,25 @@ export const appSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
-      });
+      })
+    .addCase(updatePlant.fulfilled, (state, { payload }) => {
+      const newPlantsOwned = state.plantsOwned.map((plant) => {
+        if (plant.plantId === payload.plantId) {
+          return payload;
+        } else {
+          return plant;
+        }
+      })
+      const newPlantsCaredFor = state.plantsCaredFor.map((plant) => {
+        if (plant.plantId === payload.plantId) {
+          return payload;
+        } else {
+          return plant;
+        }
+      })
+      state.plantsOwned = newPlantsOwned;
+      state.plantsCaredFor = newPlantsCaredFor;
+    })
   },
 });
 
