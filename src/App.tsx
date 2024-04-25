@@ -13,12 +13,6 @@ import { getLoggedInDate, logOutUser } from "./store/appSlice";
 
 
 function App() {
-  const date = new Date();
-  const loggedInDate = useAppSelector(getLoggedInDate);
-  // log out if more than 7 days have passed since the user logged in
-  if (loggedInDate && (date.getTime() - loggedInDate.getTime() > (1000 * 60 * 60 * 24 * 7))) {
-    useAppSelector(logOutUser);
-  }
   return (
     <BrowserRouter>
       <Routes>
