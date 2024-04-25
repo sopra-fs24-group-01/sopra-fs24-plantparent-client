@@ -42,15 +42,20 @@ const StyledMoodContainer = styled.div`
   right: 8px;
 `;
 
-export const StyledPlantTitle = styled.div`
+export const StyledPlantTitle = styled.div<{$underline?: boolean}>`
   color: #83b271;
   font-size: 2rem;
   margin: 0 auto;
-  text-decoration: underline;
+  ${props => (props.$underline) && css`
+    text-decoration: underline;
+  `};
+  
 
   &:hover {
-    cursor: pointer;
-    color: #4f7343;
+    ${props => (props.$underline) && css`
+      cursor: pointer;
+      color: #4f7343;
+    `};
   }
 `;
 
@@ -195,7 +200,7 @@ export default function PlantComponent({ plant }: { plant: Plant }) {
       </StyledMoodContainer>
       <StyledPlantImageContainer>
         <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />
-        <StyledPlantTitle onClick={() => navigate("/plant/" + plant.plantId)}>{plant.plantName}</StyledPlantTitle>
+        <StyledPlantTitle $underline={true} onClick={() => navigate("/plant/" + plant.plantId)}>{plant.plantName}</StyledPlantTitle>
       </StyledPlantImageContainer>
       <StyledPlantMainInfo>
         <StyledPlantDescription>{plant.species}</StyledPlantDescription>

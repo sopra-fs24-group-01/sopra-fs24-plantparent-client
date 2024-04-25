@@ -11,6 +11,7 @@ import { StyledPrimaryButton } from "./Login";
 import { Schedule, StyledPlantTitle } from "./PlantComponent";
 import { formatDate } from "../../helpers/util";
 import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
+import PropTypes from "prop-types";
 
 
 const StyledMainContainer = styled.div`
@@ -152,13 +153,31 @@ const StyledEditScheduleContainer = styled.span`
   }
 `;
 
+function TextContainer({svg,  children }) {
+  return (
+    <StyledIndividualCaringContainer>
+      <StyledCaringImageContainer>
+        {svg}
+      </StyledCaringImageContainer>
+      <StyledCaringTextContainer>
+        {children}
+      </StyledCaringTextContainer>
+    </StyledIndividualCaringContainer>
+  );
+}
+
+TextContainer.propTypes = {
+  svg: PropTypes.element.isRequired,
+  children: PropTypes.node.isRequired,
+};
+
 
 export default function PlantView() {
   // get the logged in user from the store
   const user = useAppSelector(selectLoggedInUser);
   // get the status of the plants from the store
   const appStatus = useAppSelector(getStatus);
-  
+
   // capture the plantId from the URL
   const { plantId } = useParams<{ plantId: string }>();
   // get the plant from the store
@@ -174,32 +193,34 @@ export default function PlantView() {
             <EditPlantSVG style={{ width: "35px", height: "35px" }} />
           </StyledEditPlantContainer>
           <StyledPlantProfileContainer>
-              <StyledPlantProfileHeader>
-                  <StyledPlantTitle>{plant.plantName}</StyledPlantTitle>
-                  <StyledPrimaryButton onClick={() => navigate("/plants")}>Add Caretaker</StyledPrimaryButton>
-              </StyledPlantProfileHeader>
-              <StyledPlantProfileDetails>
-                  <StyledPlantImageContainer>
-                      <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />
-                  </StyledPlantImageContainer>
-                  <StyledScheduleIconsContainer>
-                      <StyledScheduleIconContainer>
-                        <Schedule plantId={plant.plantId} text={"Water"} date={plant.nextWateringDate}
-                                  svg={<DropSVG style={{ color: "#00beff", width: "50px", height: "50px" }} />}
-                                  watering={true} showText={false}/>
-                      </StyledScheduleIconContainer>
-                      <StyledScheduleIconContainer>
-                        <Schedule plantId={plant.plantId} text={"Care"} date={plant.nextCaringDate}
-                                  svg={<BandaidSVG style={{ color: "#ffaf00", width: "50px", height: "50px" }} />}
-                                  watering={false} showText={false}/>
-                      </StyledScheduleIconContainer>
-                  </StyledScheduleIconsContainer>
-              </StyledPlantProfileDetails>
-            </StyledPlantProfileContainer>
+            <StyledPlantProfileHeader>
+              <StyledPlantTitle $underline={false}>{plant.plantName}</StyledPlantTitle>
+              <StyledPrimaryButton onClick={() => navigate("/plants")}>Add Caretaker</StyledPrimaryButton>
+            </StyledPlantProfileHeader>
+            <StyledPlantProfileDetails>
+              <StyledPlantImageContainer>
+                <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />
+              </StyledPlantImageContainer>
+              <StyledScheduleIconsContainer>
+                <StyledScheduleIconContainer>
+                  <Schedule plantId={plant.plantId} text={"Water"} date={plant.nextWateringDate}
+                            svg={<DropSVG style={{ color: "#00beff", width: "50px", height: "50px" }} />}
+                            watering={true} showText={false} />
+                </StyledScheduleIconContainer>
+                <StyledScheduleIconContainer>
+                  <Schedule plantId={plant.plantId} text={"Care"} date={plant.nextCaringDate}
+                            svg={<BandaidSVG style={{ color: "#ffaf00", width: "50px", height: "50px" }} />}
+                            watering={false} showText={false} />
+                </StyledScheduleIconContainer>
+              </StyledScheduleIconsContainer>
+            </StyledPlantProfileDetails>
+          </StyledPlantProfileContainer>
           <StyledDividerSmall />
-          <StyledPlantDescription><StyledSmallText>Plant info:</StyledSmallText> {plant.species}</StyledPlantDescription>
+          <StyledPlantDescription><StyledSmallText>Plant info:</StyledSmallText> {plant.species}
+          </StyledPlantDescription>
           <StyledDividerSmall />
-          <StyledPlantDescription><StyledSmallText>Care instructions:</StyledSmallText>{plant.careInstructions}</StyledPlantDescription>
+          <StyledPlantDescription><StyledSmallText>Care instructions:</StyledSmallText>{plant.careInstructions}
+          </StyledPlantDescription>
           <StyledDividerSmall style={{ marginBottom: "auto" }} />
           <StyledCalendarTitle>Caring Schedule
             <StyledEditScheduleContainer onClick={() => navigate("/editSchedule/" + plant.plantId)}>
@@ -207,26 +228,22 @@ export default function PlantView() {
             </StyledEditScheduleContainer>
           </StyledCalendarTitle>
           <StyledCaringContainer>
-            <StyledIndividualCaringContainer>
-              <StyledCaringImageContainer>
-                <DropSVG style={{ color: "#00beff", width: "50px", height: "50px", margin: 'auto' }} />
-              </StyledCaringImageContainer>
-              <StyledCaringTextContainer>
-                <StyledIndividualCaringText><StyledSmallText>Last Watering Date:</StyledSmallText> {formatDate(plant.lastWateringDate)}</StyledIndividualCaringText>
-                <StyledIndividualCaringText><StyledSmallText>Next Watering Date:</StyledSmallText> {formatDate(plant.nextWateringDate)}</StyledIndividualCaringText>
-                <StyledIndividualCaringText><StyledSmallText>Watering Interval:</StyledSmallText> every {plant.wateringInterval} day(s)</StyledIndividualCaringText>
-              </StyledCaringTextContainer>
-            </StyledIndividualCaringContainer>
-            <StyledIndividualCaringContainer>
-              <StyledCaringImageContainer>
-                <BandaidSVG style={{ color: "#ffaf00", width: "50px", height: "50px", margin: 'auto' }} />
-              </StyledCaringImageContainer>
-              <StyledCaringTextContainer>
-                <StyledIndividualCaringText><StyledSmallText>Last Caring Date:</StyledSmallText> {formatDate(plant.lastCaringDate)}</StyledIndividualCaringText>
-                <StyledIndividualCaringText><StyledSmallText>Next Caring Date:</StyledSmallText> {formatDate(plant.nextCaringDate)}</StyledIndividualCaringText>
-                <StyledIndividualCaringText><StyledSmallText>Caring Interval:</StyledSmallText> every {plant.caringInterval} day(s)</StyledIndividualCaringText>
-              </StyledCaringTextContainer>
-            </StyledIndividualCaringContainer>
+            <TextContainer svg={<DropSVG style={{ color: "#00beff", width: "50px", height: "50px", margin: "auto" }} />}>
+              <StyledIndividualCaringText><StyledSmallText>Last Watering
+                Date:</StyledSmallText> {formatDate(plant.lastWateringDate)}</StyledIndividualCaringText>
+              <StyledIndividualCaringText><StyledSmallText>Next Watering
+                Date:</StyledSmallText> {formatDate(plant.nextWateringDate)}</StyledIndividualCaringText>
+              <StyledIndividualCaringText><StyledSmallText>Watering
+                Interval:</StyledSmallText> every {plant.wateringInterval} day(s)</StyledIndividualCaringText>
+            </TextContainer>
+            <TextContainer svg={<BandaidSVG style={{ color: "#ffaf00", width: "50px", height: "50px", margin: "auto" }} />}>
+              <StyledIndividualCaringText><StyledSmallText>Last Caring
+                Date:</StyledSmallText> {formatDate(plant.lastCaringDate)}</StyledIndividualCaringText>
+              <StyledIndividualCaringText><StyledSmallText>Next Caring
+                Date:</StyledSmallText> {formatDate(plant.nextCaringDate)}</StyledIndividualCaringText>
+              <StyledIndividualCaringText><StyledSmallText>Caring
+                Interval:</StyledSmallText> every {plant.caringInterval} day(s)</StyledIndividualCaringText>
+            </TextContainer>
           </StyledCaringContainer>
         </StyledMainContainer>
       }
