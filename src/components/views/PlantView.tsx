@@ -14,6 +14,7 @@ import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
 import PropTypes from "prop-types";
 import { CaretakerSelectorComponent } from "./CaretakerSelectorComponent";
 import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
+import { CaretakerComponent } from "./CaretakerComponent";
 
 
 const StyledMainContainer = styled.div`
@@ -195,13 +196,17 @@ export default function PlantView() {
   const plant = useAppSelector(state => selectPlantById(state, Number(plantId)));
   const navigate = useNavigate();
   const [showSelectCaretakers, setShowSelectCaretakers] = useState<boolean>(false);
+  const [reloadCaretakers, setReloadCaretakers] = useState<boolean>(false);
 
   return (
     <>
       <Header />
       {appStatus === "loading" ? <div>Loading...</div> :
         <StyledMainContainer>
-          {showSelectCaretakers && <CaretakerSelectorComponent plantId={plantId} />}
+          {showSelectCaretakers &&
+            <CaretakerSelectorComponent plantId={plantId} setShowSelectCaretakers={setShowSelectCaretakers}
+                                        reloadCaretakers={reloadCaretakers}
+                                        setReloadCaretakers={setReloadCaretakers} />}
           <StyledEditPlantContainer onClick={() => navigate("/editPlant/" + plant.plantId)}>
             <EditPlantSVG style={{ width: "35px", height: "35px" }} />
           </StyledEditPlantContainer>
@@ -213,8 +218,6 @@ export default function PlantView() {
                             style={{ color: "#83b271", width: "60px", height: "60px", margin: "auto" }} />
                 <div>Add Caretaker</div>
               </StyledAddCaretakerContainer>
-
-              {/*<StyledPrimaryButton onClick={() => setShowSelectCaretakers(!showSelectCaretakers)}>Add Caretaker</StyledPrimaryButton>*/}
             </StyledPlantProfileHeader>
             <StyledPlantProfileDetails>
               <StyledPlantImageContainer>
@@ -266,6 +269,9 @@ export default function PlantView() {
                 Interval:</StyledSmallText> every {plant.caringInterval} day(s)</StyledIndividualCaringText>
             </TextContainer>
           </StyledCaringContainer>
+          <StyledDividerSmall />
+          <CaretakerComponent plantId={plantId} setShowSelectCaretakers={setShowSelectCaretakers}
+                              reloadCaretakers={reloadCaretakers} setReloadCaretakers={setReloadCaretakers} />
         </StyledMainContainer>
       }
     </>
