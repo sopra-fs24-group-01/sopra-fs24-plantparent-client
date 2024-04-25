@@ -10,9 +10,7 @@ const mockPlant1: Plant = {
   nextWateringDate: "2024-04-10",
   lastCaringDate: "2024-03-26",
   caringInterval: 30,
-  nextCaringDate: "2024-04-26",
-  owner: 7,
-  caretakers: [2, 3],
+  nextCaringDate: "2024-04-26"
 };
 
 const mockPlant2: Plant = {
@@ -25,9 +23,7 @@ const mockPlant2: Plant = {
   nextWateringDate: "2024-06-14",
   lastCaringDate: "2024-03-26",
   caringInterval: 182.5,
-  nextCaringDate: "2024-09-25",
-  owner: 1,
-  caretakers: [7],
+  nextCaringDate: "2024-09-25"
 };
 
 const mockPlant3: Plant = {
@@ -40,9 +36,7 @@ const mockPlant3: Plant = {
   nextWateringDate: "2024-04-12",
   lastCaringDate: "2024-03-28",
   caringInterval: 30,
-  nextCaringDate: "2024-04-28",
-  owner: 2,
-  caretakers: [3],
+  nextCaringDate: "2024-04-28"
 };
 
 const mockPlant4: Plant = {
@@ -55,9 +49,7 @@ const mockPlant4: Plant = {
   nextWateringDate: "2024-05-01",
   lastCaringDate: "2024-03-01",
   caringInterval: 365,
-  nextCaringDate: "2025-03-01",
-  owner: 3,
-  caretakers: [1, 2],
+  nextCaringDate: "2025-03-01"
 };
 
 const mockPlant5: Plant = {
@@ -70,9 +62,7 @@ const mockPlant5: Plant = {
   nextWateringDate: "2024-04-14",
   lastCaringDate: "2024-03-14",
   caringInterval: 30,
-  nextCaringDate: "2024-04-14",
-  owner: 1,
-  caretakers: [],
+  nextCaringDate: "2024-04-14"
 };
 
 const mockPlant6: Plant = {
@@ -85,9 +75,7 @@ const mockPlant6: Plant = {
   nextWateringDate: "2024-04-12",
   lastCaringDate: "2024-03-28",
   caringInterval: 30,
-  nextCaringDate: "2024-04-28",
-  owner: 2,
-  caretakers: [3],
+  nextCaringDate: "2024-04-28"
 };
 
 const mockPlants: Plant[] = [mockPlant1, mockPlant2, mockPlant3, mockPlant4, mockPlant5, mockPlant6];
@@ -112,25 +100,25 @@ export function getAllPlants(): Promise<Plant[]> {
     });
 }
 
-export function getPlantsForUser(userId: number): Promise<Plant[]> {
-  const ownedPlantsPromise = fetch(baseurl + "plants/owned?ownerId=" + userId)
-    .then(response => response.json())
-    .catch(error => {
-      console.log(error);
-      mockPlants.filter(plant => plant.owner === userId);
-    });
-
-  const caredForPlantsPromise = fetch(baseurl + "plants/caredFor?careTakerId=" + userId)
-    .then(response => response.json())
-    .catch(error => {
-      console.log(error);
-      mockPlants.filter(plant => plant.caretakers.includes(userId));
-    });
-
-  //return Promise.all([ownedPlantsPromise, caredForPlantsPromise])
-  //  .then(([ownedPlants, caredForPlants]) => [...ownedPlants, ...caredForPlants]);
-  return new Promise<Plant[]>(resolve => resolve(mockPlants));
-}
+// export function getPlantsForUser(userId: number): Promise<Plant[]> {
+//   const ownedPlantsPromise = fetch(baseurl + "plants/owned?ownerId=" + userId)
+//     .then(response => response.json())
+//     .catch(error => {
+//       console.log(error);
+//       mockPlants.filter(plant => plant.owner === userId);
+//     });
+//
+//   const caredForPlantsPromise = fetch(baseurl + "plants/caredFor?careTakerId=" + userId)
+//     .then(response => response.json())
+//     .catch(error => {
+//       console.log(error);
+//       mockPlants.filter(plant => plant.caretakers.includes(userId));
+//     });
+//
+//   return Promise.all([ownedPlantsPromise, caredForPlantsPromise])
+//     .then(([ownedPlants, caredForPlants]) => [...ownedPlants, ...caredForPlants]);
+//   // return new Promise<Plant[]>(resolve => resolve(mockPlants));
+// }
 
 export function createPlant(plant: Plant) {
   return fetch(baseurl + "plants", {

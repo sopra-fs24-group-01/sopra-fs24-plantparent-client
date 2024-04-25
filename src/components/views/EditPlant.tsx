@@ -10,39 +10,26 @@ import {
   StyledMainContainer, StyledPrimaryButton,
 } from "./Login";
 import { useDispatch } from "react-redux";
-import { updatePlant, getPlant } from "../../service/plantService";
 import { Plant } from "../../types";
-import { selectLoggedInUser } from "../../store/userSlice";
-import { selectPlantById, fetchPlants } from "../../store/plantSlice";
 import { useAppSelector } from "../../hooks";
-import { store } from "../../store";
-
-store.dispatch(fetchPlants());
+import { getStatus, selectLoggedInUser, selectPlantById } from "../../store/appSlice";
+import { updatePlant } from "../../service/appService";
 
 
 export default function EditPlant() {
   // get the logged in user from the store
   const user = useAppSelector(selectLoggedInUser);
-  // get the status of the plants from the store
-  const plantStatus = useAppSelector(state => state.plants.status);
-  
   // capture the plantId from the URL
   const { plantId } = useParams<{ plantId: string }>();
   // get the plant from the store
   const plant = useAppSelector(state => selectPlantById(state, Number(plantId)));
+  const appStatus = useAppSelector(getStatus)
 
-  const [plantName, setPlantName] = useState<string>("");
-  const [species, setSpecies] = useState<string>("");
-  const [careInstructions, setCareInstructions] = useState<string>("");
+  const [plantName, setPlantName] = useState<string>(plant.plantName);
+  const [species, setSpecies] = useState<string>(plant.species);
+  const [careInstructions, setCareInstructions] = useState<string>(plant.careInstructions);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    if(plantStatus === "succeeded") {
-      setPlantName(plant.plantName);
-      setSpecies(plant.species);
-      setCareInstructions(plant.careInstructions);
-    }
-  }, [plantStatus]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -52,7 +39,6 @@ export default function EditPlant() {
 
     const new_plant: Plant = {
       plantId: Number(plantId),
-      owner: plant.owner,
       plantName: plantName,
       species: species,
       careInstructions: careInstructions,
@@ -62,7 +48,6 @@ export default function EditPlant() {
       lastCaringDate: plant.lastCaringDate,
       caringInterval: plant.caringInterval,
       nextCaringDate: plant.nextCaringDate,
-      caretakers: plant.caretakers,
     };
     try {
       await updatePlant(new_plant);
@@ -74,7 +59,7 @@ export default function EditPlant() {
   }
 
   return (
-    plantStatus !== "succeeded" ? <div>Loading...</div> :
+    appStatus !== "succeeded" ? <div>Loading...</div> :
     <StyledMainContainer>
       <StyledLoginContainer>
         <StyledLogoContainerLarge>
@@ -102,8 +87,9 @@ export default function EditPlant() {
                             $validInput={true}
                             placeholder="Care Instructions"
                             onChange={(event) => setCareInstructions(event.target.value)} />
-          <StyledPrimaryButton disabled={!plantName || !species || user.id !== plant.owner}
+          <StyledPrimaryButton disabled={(plantName === "" || species === "") || (plantName === plant.plantName && species === plant.species && careInstructions === plant.careInstructions) }
                               type="submit">Save Changes</StyledPrimaryButton>
+          <StyledPrimaryButton onClick={() => navigate("/plant/" + plantId)}>Cancel</StyledPrimaryButton>
           {error && <StyledError>{error}</StyledError>}
         </StyledForm>
       </StyledLoginContainer>

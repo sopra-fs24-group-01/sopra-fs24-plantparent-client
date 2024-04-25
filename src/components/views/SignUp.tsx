@@ -9,9 +9,9 @@ import {
   StyledLogoContainerLarge,
   StyledMainContainer, StyledP, StyledPrimaryButton,
 } from "./Login";
-import { registerUser, userError } from "../../store/userSlice";
 import { User } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
+import { appError, registerUser } from "../../store/appSlice";
 
 
 export default function SignUp() {
@@ -26,7 +26,7 @@ export default function SignUp() {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const errorMsg = useAppSelector(userError);
+  const errorMsg = useAppSelector(appError);
 
   async function doSignUp(event: React.FormEvent) {
     event.preventDefault();
@@ -35,7 +35,9 @@ export default function SignUp() {
     const user: User = {
       username: username,
       email: email,
-      password: password
+      password: password,
+      plantsOwned: [],
+      plantsCaredFor: []
     };
     try {
       await dispatch(registerUser(user)).unwrap();
