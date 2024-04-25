@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactSVG, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import styled, { css } from "styled-components";
 import { Plant } from "../../types";
 import { ReactComponent as ImagePlaceholderSVG } from "../../assets/image_placeholder.svg";
@@ -10,9 +10,9 @@ import { ReactComponent as DropSVG } from "../../assets/droplet-half.svg";
 import { ReactComponent as BandaidSVG } from "../../assets/bandaid.svg";
 import { ReactComponent as CheckSVG } from "../../assets/check-circle.svg";
 import { ReactComponent as CheckFillSVG } from "../../assets/check-circle-fill.svg";
-import { careForPlant, waterPlant } from "../../service/plantService";
 import { Modal } from "./PopupMsgComponent";
 import { formatDistance, parseISO } from "date-fns";
+import { careForPlant, waterPlant } from "../../service/appService";
 
 
 const StyledPlantComponentContainer = styled.div`

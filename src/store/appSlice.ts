@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { login } from "../service/appService";
 import { Plant, User } from "../types";
+import { createUser } from "../service/userService";
 
 
 interface IUserState {
@@ -21,6 +22,18 @@ const initialState: IUserState = {
   error: null,
 };
 
+export const registerUser = createAsyncThunk(
+  "users/registerUser",
+  async (newUser: User, { rejectWithValue }) => {
+    try {
+      return await createUser(newUser);
+    } catch (err) {
+      console.log(err);
+      return rejectWithValue(err.message);
+    }
+  },
+);
+
 export const loginUser = createAsyncThunk(
   "users/loginUser",
   async (user: { username: string, password: string }, { rejectWithValue }) => {
@@ -39,6 +52,23 @@ export const appSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
+      .addCase(registerUser.pending, (state, { payload }) => {
+        state.status = "loading";
+      })
+      .addCase(registerUser.fulfilled, (state, { payload }) => {
+        state.status = "succeeded";
+        state.loggedInDate = new Date();
+        state.loggedInUser = payload;
+        state.plantsOwned = payload.plantsOwned;
+        state.plantsCaredFor = payload.plantsCaredFor;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        if (action.payload) {
+          state.error = action.payload;
+        } else {
+          state.error = action.error.message;
+        }
+      })
       .addCase(loginUser.pending, (state, { payload }) => {
         state.status = "loading";
       })
@@ -100,4 +130,4 @@ export const getLoggedInDate = (state: RootState) => state.appData.loggedInDate;
 
 
 export const getStatus = (state: RootState) => state.appData.status;
-export const error = (state: RootState) => state.appData.error;
+export const appError = (state: RootState) => state.appData.error;

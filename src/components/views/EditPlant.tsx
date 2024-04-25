@@ -10,14 +10,11 @@ import {
   StyledMainContainer, StyledPrimaryButton,
 } from "./Login";
 import { useDispatch } from "react-redux";
-import { updatePlant, getPlant } from "../../service/plantService";
 import { Plant } from "../../types";
 import { selectLoggedInUser } from "../../store/userSlice";
-import { selectPlantById, fetchPlants } from "../../store/plantSlice";
 import { useAppSelector } from "../../hooks";
-import { store } from "../../store";
-
-store.dispatch(fetchPlants());
+import { selectPlantById } from "../../store/appSlice";
+import { updatePlant } from "../../service/appService";
 
 
 export default function EditPlant() {
@@ -52,7 +49,6 @@ export default function EditPlant() {
 
     const new_plant: Plant = {
       plantId: Number(plantId),
-      owner: plant.owner,
       plantName: plantName,
       species: species,
       careInstructions: careInstructions,
@@ -62,7 +58,6 @@ export default function EditPlant() {
       lastCaringDate: plant.lastCaringDate,
       caringInterval: plant.caringInterval,
       nextCaringDate: plant.nextCaringDate,
-      caretakers: plant.caretakers,
     };
     try {
       await updatePlant(new_plant);
