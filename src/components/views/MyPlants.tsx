@@ -1,42 +1,26 @@
 import React, { useEffect } from "react";
 import Header from "./Header";
-import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import PlantComponent from "./PlantComponent";
 import { StyledPrimaryButton } from "./Login";
 import { useNavigate } from "react-router-dom";
-import { getStatus, getUserDataById, loginUser, selectAllPlants, selectLoggedInUser } from "../../store/appSlice";
+import {
+  getStatus,
+  getUserDataById,
+  selectAllPlants,
+  selectLoggedInUser,
+  selectOwnedPlants,
+} from "../../store/appSlice";
+import { StyledMainContainer, StyledMainContainerContainer, StyledSideBar } from "./Home";
+import { Plant } from "../../types";
 
 
-export const StyledMainContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: row;
-`;
 
-export const StyledSideBar = styled.div`
-  width: 20vw;
-  min-width: 200px;
-  height: calc(100vh - 80px);
-  margin-top: 79px;
-  border: 1px solid black;
-`;
-
-export const StyledMainContainerContainer = styled.div`
-  width: 80vw;
-  height: calc(100vh - 80px);
-  margin-top: 79px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-`;
-
-function Home() {
+function MyPlants() {
   const user = useAppSelector(selectLoggedInUser);
   const status = useAppSelector(getStatus);
 
-  const plants: any[] = useAppSelector(selectAllPlants);
+  const plants: Plant[] = useAppSelector(selectOwnedPlants);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -64,4 +48,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default MyPlants;

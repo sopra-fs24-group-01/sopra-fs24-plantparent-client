@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { login } from "../service/appService";
+import { getPlantById, login, createUser, getUserById } from "../service/appService";
 import { Plant, User } from "../types";
-import { createUser } from "../service/userService";
 
 
 interface IUserState {
@@ -46,6 +45,19 @@ export const loginUser = createAsyncThunk(
   },
 );
 
+export const getUserDataById = createAsyncThunk(
+  "users/getUserDataById",
+  async (userId: number) => {
+    return await getUserById(userId);
+  });
+
+export const updatePlant = createAsyncThunk(
+  "plants/updatePlant",
+  async (plantId: number) => {
+    return await getPlantById(plantId);
+  },
+);
+
 export const appSlice = createSlice({
   name: "appData",
   initialState,
@@ -82,6 +94,29 @@ export const appSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
+      })
+      .addCase(getUserDataById.fulfilled, (state, { payload }) => {
+        state.status = "succeeded";
+        state.plantsOwned = payload.plantsOwned;
+        state.plantsCaredFor = payload.plantsCaredFor;
+      })
+      .addCase(updatePlant.fulfilled, (state, { payload }) => {
+        const newPlantsOwned = state.plantsOwned.map((plant) => {
+          if (plant.plantId === payload.plantId) {
+            return payload;
+          } else {
+            return plant;
+          }
+        });
+        const newPlantsCaredFor = state.plantsCaredFor.map((plant) => {
+          if (plant.plantId === payload.plantId) {
+            return payload;
+          } else {
+            return plant;
+          }
+        });
+        state.plantsOwned = newPlantsOwned;
+        state.plantsCaredFor = newPlantsCaredFor;
       });
   },
 });
@@ -115,16 +150,34 @@ export const selectAllPlants = createSelector(
     });
   });
 
+export const selectOwnedPlants = createSelector(
+  [
+    (state: RootState) => state.appData.plantsOwned
+  ],
+  (plantsOwned) => {
+    return [...plantsOwned].sort((a, b) => {
+      const aNextCaringDate = new Date(a.nextCaringDate);
+      const bNextCaringDate = new Date(b.nextCaringDate);
+      const aNextWateringDate = new Date(a.nextWateringDate);
+      const bNextWateringDate = new Date(b.nextWateringDate);
+      if ((aNextCaringDate < bNextCaringDate) || (aNextWateringDate < bNextWateringDate)) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+  });
+
 export const selectPlantById = (state: RootState, id: number) => {
   return selectAllPlants(state).find((plant) => plant.plantId === id);
-}
+};
 
 export const logOutUser = (state: RootState) => {
   state.appData.loggedInUser = null;
   state.appData.plantsOwned = [];
   state.appData.plantsCaredFor = [];
   state.appData.loggedInDate = null;
-}
+};
 
 export const getLoggedInDate = (state: RootState) => state.appData.loggedInDate;
 

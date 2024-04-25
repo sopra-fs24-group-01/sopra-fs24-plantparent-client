@@ -1,4 +1,4 @@
-import { Plant, User } from "../types";
+import { Plant, PlantFull, User } from "../types";
 
 const baseurl = process.env.REACT_APP_BACKEND_BASEURL;
 
@@ -14,6 +14,18 @@ export function login(user: {username: string, password: string}): Promise<User>
     .catch(error => {
       console.log(error);
     });
+}
+
+export function getUserById(userId: number): Promise<User> {
+  return fetch(baseurl + "users/" + userId)
+    .then(response => response.json())
+    .then(data => {
+      return data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+
 }
 
 export function createUser(user: User) {
@@ -75,9 +87,21 @@ export function updatePlant(plant: Plant) {
     });
 }
 
+export function getPlantById(plantId: number): Promise<PlantFull> {
+  return fetch(baseurl + "plants/" + plantId)
+    .then(response => response.json())
+    .then(data => {
+      return data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+
+}
+
 export function waterPlant(plantId: number) {
   return fetch(baseurl + "plants/" + plantId + "/water", {
-    method: "POST",
+    method: "PUT",
   })
     .then(response => {
       if (!response.ok) {
@@ -91,7 +115,7 @@ export function waterPlant(plantId: number) {
 
 export function careForPlant(plantId: number) {
   return fetch(baseurl + "plants/" + plantId + "/care", {
-    method: "POST",
+    method: "PUT",
   })
     .then(response => {
       if (!response.ok) {
@@ -102,3 +126,35 @@ export function careForPlant(plantId: number) {
       console.log(error);
     });
 }
+
+export function addCaretaker(plantId: number, userId: number) {
+  return fetch(baseurl + "plants/" + plantId + "/caretakers", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ "caretakerId": userId }),
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+export function removeCaretaker(plantId: number, userId: number) {
+  return fetch(baseurl + "plants/" + plantId + "/caretakers/" + userId, {
+    method: "DELETE",
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }

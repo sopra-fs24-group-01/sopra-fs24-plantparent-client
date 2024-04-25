@@ -10,12 +10,15 @@ import {
   StyledMainContainer, StyledPrimaryButton,
 } from "./Login";
 import { useDispatch } from "react-redux";
-import { Plant } from "../../types";
+import { Plant, PlantFull, PlantSimple } from "../../types";
 import Header from "./Header";
 import { createPlant } from "../../service/appService";
+import { selectLoggedInUser } from "../../store/appSlice";
+import { useAppSelector } from "../../hooks";
 
 
 export default function CreatePlant() {
+  const user = useAppSelector(selectLoggedInUser);
   const [plantName, setPlantName] = useState<string>("");
   const [species, setSpecies] = useState<string>("");
   const [careInstructions, setCareInstructions] = useState<string>("");
@@ -27,20 +30,30 @@ export default function CreatePlant() {
 
   const navigate = useNavigate();
 
-  async function doCreatePlant() {
-    console.log("Creation for plant with plant name " + plantName);
+  async function doCreatePlant(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
-    const plant: Plant = {
+    const lastWatering = new Date(lastWateringDate);
+    lastWatering.setDate(lastWatering.getDate() + Number(wateringInterval));
+    const nextWateringDate = lastWatering.toISOString().split('T')[0];
+
+    const lastCaring = new Date(lastCaringDate);
+    lastCaring.setDate(lastCaring.getDate() + Number(caringInterval));
+    const nextCaringDate = lastCaring.toISOString().split('T')[0];
+
+    const plant: PlantSimple = {
       plantId: null,
       plantName: plantName,
       species: species,
       careInstructions: careInstructions,
       lastWateringDate: lastWateringDate,
       wateringInterval: wateringInterval,
-      nextWateringDate: lastWateringDate + wateringInterval,
+      nextWateringDate: nextWateringDate,
       lastCaringDate: lastCaringDate,
       caringInterval: caringInterval,
-      nextCaringDate: lastCaringDate + caringInterval,
+      nextCaringDate: nextCaringDate,
+      owner: { id: user.id, username: user.username, email: user.email, password: user.password},
+      caretakers: []
     };
     try {
       await createPlant(plant);
