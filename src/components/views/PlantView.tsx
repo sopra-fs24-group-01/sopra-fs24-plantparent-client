@@ -191,6 +191,7 @@ TextContainer.propTypes = {
 
 
 export default function PlantView() {
+  const user = useAppSelector(selectLoggedInUser);
   const appStatus = useAppSelector(getStatus);
   const { plantId } = useParams<{ plantId: string }>();
   const plant = useAppSelector(state => selectPlantById(state, Number(plantId)));
@@ -225,12 +226,12 @@ export default function PlantView() {
               </StyledPlantImageContainer>
               <StyledScheduleIconsContainer>
                 <StyledScheduleIconContainer>
-                  <Schedule plantId={plant.plantId} text={"Water"} date={plant.nextWateringDate}
+                  <Schedule plantId={plant.plantId} userId={user.id} text={"Water"} date={plant.nextWateringDate}
                             svg={<DropSVG style={{ color: "#00beff", width: "50px", height: "50px" }} />}
                             watering={true} showText={false} />
                 </StyledScheduleIconContainer>
                 <StyledScheduleIconContainer>
-                  <Schedule plantId={plant.plantId} text={"Care"} date={plant.nextCaringDate}
+                  <Schedule plantId={plant.plantId} userId={user.id} text={"Care"} date={plant.nextCaringDate}
                             svg={<BandaidSVG style={{ color: "#ffaf00", width: "50px", height: "50px" }} />}
                             watering={false} showText={false} />
                 </StyledScheduleIconContainer>

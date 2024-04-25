@@ -101,7 +101,7 @@ export function getPlantById(plantId: number): Promise<PlantFull> {
 
 export function waterPlant(plantId: number) {
   return fetch(baseurl + "plants/" + plantId + "/water", {
-    method: "POST",
+    method: "PUT",
   })
     .then(response => {
       if (!response.ok) {
@@ -115,7 +115,7 @@ export function waterPlant(plantId: number) {
 
 export function careForPlant(plantId: number) {
   return fetch(baseurl + "plants/" + plantId + "/care", {
-    method: "POST",
+    method: "PUT",
   })
     .then(response => {
       if (!response.ok) {

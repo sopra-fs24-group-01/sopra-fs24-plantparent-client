@@ -52,7 +52,7 @@ function Home() {
           <StyledSideBar />
           <StyledMainContainerContainer>
             {plants.length < 1 ? <div>You have no plants yet. Create one!</div> : plants.map(plant => (
-              <PlantComponent key={plant.plantName} plant={plant} />
+              <PlantComponent key={plant.plantName} plant={plant} userId={user.id} />
             ))}
             <StyledPrimaryButton
               disabled={false}

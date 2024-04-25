@@ -123,8 +123,9 @@ const StyledGreenText = styled.span`
 `;
 
 
-export function Schedule({ plantId, text, date, svg, watering, showText = true }: {
+export function Schedule({ plantId, userId, text, date, svg, watering, showText = true }: {
   plantId: number,
+  userId: number,
   text: string,
   date: string,
   svg: ReactElement,
@@ -134,7 +135,6 @@ export function Schedule({ plantId, text, date, svg, watering, showText = true }
   const [day, setDay] = useState(0);
   const [modal, setModal] = useState<boolean>(false);
   const past = isInThePast(date);
-  const dateObject = parseISO(date);
   const now = new Date();
 
   useState(() => {
@@ -144,12 +144,12 @@ export function Schedule({ plantId, text, date, svg, watering, showText = true }
   function action() {
     if (watering) {
       waterPlant(plantId).then();
-      console.log("watering");
     } else {
       careForPlant(plantId).then();
       console.log("caring");
     }
     setModal(false);
+    window.location.reload();
   }
 
   return (
@@ -178,7 +178,7 @@ export function Schedule({ plantId, text, date, svg, watering, showText = true }
   );
 }
 
-export default function PlantComponent({ plant }: { plant: Plant }) {
+export default function PlantComponent({ plant, userId }: { plant: Plant, userId: number }) {
   const navigate = useNavigate();
   let mood = "happy";
   // next watering date or next caring date in the past
@@ -207,10 +207,10 @@ export default function PlantComponent({ plant }: { plant: Plant }) {
         <StyledDividerSmall />
         {plant.careInstructions}
         <StyledDividerSmall style={{ marginBottom: "auto" }} />
-        <Schedule plantId={plant.plantId} text={"Next watering date:"} date={plant.nextWateringDate}
+        <Schedule plantId={plant.plantId} userId={userId} text={"Next watering date:"} date={plant.nextWateringDate}
                   svg={<DropSVG style={{ color: "#00beff", width: "50px", height: "50px" }} />}
                   watering={true} />
-        <Schedule plantId={plant.plantId} text={"Next caring date:"} date={plant.nextCaringDate}
+        <Schedule plantId={plant.plantId} userId={userId} text={"Next caring date:"} date={plant.nextCaringDate}
                   svg={<BandaidSVG style={{ color: "#ffaf00", width: "50px", height: "50px" }} />}
                   watering={false} />
       </StyledPlantMainInfo>
