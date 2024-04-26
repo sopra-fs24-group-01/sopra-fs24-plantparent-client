@@ -25,6 +25,7 @@ export function createUser(user: User) {
       if (!response.ok) {
         throw new Error("User already exists");
       }
+      
       return response.json();
     })
     .catch(error => {

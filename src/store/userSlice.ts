@@ -34,6 +34,7 @@ export const registerUser = createAsyncThunk(
       return await createUser(newUser);
     } catch (err) {
       console.log(err);
+      
       return rejectWithValue(err.message);
     }
   },
@@ -46,6 +47,7 @@ export const loginUser = createAsyncThunk(
       return await login(user);
     } catch (err) {
       console.log(err);
+      
       return rejectWithValue(err.message);
     }
   },

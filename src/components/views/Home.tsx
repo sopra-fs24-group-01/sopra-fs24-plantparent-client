@@ -42,7 +42,7 @@ function Home() {
 
   useEffect(() => {
     dispatch(getUserDataById(user.id));
-  }, [])
+  }, []);
 
   return (
     <>

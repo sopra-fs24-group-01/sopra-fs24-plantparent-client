@@ -105,7 +105,7 @@ const CaringSVGContainer = styled.div<{ $hover?: boolean }>`
     ${props => props.$hover && css`
       cursor: pointer;
       scale: 0.95;`
-    }
+}
   }
 `;
 
@@ -155,7 +155,7 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
   return (
     <>
       {modal && <Modal setModal={setModal} action={action}
-                       text={`Are you sure you ${watering ? "watered" : "cared for"} the plant?`} />}
+        text={`Are you sure you ${watering ? "watered" : "cared for"} the plant?`} />}
       <StyledScheduleContainer>
         {showText &&
           <StyledSchedule>
@@ -208,11 +208,11 @@ export default function PlantComponent({ plant, userId }: { plant: Plant, userId
         {plant.careInstructions}
         <StyledDividerSmall style={{ marginBottom: "auto" }} />
         <Schedule plantId={plant.plantId} userId={userId} text={"Next watering date:"} date={plant.nextWateringDate}
-                  svg={<DropSVG style={{ color: "#00beff", width: "50px", height: "50px" }} />}
-                  watering={true} />
+          svg={<DropSVG style={{ color: "#00beff", width: "50px", height: "50px" }} />}
+          watering={true} />
         <Schedule plantId={plant.plantId} userId={userId} text={"Next caring date:"} date={plant.nextCaringDate}
-                  svg={<BandaidSVG style={{ color: "#ffaf00", width: "50px", height: "50px" }} />}
-                  watering={false} />
+          svg={<BandaidSVG style={{ color: "#ffaf00", width: "50px", height: "50px" }} />}
+          watering={false} />
       </StyledPlantMainInfo>
     </StyledPlantComponentContainer>
   );

@@ -67,6 +67,7 @@ export function CaretakerComponent({ plantId, setShowSelectCaretakers, reloadCar
       if (unique.findIndex(u => u.id === c.id) === -1) {
         unique.push({ id: c.id, username: c.username });
       }
+      
       return unique;
     }, [] as { id: number, username: string }[]);
     setUsers(us);
@@ -96,21 +97,21 @@ export function CaretakerComponent({ plantId, setShowSelectCaretakers, reloadCar
     <>
       <StyledCaretakersTitle>Caretakers</StyledCaretakersTitle>
       <StyledCaretakersContainer>
-      {users === null || users.length === 0 ?
-      <StyledNoCaretakers>No caretakers added yet. <span onClick={() => setShowSelectCaretakers(true)}>Add one!</span></StyledNoCaretakers> :
-        <>
-          {users.map((u) => {
-            return (
-              <StyledUserContainer key={u.id}>{u.username}
-                <div title="Remove caretaker">
-                  <RemoveUserSVG onClick={() => removeCaretakerFromPlant(Number(plantId), Number(u.id))}
-                                 style={{ width: "30px", height: "30px" }} />
-                </div>
-              </StyledUserContainer>
-            );
-          })}
-        </>
-      }
+        {users === null || users.length === 0 ?
+          <StyledNoCaretakers>No caretakers added yet. <span onClick={() => setShowSelectCaretakers(true)}>Add one!</span></StyledNoCaretakers> :
+          <>
+            {users.map((u) => {
+              return (
+                <StyledUserContainer key={u.id}>{u.username}
+                  <div title="Remove caretaker">
+                    <RemoveUserSVG onClick={() => removeCaretakerFromPlant(Number(plantId), Number(u.id))}
+                      style={{ width: "30px", height: "30px" }} />
+                  </div>
+                </StyledUserContainer>
+              );
+            })}
+          </>
+        }
       </StyledCaretakersContainer>
     </>
   );

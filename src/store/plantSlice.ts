@@ -64,5 +64,6 @@ export const selectAllPlants = createSelector(
 
 export const selectPlantById = (state: RootState, id: number) => {
   console.log(state.plants.entities);
+  
   return state.plants.entities.find((plant) => plant.plantId === id);
 }

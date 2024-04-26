@@ -28,6 +28,7 @@ export const registerUser = createAsyncThunk(
       return await createUser(newUser);
     } catch (err) {
       console.log(err);
+      
       return rejectWithValue(err.message);
     }
   },
@@ -40,6 +41,7 @@ export const loginUser = createAsyncThunk(
       return await login(user);
     } catch (err) {
       console.log(err);
+      
       return rejectWithValue(err.message);
     }
   },
@@ -183,4 +185,5 @@ export const getLoggedInDate = (state: RootState) => state.appData.loggedInDate;
 
 
 export const getStatus = (state: RootState) => state.appData.status;
+
 export const appError = (state: RootState) => state.appData.error;

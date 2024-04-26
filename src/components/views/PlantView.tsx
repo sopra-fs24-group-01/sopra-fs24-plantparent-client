@@ -244,8 +244,8 @@ export default function PlantView() {
         <StyledMainContainer>
           {showSelectCaretakers &&
             <CaretakerSelectorComponent plantId={plantId} setShowSelectCaretakers={setShowSelectCaretakers}
-                                        reloadCaretakers={reloadCaretakers}
-                                        setReloadCaretakers={setReloadCaretakers} />}
+              reloadCaretakers={reloadCaretakers}
+              setReloadCaretakers={setReloadCaretakers} />}
           <StyledEditPlantContainer onClick={() => navigate("/editPlant/" + plant.plantId)}>
             <EditPlantSVG style={{ width: "35px", height: "35px" }} />
           </StyledEditPlantContainer>
@@ -254,7 +254,7 @@ export default function PlantView() {
               <StyledPlantTitle $underline={false}>{plant.plantName}</StyledPlantTitle>
               <StyledAddCaretakerContainer>
                 <AddUserSVG onClick={() => setShowSelectCaretakers(!showSelectCaretakers)}
-                            style={{ color: "#83b271", width: "60px", height: "60px", margin: "auto" }} />
+                  style={{ color: "#83b271", width: "60px", height: "60px", margin: "auto" }} />
                 <div>Add Caretaker</div>
               </StyledAddCaretakerContainer>
             </StyledPlantProfileHeader>
@@ -270,13 +270,13 @@ export default function PlantView() {
               <StyledScheduleIconsContainer>
                 <StyledScheduleIconContainer>
                   <Schedule plantId={plant.plantId} userId={user.id} text={"Water"} date={plant.nextWateringDate}
-                            svg={<DropSVG style={{ color: "#00beff", width: "50px", height: "50px" }} />}
-                            watering={true} showText={false} />
+                    svg={<DropSVG style={{ color: "#00beff", width: "50px", height: "50px" }} />}
+                    watering={true} showText={false} />
                 </StyledScheduleIconContainer>
                 <StyledScheduleIconContainer>
                   <Schedule plantId={plant.plantId} userId={user.id} text={"Care"} date={plant.nextCaringDate}
-                            svg={<BandaidSVG style={{ color: "#ffaf00", width: "50px", height: "50px" }} />}
-                            watering={false} showText={false} />
+                    svg={<BandaidSVG style={{ color: "#ffaf00", width: "50px", height: "50px" }} />}
+                    watering={false} showText={false} />
                 </StyledScheduleIconContainer>
               </StyledScheduleIconsContainer>
             </StyledPlantProfileDetails>
@@ -315,7 +315,7 @@ export default function PlantView() {
           </StyledCaringContainer>
           <StyledDividerSmall />
           <CaretakerComponent plantId={plantId} setShowSelectCaretakers={setShowSelectCaretakers}
-                              reloadCaretakers={reloadCaretakers} setReloadCaretakers={setReloadCaretakers} />
+            reloadCaretakers={reloadCaretakers} setReloadCaretakers={setReloadCaretakers} />
         </StyledMainContainer>
       }
     </>

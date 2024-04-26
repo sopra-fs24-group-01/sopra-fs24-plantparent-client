@@ -15,7 +15,6 @@ import { StyledMainContainer, StyledMainContainerContainer, StyledSideBar } from
 import { Plant } from "../../types";
 
 
-
 function MyPlants() {
   const user = useAppSelector(selectLoggedInUser);
   const status = useAppSelector(getStatus);

@@ -90,7 +90,7 @@ export function CaretakerSelectorComponent({ plantId, setShowSelectCaretakers, r
                 <StyledUserListItemContainer key={u.id}>{u.username}
                   <div title="Add as caretaker">
                     <AddUserSVG onClick={() => addCaretakerToPlant(Number(plantId), Number(u.id))}
-                                style={{ width: "30px", height: "30px" }} />
+                      style={{ width: "30px", height: "30px" }} />
                   </div>
                 </StyledUserListItemContainer>
               );

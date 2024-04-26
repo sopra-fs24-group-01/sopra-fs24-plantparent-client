@@ -82,25 +82,25 @@ export default function EditPlant() {
           <StyledForm onSubmit={doEditPlant}>
             <label htmlFor="plantName">Plant Name</label>
             <StyledInputField id="plantName"
-                              type="text"
-                              value={plantName}
-                              $validInput={true}
-                              placeholder="Plant Name"
-                              onChange={(event) => setPlantName(event.target.value)} />
+              type="text"
+              value={plantName}
+              $validInput={true}
+              placeholder="Plant Name"
+              onChange={(event) => setPlantName(event.target.value)} />
             <label htmlFor="species">Species</label>
             <StyledInputField id="species"
-                              type="text"
-                              value={species}
-                              $validInput={true}
-                              placeholder="Species"
-                              onChange={(event) => setSpecies(event.target.value)} />
+              type="text"
+              value={species}
+              $validInput={true}
+              placeholder="Species"
+              onChange={(event) => setSpecies(event.target.value)} />
             <label htmlFor="careInstructions">Care Instructions</label>
             <StyledInputField id="careInstructions"
-                              type="text"
-                              value={careInstructions}
-                              $validInput={true}
-                              placeholder="Care Instructions"
-                              onChange={(event) => setCareInstructions(event.target.value)} />
+              type="text"
+              value={careInstructions}
+              $validInput={true}
+              placeholder="Care Instructions"
+              onChange={(event) => setCareInstructions(event.target.value)} />
             <StyledPrimaryButton
               disabled={(plantName === "" || species === "") || (plantName === plant.plantName && species === plant.species && careInstructions === plant.careInstructions)}
               type="submit">Save Changes</StyledPrimaryButton>

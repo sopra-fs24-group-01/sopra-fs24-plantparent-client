@@ -68,33 +68,33 @@ export default function SignUp() {
         </StyledLogoContainerLarge>
         <StyledForm onSubmit={doSignUp}>
           <StyledInputField id="username"
-                            type="text"
-                            value={username}
-                            $validInput={true}
-                            placeholder="Username"
-                            onChange={(event) => setUsername(event.target.value)} />
+            type="text"
+            value={username}
+            $validInput={true}
+            placeholder="Username"
+            onChange={(event) => setUsername(event.target.value)} />
           <StyledInputField id="email"
-                            type="text"
-                            value={email}
-                            $validInput={isInputValid}
-                            placeholder="Email"
-                            onBlur={(event) => validateEmail(event.target.value)}
-                            onChange={(event) => setEmail(event.target.value)} />
+            type="text"
+            value={email}
+            $validInput={isInputValid}
+            placeholder="Email"
+            onBlur={(event) => validateEmail(event.target.value)}
+            onChange={(event) => setEmail(event.target.value)} />
           <StyledInputField id="password"
-                            type="password"
-                            value={password}
-                            $validInput={true}
-                            placeholder="Password"
-                            onChange={(event) => setPassword(event.target.value)} />
+            type="password"
+            value={password}
+            $validInput={true}
+            placeholder="Password"
+            onChange={(event) => setPassword(event.target.value)} />
           <StyledInputField id="confirm-password"
-                            type="password"
-                            value={confirmPassword}
-                            $validInput={isValidPWConfirm}
-                            placeholder="Confirm password"
-                            onBlur={(event) => validateConfirmPassword(event.target.value)}
-                            onChange={(event) => setConfirmPassword(event.target.value)} />
+            type="password"
+            value={confirmPassword}
+            $validInput={isValidPWConfirm}
+            placeholder="Confirm password"
+            onBlur={(event) => validateConfirmPassword(event.target.value)}
+            onChange={(event) => setConfirmPassword(event.target.value)} />
           <StyledPrimaryButton disabled={!isInputValid || !username || !password || !confirmPassword || !email || !isValidPWConfirm}
-                               type="submit">Sign Up</StyledPrimaryButton>
+            type="submit">Sign Up</StyledPrimaryButton>
           <StyledP>Already have an account? <StyledLink onClick={() => navigate("/login")}>Sign
             In</StyledLink></StyledP>
           {error && <StyledError>{error}</StyledError>}
