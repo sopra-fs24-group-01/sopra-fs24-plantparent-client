@@ -10,6 +10,7 @@ import EditPlant from "components/views/EditPlant";
 import EditSchedule from "components/views/EditSchedule";
 import PlantView from "components/views/PlantView";
 import MyPlants from "./components/views/MyPlants";
+import UserProfile from "components/views/UserProfile";
 
 
 function App() {
@@ -49,6 +50,10 @@ function App() {
 
         <Route path="/plant/:plantId" element={<LoginGuard/>}>
           <Route path="/plant/:plantId" element={<PlantView/>} />
+        </Route>
+
+        <Route path="/profile/:userId" element={<LoginGuard/>}>
+          <Route path="/profile/:userId" element={<UserProfile/>} />
         </Route>
 
       </Routes>
