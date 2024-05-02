@@ -11,6 +11,7 @@ import EditSchedule from "components/views/EditSchedule";
 import PlantView from "components/views/PlantView";
 import MyPlants from "./components/views/MyPlants";
 import UserProfile from "components/views/UserProfile";
+import EditUser from "components/views/EditUser";
 
 
 function App() {
@@ -52,8 +53,12 @@ function App() {
           <Route path="/plant/:plantId" element={<PlantView/>} />
         </Route>
 
-        <Route path="/profile/:userId" element={<LoginGuard/>}>
-          <Route path="/profile/:userId" element={<UserProfile/>} />
+        <Route path="/user/:userId" element={<LoginGuard/>}>
+          <Route path="/user/:userId" element={<UserProfile/>} />
+        </Route>
+
+        <Route path="/editUser/:userId" element={<LoginGuard/>}>
+          <Route path="/editUser/:userId" element={<EditUser/>} />
         </Route>
 
       </Routes>

@@ -100,9 +100,9 @@ export default function EditUser() {
                               onBlur={(event) => validateEmail(event.target.value)}
                               onChange={(event) => setEmail(event.target.value)} />
             <StyledPrimaryButton
-              disabled={(username === "" || email === "" || !isInputValid) || (plantName === plant.plantName && species === plant.species && careInstructions === plant.careInstructions)}
+              disabled={(username === "" || email === "" || !isInputValid)}
               type="submit">Save Changes</StyledPrimaryButton>
-            <StyledPrimaryButton onClick={() => navigate("/plant/" + plantId)}>Cancel</StyledPrimaryButton>
+            <StyledPrimaryButton onClick={() => navigate("/user/" + userId)}>Cancel</StyledPrimaryButton>
             {error && <StyledError>{error}</StyledError>}
           </StyledForm>
         </StyledLoginContainer>
