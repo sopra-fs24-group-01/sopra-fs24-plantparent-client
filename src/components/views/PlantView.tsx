@@ -19,6 +19,7 @@ import { getPlantById } from "../../service/appService";
 import { ReactComponent as HappyFaceSVG } from "../../assets/emoji-smile-fill.svg";
 import { ReactComponent as NeutralFaceSVG } from "../../assets/emoji-neutral-fill.svg";
 import { ReactComponent as AngryFaceSVG } from "../../assets/emoji-dizzy-fill.svg";
+import { QRCodeComponent } from "./QRCodeComponent";
 
 
 const StyledMainContainer = styled.div`
@@ -176,6 +177,9 @@ const StyledAddCaretakerContainer = styled.div`
 `;
 
 const StyledMoodContainer = styled.div`
+  position: absolute;
+  top: 8px;
+  left: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -264,10 +268,11 @@ export default function PlantView() {
                 <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />
               </StyledPlantImageContainer>
               <StyledMoodContainer>
-                {mood === "happy" && <HappyFaceSVG style={{ color: "#83b271", width: "75px", height: "75px" }} />}
-                {mood === "neutral" && <NeutralFaceSVG style={{ color: "orange", width: "75px", height: "75px" }} />}
-                {mood === "angry" && <AngryFaceSVG style={{ color: "red", width: "75px", height: "75px" }} />}
+                {mood === "happy" && <HappyFaceSVG style={{ color: "#83b271", width: "55px", height: "55px" }} />}
+                {mood === "neutral" && <NeutralFaceSVG style={{ color: "orange", width: "55px", height: "55px" }} />}
+                {mood === "angry" && <AngryFaceSVG style={{ color: "red", width: "55px", height: "55px" }} />}
               </StyledMoodContainer>
+              <QRCodeComponent plant={plant} />
               <StyledScheduleIconsContainer>
                 <StyledScheduleIconContainer>
                   <Schedule plantId={plant.plantId} userId={user.id} text={"Water"} date={plant.nextWateringDate}
