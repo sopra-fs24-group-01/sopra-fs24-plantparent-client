@@ -15,7 +15,7 @@ import { getStatus, selectLoggedInUser } from "../../store/appSlice";
 import { getUserById, updateUser } from "../../service/appService";
 
 
-export default function EditUser() {
+export default function EditPassword() {
   // get the logged in user from the store
   const loggedInUser = useAppSelector(selectLoggedInUser);
   // capture the plantId from the URL
@@ -24,30 +24,31 @@ export default function EditUser() {
   const appStatus = useAppSelector(getStatus);
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
-  const [username, setUsername] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
+  const [oldPassword, setOldPassword] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [error, setError] = useState("");
   const [isInputValid, setIsInputValid] = useState<boolean>(true);
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [isValidPWConfirm, setIsValidPWConfirm] = useState<boolean>(true);
 
   useEffect(() => {
     async function fetchUser() {
       const fetchedUser = await getUserById(Number(userId));
       setUser(fetchedUser);
-      setUsername(fetchedUser.username);
-      setEmail(fetchedUser.email);
+      setPassword(fetchedUser.password);
     }
 
     fetchUser();
   }, [userId]);
 
-  async function doEditUser(event: React.FormEvent<HTMLFormElement>) {
+  async function doEditPassword(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const new_user: User = {
       id: Number(userId),
-      username: username,
-      email: email,
-      password: user.password,
+      username: user.username,
+      email: user.email,
+      password: password,
       plantsCaredFor: user.plantsCaredFor,
       plantsOwned: user.plantsOwned,
     };
@@ -61,9 +62,10 @@ export default function EditUser() {
     }
   }
 
-  function validateEmail(email: string) {
-    const re = /\S+@\S+\.\S+/;
-    setIsInputValid(re.test(email));
+  function validateConfirmPassword(cpw: string) {
+    const passwordsMatch = password === cpw;
+    console.log(passwordsMatch);
+    setIsValidPWConfirm(passwordsMatch);
   }
 
   if (!user) {
@@ -81,24 +83,31 @@ export default function EditUser() {
           <StyledLogoContainerLarge>
             <LogoSVG style={{ height: "100px", maxWidth: "100%" }} />
           </StyledLogoContainerLarge>
-          <StyledForm onSubmit={doEditUser}>
-            <label htmlFor="username">Username</label>
-            <StyledInputField id="username"
-                              type="text"
-                              value={username}
-                              $validInput={true}
-                              placeholder="Username"
-                              onChange={(event) => setUsername(event.target.value)} />
-            <label htmlFor="email">Email</label>
-            <StyledInputField id="email"
-                              type="text"
-                              value={email}
-                              $validInput={isInputValid}
-                              placeholder="Email"
-                              onBlur={(event) => validateEmail(event.target.value)}
-                              onChange={(event) => setEmail(event.target.value)} />
+          <StyledForm onSubmit={doEditPassword}>
+            <label htmlFor="old-password">Old Password</label>
+            <StyledInputField id="old-password"
+                            type="password"
+                            value={oldPassword}
+                            $validInput={true}
+                            placeholder="Old Password"
+                            onChange={(event) => setOldPassword(event.target.value)} />
+            <label htmlFor="new-password">New Password</label>
+            <StyledInputField id="new-password"
+                            type="password"
+                            value={password}
+                            $validInput={true}
+                            placeholder="New Password"
+                            onChange={(event) => setPassword(event.target.value)} />
+            <label htmlFor="confirm-password">Confirm New Password</label>
+            <StyledInputField id="confirm-password"
+                            type="password"
+                            value={confirmPassword}
+                            $validInput={isValidPWConfirm}
+                            placeholder="Confirm New Password"
+                            onBlur={(event) => validateConfirmPassword(event.target.value)}
+                            onChange={(event) => setConfirmPassword(event.target.value)} />
             <StyledPrimaryButton
-              disabled={(username === "" || email === "" || !isInputValid)}
+              disabled={(password === "" || oldPassword !== user.password || !isValidPWConfirm)}
               type="submit">Save Changes</StyledPrimaryButton>
             <StyledPrimaryButton onClick={() => navigate("/user/" + userId)}>Cancel</StyledPrimaryButton>
             {error && <StyledError>{error}</StyledError>}

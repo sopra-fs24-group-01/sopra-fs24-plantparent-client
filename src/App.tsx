@@ -12,6 +12,7 @@ import PlantView from "components/views/PlantView";
 import MyPlants from "./components/views/MyPlants";
 import UserProfile from "components/views/UserProfile";
 import EditUser from "components/views/EditUser";
+import EditPassword from "components/views/EditPassword";
 
 
 function App() {
@@ -59,6 +60,10 @@ function App() {
 
         <Route path="/editUser/:userId" element={<LoginGuard/>}>
           <Route path="/editUser/:userId" element={<EditUser/>} />
+        </Route>
+
+        <Route path="/editPassword/:userId" element={<LoginGuard/>}>
+          <Route path="/editPassword/:userId" element={<EditPassword/>} />
         </Route>
 
       </Routes>
