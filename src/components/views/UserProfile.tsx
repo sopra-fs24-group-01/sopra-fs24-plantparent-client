@@ -3,22 +3,14 @@ import Header from "./Header";
 import styled, { css } from "styled-components";
 import { useAppSelector } from "../../hooks";
 import { useNavigate, useParams } from "react-router-dom";
-import { ReactComponent as DropSVG } from "../../assets/droplet-half.svg";
-import { ReactComponent as BandaidSVG } from "../../assets/bandaid.svg";
 import { ReactComponent as ImagePlaceholderSVG } from "../../assets/image_placeholder.svg";
 import { getStatus, selectLoggedInUser } from "../../store/appSlice";
-import { Schedule, StyledPlantTitle } from "./PlantComponent";
-import { formatDate, isInThePast } from "../../helpers/util";
+import { StyledPlantTitle } from "./PlantComponent";
 import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
-import PropTypes from "prop-types";
-import { CaretakerSelectorComponent } from "./CaretakerSelectorComponent";
-import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
-import { CaretakerComponent } from "./CaretakerComponent";
-import { PlantFull, User } from "../../types";
-import { getPlantById, getUserById } from "../../service/appService";
-import { ReactComponent as HappyFaceSVG } from "../../assets/emoji-smile-fill.svg";
-import { ReactComponent as NeutralFaceSVG } from "../../assets/emoji-neutral-fill.svg";
-import { ReactComponent as AngryFaceSVG } from "../../assets/emoji-dizzy-fill.svg";
+import { User } from "../../types";
+import { getUserById } from "../../service/appService";
+import { StyledPrimaryButton } from "./Login";
+
 
 
 const StyledMainContainer = styled.div`
@@ -36,12 +28,12 @@ const StyledMainContainer = styled.div`
   border-radius: 5px;
 `;
 
-const StyledPlantProfileContainer = styled.div`
+const StyledUserProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-const StyledPlantProfileHeader = styled.div`
+const StyledUserProfileHeader = styled.div`
   height: 10vh;
   display: flex;
   flex-direction: row;
@@ -49,14 +41,14 @@ const StyledPlantProfileHeader = styled.div`
   align-items: center;
 `;
 
-const StyledPlantProfileDetails = styled.div`
+const StyledUserProfileDetails = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin-right: auto;
 `;
 
-const StyledPlantImageContainer = styled.div`
+const StyledUserImageContainer = styled.div`
   display: flex;
   justify-content: right;
   flex-direction: column;
@@ -65,7 +57,9 @@ const StyledPlantImageContainer = styled.div`
   margin-left: 25px;
 `;
 
-const StyledPlantDescription = styled.div`
+const StyledUserDescription = styled.div`
+  display: flex;
+  flex-direction: column;
   font-size: 1.5rem;
   margin-bottom: 15px;
   text-align: center;
@@ -76,29 +70,7 @@ const StyledSmallText = styled.div`
   margin: 5px;
 `;
 
-const StyledIndividualCaringContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 30px;
-  justify-content: center;
-  width: 100%;
-`;
-
-const StyledCaringImageContainer = styled.div`
-  display: flex;
-  justify-content: right;
-  flex-direction: column;
-  width: fit-content;
-  margin-right: 25px;
-`;
-
-const StyledCaringTextContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-
-const StyledEditPlantContainer = styled.div`
+const StyledEditUserContainer = styled.div`
   position: absolute;
   top: 5px;
   right: 8px;
@@ -109,25 +81,6 @@ const StyledEditPlantContainer = styled.div`
     color: #4f7343;
   }
 `;
-
-function TextContainer({ svg, children }) {
-  return (
-    <StyledIndividualCaringContainer>
-      <StyledCaringImageContainer>
-        {svg}
-      </StyledCaringImageContainer>
-      <StyledCaringTextContainer>
-        {children}
-      </StyledCaringTextContainer>
-    </StyledIndividualCaringContainer>
-  );
-}
-
-TextContainer.propTypes = {
-  svg: PropTypes.element.isRequired,
-  children: PropTypes.node.isRequired,
-};
-
 
 export default function PlantView() {
   const loggedInUser = useAppSelector(selectLoggedInUser);
@@ -155,23 +108,28 @@ useEffect(() => {
       {appStatus === "loading" ? <div>Loading...</div> :
         <StyledMainContainer>
             {user.id === loggedInUser?.id && (
-                <StyledEditPlantContainer onClick={() => navigate("/editUser/" + user.id)}>
+                <StyledEditUserContainer onClick={() => navigate("/editUser/" + user.id)}>
                 <EditPlantSVG style={{ width: "35px", height: "35px" }} />
-                </StyledEditPlantContainer>
+                </StyledEditUserContainer>
             )}
-          <StyledPlantProfileContainer>
-            <StyledPlantProfileHeader>
+          <StyledUserProfileContainer>
+            <StyledUserProfileHeader>
               <StyledPlantTitle $underline={false}>{user.username}</StyledPlantTitle>
-            </StyledPlantProfileHeader>
-            <StyledPlantProfileDetails>
-              <StyledPlantImageContainer>
+            </StyledUserProfileHeader>
+            <StyledUserProfileDetails>
+              <StyledUserImageContainer>
                 <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />
-              </StyledPlantImageContainer>
-              <StyledPlantDescription>
+              </StyledUserImageContainer>
+              <StyledUserDescription>
                 <StyledSmallText>Email:</StyledSmallText> {user.email}
-              </StyledPlantDescription>
-            </StyledPlantProfileDetails>
-          </StyledPlantProfileContainer>
+                {user.id === loggedInUser?.id && (
+                    <StyledPrimaryButton type="button" onClick={() => navigate("/editPassword/" + user.id)}>
+                        Change Password
+                    </StyledPrimaryButton>
+                )}
+              </StyledUserDescription>
+            </StyledUserProfileDetails>
+          </StyledUserProfileContainer>
         </StyledMainContainer>
       }
     </>

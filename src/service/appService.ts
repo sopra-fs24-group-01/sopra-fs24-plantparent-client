@@ -48,6 +48,20 @@ export function createUser(user: User) {
     });
 }
 
+export function updateUser(user: User) {
+  return fetch(baseurl + "users/" + user.id, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  })
+    .then(response => response.json())
+    .catch(error => {
+      console.log(error);
+    });
+}
+
 export function getAllUsers(): Promise<User[]> {
   return fetch(baseurl + "users")
     .then(response => response.json())
