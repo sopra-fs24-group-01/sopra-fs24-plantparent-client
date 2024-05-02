@@ -246,9 +246,10 @@ export default function PlantView() {
             <CaretakerSelectorComponent plantId={plantId} setShowSelectCaretakers={setShowSelectCaretakers}
               reloadCaretakers={reloadCaretakers}
               setReloadCaretakers={setReloadCaretakers} />}
-          <StyledEditPlantContainer onClick={() => navigate("/editPlant/" + plant.plantId)}>
-            <EditPlantSVG style={{ width: "35px", height: "35px" }} />
-          </StyledEditPlantContainer>
+          {user.id === plant.owner.id &&
+            <StyledEditPlantContainer onClick={() => navigate("/editPlant/" + plant.plantId)}>
+              <EditPlantSVG style={{ width: "35px", height: "35px" }} />
+            </StyledEditPlantContainer>}
           <StyledPlantProfileContainer>
             <StyledPlantProfileHeader>
               <StyledPlantTitle $underline={false}>{plant.plantName}</StyledPlantTitle>
@@ -289,9 +290,11 @@ export default function PlantView() {
           </StyledPlantDescription>
           <StyledDividerSmall style={{ marginBottom: "auto" }} />
           <StyledCalendarTitle>Caring Schedule
+            {user.id === plant.owner.id &&
             <StyledEditScheduleContainer onClick={() => navigate("/editSchedule/" + plant.plantId)}>
               <EditPlantSVG style={{ width: "30px", height: "30px", marginTop: "5px" }} />
             </StyledEditScheduleContainer>
+            }
           </StyledCalendarTitle>
           <StyledCaringContainer>
             <TextContainer
