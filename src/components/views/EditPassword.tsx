@@ -24,10 +24,8 @@ export default function EditPassword() {
   const appStatus = useAppSelector(getStatus);
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
-  const [oldPassword, setOldPassword] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState("");
-  const [isInputValid, setIsInputValid] = useState<boolean>(true);
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [isValidPWConfirm, setIsValidPWConfirm] = useState<boolean>(true);
 
@@ -84,13 +82,6 @@ export default function EditPassword() {
             <LogoSVG style={{ height: "100px", maxWidth: "100%" }} />
           </StyledLogoContainerLarge>
           <StyledForm onSubmit={doEditPassword}>
-            <label htmlFor="old-password">Old Password</label>
-            <StyledInputField id="old-password"
-                            type="password"
-                            value={oldPassword}
-                            $validInput={true}
-                            placeholder="Old Password"
-                            onChange={(event) => setOldPassword(event.target.value)} />
             <label htmlFor="new-password">New Password</label>
             <StyledInputField id="new-password"
                             type="password"
@@ -107,7 +98,7 @@ export default function EditPassword() {
                             onBlur={(event) => validateConfirmPassword(event.target.value)}
                             onChange={(event) => setConfirmPassword(event.target.value)} />
             <StyledPrimaryButton
-              disabled={(password === "" || oldPassword !== user.password || !isValidPWConfirm)}
+              disabled={(password === "" ||  !isValidPWConfirm)}
               type="submit">Save Changes</StyledPrimaryButton>
             <StyledPrimaryButton onClick={() => navigate("/user/" + userId)}>Cancel</StyledPrimaryButton>
             {error && <StyledError>{error}</StyledError>}

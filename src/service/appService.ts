@@ -1,4 +1,4 @@
-import { Plant, PlantFull, User } from "../types";
+import { Plant, PlantFull, User, UserSimple } from "../types";
 
 const baseurl = process.env.REACT_APP_BACKEND_BASEURL;
 
@@ -48,19 +48,38 @@ export function createUser(user: User) {
     });
 }
 
-export function updateUser(user: User) {
-  return fetch(baseurl + "users/" + user.id, {
+export function updateUser(user: UserSimple) {
+  // Ensure the URL is properly concatenated with the user ID
+  const url = `${baseurl}users/${user.id}`;
+
+  return fetch(url, {
     method: "PUT",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(user),
+    // Stringify only the relevant parts of the user object
+    body: JSON.stringify({
+      username: user.username,
+      email: user.email,
+      password: user.password
+    })
   })
-    .then(response => response.json())
-    .catch(error => {
-      console.log(error);
+  .then(response => {
+    // Check if the response status is 204 (No Content), indicating success
+    if (response.status === 204) {
+      console.log("Update successful");
+      return;
+    }
+    // If not successful, convert response to JSON to read the error message
+    return response.json().then(data => {
+      throw new Error(data.message || "Failed to update user");
     });
+  })
+  .catch(error => {
+    console.error("Error updating user:", error);
+  });
 }
+
 
 export function getAllUsers(): Promise<User[]> {
   return fetch(baseurl + "users")

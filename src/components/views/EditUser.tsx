@@ -26,6 +26,7 @@ export default function EditUser() {
   const [user, setUser] = useState<User | null>(null);
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [error, setError] = useState("");
   const [isInputValid, setIsInputValid] = useState<boolean>(true);
 
@@ -43,13 +44,11 @@ export default function EditUser() {
   async function doEditUser(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const new_user: User = {
+    const new_user: UserSimple = {
       id: Number(userId),
       username: username,
       email: email,
-      password: user.password,
-      plantsCaredFor: user.plantsCaredFor,
-      plantsOwned: user.plantsOwned,
+      password: user.password, // Backend doesn't provide password. Needs to be implemented.
     };
 
     try {
