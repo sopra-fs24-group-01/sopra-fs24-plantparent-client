@@ -33,7 +33,6 @@ export default function EditPassword() {
     async function fetchUser() {
       const fetchedUser = await getUserById(Number(userId));
       setUser(fetchedUser);
-      setPassword(fetchedUser.password);
     }
 
     fetchUser();
@@ -42,13 +41,11 @@ export default function EditPassword() {
   async function doEditPassword(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const new_user: User = {
+    const new_user: UserSimple = {
       id: Number(userId),
       username: user.username,
       email: user.email,
       password: password,
-      plantsCaredFor: user.plantsCaredFor,
-      plantsOwned: user.plantsOwned,
     };
 
     try {
