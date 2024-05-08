@@ -121,6 +121,16 @@ export function updatePlant(plant: Plant) {
     });
 }
 
+export function deletePlantById(plantId: number) {
+  return fetch(baseurl + "plants/" + plantId, {
+    method: "DELETE",
+  })
+    .then(response => response.json())
+    .catch(error => {
+      console.log(error);
+    });
+}
+
 export function getPlantById(plantId: number): Promise<PlantFull> {
   return fetch(baseurl + "plants/" + plantId)
     .then(response => response.json())

@@ -181,6 +181,24 @@ const StyledMoodContainer = styled.div`
   align-items: center;
 `;
 
+const StyledDeleteButton = styled.button`
+  color: #ffffff;
+  font-size: 1.5rem;
+  background-color: red;
+  width: 380px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  margin: 50px auto 5px auto;
+  
+  &:hover {
+    ${props => !props.disabled && css`
+      cursor: pointer;
+      scale: 0.95;`
+}
+  }
+`;
+
 function TextContainer({ svg, children }) {
   return (
     <StyledIndividualCaringContainer>
@@ -316,6 +334,9 @@ export default function PlantView() {
           <StyledDividerSmall />
           <CaretakerComponent plantId={plantId} setShowSelectCaretakers={setShowSelectCaretakers}
             reloadCaretakers={reloadCaretakers} setReloadCaretakers={setReloadCaretakers} />
+          {plant.owner.id === user.id && (
+            <StyledDeleteButton onClick={() => navigate("/deletePlant/" + plant.plantId)}>Delete Plant</StyledDeleteButton>
+          )}
         </StyledMainContainer>
       }
     </>
