@@ -5,7 +5,13 @@ import { useAppDispatch, useAppSelector } from "../../hooks";
 import PlantComponent from "./PlantComponent";
 import { StyledPrimaryButton } from "./Login";
 import { useNavigate } from "react-router-dom";
-import { getStatus, getUserDataById, loginUser, selectAllPlants, selectLoggedInUser } from "../../store/appSlice";
+import {
+  getStatus,
+  selectAllPlants,
+  selectLoggedInUser, updateGetAllPlantsCaredFor,
+  updateGetAllPlantsOwned,
+} from "../../store/appSlice";
+import { Plant } from "../../types";
 
 
 export const StyledMainContainer = styled.div`
@@ -35,14 +41,15 @@ export const StyledMainContainerContainer = styled.div`
 function Home() {
   const user = useAppSelector(selectLoggedInUser);
   const status = useAppSelector(getStatus);
-
-  const plants: any[] = useAppSelector(selectAllPlants);
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getUserDataById(user.id));
+    dispatch(updateGetAllPlantsOwned(user.id));
+    dispatch(updateGetAllPlantsCaredFor(user.id));
   }, []);
+
+  const plants: Plant[] = useAppSelector(selectAllPlants);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -52,7 +59,7 @@ function Home() {
           <StyledSideBar />
           <StyledMainContainerContainer>
             {plants.length < 1 ? <div>You have no plants yet. Create one!</div> : plants.map(plant => (
-              <PlantComponent key={plant.plantName} plant={plant} userId={user.id} />
+              <PlantComponent key={plant.plantName} plantId={plant.plantId} userId={user.id} />
             ))}
             <StyledPrimaryButton
               disabled={false}

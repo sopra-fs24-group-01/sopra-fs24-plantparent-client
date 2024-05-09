@@ -10,6 +10,9 @@ import EditPlant from "components/views/EditPlant";
 import EditSchedule from "components/views/EditSchedule";
 import PlantView from "components/views/PlantView";
 import MyPlants from "./components/views/MyPlants";
+import UserProfile from "components/views/UserProfile";
+import EditUser from "components/views/EditUser";
+import EditPassword from "components/views/EditPassword";
 
 
 function App() {
@@ -31,6 +34,10 @@ function App() {
           <Route path="/" element={<Home/>} />
         </Route>
 
+        <Route path="/profile" element={<LoginGuard/>}>
+          <Route path="/profile" element={<UserProfile/>} />
+        </Route>
+
         <Route path="/myPlants" element={<LoginGuard/>}>
           <Route path="/myPlants" element={<MyPlants/>} />
         </Route>
@@ -49,6 +56,14 @@ function App() {
 
         <Route path="/plant/:plantId" element={<LoginGuard/>}>
           <Route path="/plant/:plantId" element={<PlantView/>} />
+        </Route>
+
+        <Route path="/editUser" element={<LoginGuard/>}>
+          <Route path="/editUser" element={<EditUser/>} />
+        </Route>
+
+        <Route path="/editPassword" element={<LoginGuard/>}>
+          <Route path="/editPassword" element={<EditPassword/>} />
         </Route>
 
       </Routes>

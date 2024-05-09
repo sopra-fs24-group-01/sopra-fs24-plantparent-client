@@ -6,10 +6,8 @@ import { StyledPrimaryButton } from "./Login";
 import { useNavigate } from "react-router-dom";
 import {
   getStatus,
-  getUserDataById,
-  selectAllPlants,
   selectLoggedInUser,
-  selectOwnedPlants,
+  selectOwnedPlants, updateGetAllPlantsOwned,
 } from "../../store/appSlice";
 import { StyledMainContainer, StyledMainContainerContainer, StyledSideBar } from "./Home";
 import { Plant } from "../../types";
@@ -24,8 +22,8 @@ function MyPlants() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getUserDataById(user.id));
-  }, [])
+    dispatch(updateGetAllPlantsOwned(user.id));
+  }, []);
 
   return (
     <>
@@ -35,7 +33,7 @@ function MyPlants() {
           <StyledSideBar />
           <StyledMainContainerContainer>
             {plants.length < 1 ? <div>You have no plants yet. Create one!</div> : plants.map(plant => (
-              <PlantComponent key={plant.plantName} plant={plant} userId={user.id} />
+              <PlantComponent key={plant.plantName} plantId={plant.plantId} userId={user.id} />
             ))}
             <StyledPrimaryButton
               disabled={false}
