@@ -12,7 +12,6 @@ import { getUserById } from "../../service/appService";
 import { StyledPrimaryButton } from "./Login";
 
 
-
 const StyledMainContainer = styled.div`
   position: relative;
   width: 60vw;
@@ -85,20 +84,9 @@ const StyledEditUserContainer = styled.div`
 export default function PlantView() {
   const loggedInUser = useAppSelector(selectLoggedInUser);
   const appStatus = useAppSelector(getStatus);
-  const { userId } = useParams<{ userId: string }>();
-  const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
 
-useEffect(() => {
-    async function fetchUser() {
-        const fetchedUser = await getUserById(Number(userId));
-        setUser(fetchedUser);
-    }
-
-    fetchUser();
-}, [userId]);
-
-  if (!user) {
+  if (!loggedInUser) {
     return <div>Loading...</div>;
   }
 
@@ -107,26 +95,24 @@ useEffect(() => {
       <Header />
       {appStatus === "loading" ? <div>Loading...</div> :
         <StyledMainContainer>
-            {user.id === loggedInUser?.id && (
-                <StyledEditUserContainer onClick={() => navigate("/editUser/" + user.id)}>
-                <EditPlantSVG style={{ width: "35px", height: "35px" }} />
-                </StyledEditUserContainer>
-            )}
+          {loggedInUser.id === loggedInUser?.id && (
+            <StyledEditUserContainer onClick={() => navigate("/editUser")}>
+              <EditPlantSVG style={{ width: "35px", height: "35px" }} />
+            </StyledEditUserContainer>
+          )}
           <StyledUserProfileContainer>
             <StyledUserProfileHeader>
-              <StyledPlantTitle $underline={false}>{user.username}</StyledPlantTitle>
+              <StyledPlantTitle $underline={false}>{loggedInUser.username}</StyledPlantTitle>
             </StyledUserProfileHeader>
             <StyledUserProfileDetails>
               <StyledUserImageContainer>
                 <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />
               </StyledUserImageContainer>
               <StyledUserDescription>
-                <StyledSmallText>Email:</StyledSmallText> {user.email}
-                {user.id === loggedInUser?.id && (
-                    <StyledPrimaryButton type="button" onClick={() => navigate("/editPassword/" + user.id)}>
-                        Change Password
-                    </StyledPrimaryButton>
-                )}
+                <StyledSmallText>Email:</StyledSmallText> {loggedInUser.email}
+                <StyledPrimaryButton type="button" onClick={() => navigate("/editPassword")}>
+                  Change Password
+                </StyledPrimaryButton>
               </StyledUserDescription>
             </StyledUserProfileDetails>
           </StyledUserProfileContainer>

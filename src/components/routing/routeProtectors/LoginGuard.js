@@ -8,7 +8,7 @@ export const LoginGuard = () => {
   const loggedInUser = useAppSelector(selectLoggedInUser);
   if (loggedInUser) {
     const date = new Date();
-    const loggedInDate = new Date(useAppSelector(getLoggedInDate));    // log out if more than 7 days have passed since the user logged in
+    const loggedInDate = useAppSelector(getLoggedInDate);    // log out if more than 7 days have passed since the user logged in
     if (loggedInDate && (date.getTime() - loggedInDate.getTime() > (1000 * 60 * 60 * 24 * 7))) {
       useAppSelector(logOutUser);
       
