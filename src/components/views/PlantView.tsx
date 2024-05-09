@@ -197,7 +197,7 @@ const StyledDeleteButton = styled.button`
   border-radius: 10px;
   border: none;
   margin: 50px auto 5px auto;
-  
+
   &:hover {
     ${props => !props.disabled && css`
       cursor: pointer;
@@ -237,9 +237,10 @@ export default function PlantView() {
   const [modal, setModal] = useState<boolean>(false);
 
   function confirmDelete() {
-    deletePlantById(Number(plantId)).then();
     setModal(false);
-    navigate("/");
+    deletePlantById(Number(plantId)).then(() => {
+      navigate("/");
+    });
   }
 
   useEffect(() => {
@@ -272,7 +273,7 @@ export default function PlantView() {
   return (
     <>
       {modal && <Modal setModal={setModal} action={confirmDelete}
-          text={`Are you sure you want to delete the plant?`} />}
+        text={"Are you sure you want to delete the plant?"} />}
       <Header />
       {appStatus === "loading" ? <div>Loading...</div> :
         <StyledMainContainer>
@@ -330,9 +331,9 @@ export default function PlantView() {
           <StyledDividerSmall style={{ marginBottom: "auto" }} />
           <StyledCalendarTitle>Caring Schedule
             {user.id === plant.owner.id &&
-            <StyledEditScheduleContainer onClick={() => navigate("/editSchedule/" + plant.plantId)}>
-              <EditPlantSVG style={{ width: "30px", height: "30px", marginTop: "5px" }} />
-            </StyledEditScheduleContainer>
+              <StyledEditScheduleContainer onClick={() => navigate("/editSchedule/" + plant.plantId)}>
+                <EditPlantSVG style={{ width: "30px", height: "30px", marginTop: "5px" }} />
+              </StyledEditScheduleContainer>
             }
           </StyledCalendarTitle>
           <StyledCaringContainer>
