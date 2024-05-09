@@ -103,7 +103,7 @@ function Header() {
       <StyledNavLink $active={pathname === "/"} onClick={() => navigate("/")}>Home</StyledNavLink>
       <StyledNavLink $active={pathname === "/myPlants"} onClick={() => navigate("/myPlants")}>My Plants</StyledNavLink>
       <StyledDateHeader>{formattedDate}</StyledDateHeader>
-      <StyledIconContainer onClick={() => navigate("/user/" + loggedInUser.id)}>
+      <StyledIconContainer onClick={() => navigate("/profile")}>
         <ProfileSVG style={{width: "50px", height: "50px"}} />
       </StyledIconContainer>
     </StyledHeaderContainer>

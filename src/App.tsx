@@ -6,13 +6,13 @@ import { AuthGuard } from "./components/routing/routeProtectors/AuthGuard";
 import SignUp from "./components/views/SignUp";
 import Home from "./components/views/Home";
 import CreatePlant from "./components/views/CreatePlant";
-import EditPlant from "components/views/EditPlant";
-import EditSchedule from "components/views/EditSchedule";
-import PlantView from "components/views/PlantView";
+import EditPlant from "./components/views/EditPlant";
+import EditSchedule from "./components/views/EditSchedule";
+import PlantView from "./components/views/PlantView";
 import MyPlants from "./components/views/MyPlants";
-import UserProfile from "components/views/UserProfile";
-import EditUser from "components/views/EditUser";
-import EditPassword from "components/views/EditPassword";
+import UserProfile from "./components/views/UserProfile";
+import EditUser from "./components/views/EditUser";
+import EditPassword from "./components/views/EditPassword";
 
 
 function App() {
