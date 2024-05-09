@@ -185,7 +185,7 @@ export function removeCaretaker(plantId: number, userId: number) {
     });
 }
 
-export function getAllPlantsOwned(userId: number): Promise<Plant[]> {
+export function getAllPlantsOwned(userId: number): Promise<PlantFull[]> {
   return fetch(baseurl + "plants/owned?ownerId=" + userId)
     .then(response => {
       if (!response.ok) {
@@ -202,7 +202,7 @@ export function getAllPlantsOwned(userId: number): Promise<Plant[]> {
     });
 }
 
-export function getAllPlantsCaredFor(userId: number): Promise<Plant[]> {
+export function getAllPlantsCaredFor(userId: number): Promise<PlantFull[]> {
   return fetch(baseurl + "plants/caredFor?careTakerId=" + userId)
     .then(response => {
       if (!response.ok) {
