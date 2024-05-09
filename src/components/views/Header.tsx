@@ -3,6 +3,8 @@ import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import { ReactComponent as ProfileSVG } from "../../assets/person-circle.svg";
 import styled, { css } from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAppSelector } from "hooks";
+import { selectLoggedInUser } from "store/appSlice";
 
 const StyledHeaderContainer = styled.div`
   width: 100vw;
@@ -78,6 +80,7 @@ const StyledIconContainer = styled.div`
 function Header() {
   const location = useLocation();
   const pathname = location.pathname;
+  const loggedInUser = useAppSelector(selectLoggedInUser);
 
   const navigate = useNavigate();
 
@@ -100,7 +103,7 @@ function Header() {
       <StyledNavLink $active={pathname === "/"} onClick={() => navigate("/")}>Home</StyledNavLink>
       <StyledNavLink $active={pathname === "/myPlants"} onClick={() => navigate("/myPlants")}>My Plants</StyledNavLink>
       <StyledDateHeader>{formattedDate}</StyledDateHeader>
-      <StyledIconContainer onClick={() => navigate("/profile")}>
+      <StyledIconContainer onClick={() => navigate("/user/" + loggedInUser.id)}>
         <ProfileSVG style={{width: "50px", height: "50px"}} />
       </StyledIconContainer>
     </StyledHeaderContainer>

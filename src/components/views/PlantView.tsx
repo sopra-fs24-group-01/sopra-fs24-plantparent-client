@@ -15,10 +15,11 @@ import { CaretakerSelectorComponent } from "./CaretakerSelectorComponent";
 import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
 import { CaretakerComponent } from "./CaretakerComponent";
 import { PlantFull } from "../../types";
-import { getPlantById } from "../../service/appService";
+import { deletePlantById, getPlantById } from "../../service/appService";
 import { ReactComponent as HappyFaceSVG } from "../../assets/emoji-smile-fill.svg";
 import { ReactComponent as NeutralFaceSVG } from "../../assets/emoji-neutral-fill.svg";
 import { ReactComponent as AngryFaceSVG } from "../../assets/emoji-dizzy-fill.svg";
+import { Modal } from "./PopupMsgComponent";
 import { ReactComponent as KeySVG } from "../../assets/key.svg";
 import { ReactComponent as HouseSVG } from "../../assets/house-door.svg";
 import { QRCodeComponent } from "./QRCodeComponent";
@@ -187,6 +188,24 @@ const StyledMoodContainer = styled.div`
   align-items: center;
 `;
 
+const StyledDeleteButton = styled.button`
+  color: #ffffff;
+  font-size: 1.5rem;
+  background-color: red;
+  width: 380px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  margin: 50px auto 5px auto;
+  
+  &:hover {
+    ${props => !props.disabled && css`
+      cursor: pointer;
+      scale: 0.95;`
+}
+  }
+`;
+
 function TextContainer({ svg, children }) {
   return (
     <StyledIndividualCaringContainer>
@@ -215,6 +234,13 @@ export default function PlantView() {
   const [showSelectCaretakers, setShowSelectCaretakers] = useState<boolean>(false);
   const [reloadCaretakers, setReloadCaretakers] = useState<boolean>(false);
   const [mood, setMood] = useState<string>("happy");
+  const [modal, setModal] = useState<boolean>(false);
+
+  function confirmDelete() {
+    deletePlantById(Number(plantId)).then();
+    setModal(false);
+    navigate("/");
+  }
 
   useEffect(() => {
     async function fetchPlant() {
@@ -245,6 +271,8 @@ export default function PlantView() {
 
   return (
     <>
+      {modal && <Modal setModal={setModal} action={confirmDelete}
+          text={`Are you sure you want to delete the plant?`} />}
       <Header />
       {appStatus === "loading" ? <div>Loading...</div> :
         <StyledMainContainer>
@@ -330,6 +358,9 @@ export default function PlantView() {
           <StyledDividerSmall />
           <CaretakerComponent plantId={plantId} setShowSelectCaretakers={setShowSelectCaretakers}
             reloadCaretakers={reloadCaretakers} setReloadCaretakers={setReloadCaretakers} />
+          {plant.owner.id === user.id && (
+            <StyledDeleteButton onClick={() => setModal(true)}>Delete Plant</StyledDeleteButton>
+          )}
         </StyledMainContainer>
       }
     </>
