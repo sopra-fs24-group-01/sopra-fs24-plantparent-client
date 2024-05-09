@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import {
   StyledError,
@@ -9,51 +9,44 @@ import {
   StyledLogoContainerLarge,
   StyledMainContainer, StyledPrimaryButton,
 } from "./Login";
-import { User, UserSimple } from "../../types";
-import { useAppSelector } from "../../hooks";
-import { getStatus, selectLoggedInUser } from "../../store/appSlice";
-import { getUserById, updateUser } from "../../service/appService";
-
+import { UserSimple } from "../../types";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { getStatus, selectLoggedInUser, updateUserRedux } from "../../store/appSlice";
 
 export default function EditUser() {
-  // get the logged in user from the store
   const loggedInUser = useAppSelector(selectLoggedInUser);
-  // capture the plantId from the URL
-  const { userId } = useParams<{ userId: string }>();
-  // get the plant from the store
   const appStatus = useAppSelector(getStatus);
   const navigate = useNavigate();
-  const [user, setUser] = useState<User | null>(null);
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
   const [error, setError] = useState("");
   const [isInputValid, setIsInputValid] = useState<boolean>(true);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     async function fetchUser() {
-      const fetchedUser = await getUserById(Number(userId));
-      setUser(fetchedUser);
-      setUsername(fetchedUser.username);
-      setEmail(fetchedUser.email);
+      if (loggedInUser) {
+        setUsername(loggedInUser.username);
+        setEmail(loggedInUser.email);
+      }
     }
 
-    fetchUser();
-  }, [userId]);
+    fetchUser().then();
+  }, [loggedInUser]);
 
   async function doEditUser(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const new_user: UserSimple = {
-      id: Number(userId),
+      id: loggedInUser.id,
       username: username,
       email: email,
-      password: user.password, // Backend doesn't provide password. Needs to be implemented.
+      password: loggedInUser.password, // Backend doesn't provide password. Needs to be implemented.
     };
 
     try {
-      await updateUser(new_user);
-      navigate("/user/" + userId);
+      dispatch(updateUserRedux(new_user));
+      navigate("/profile");
     } catch (err) {
       console.log(err);
       setError(err.message);
@@ -65,12 +58,8 @@ export default function EditUser() {
     setIsInputValid(re.test(email));
   }
 
-  if (!user) {
+  if (!loggedInUser) {
     return <div>Loading...</div>;
-  }
-  
-  if (user.id !== loggedInUser?.id) {
-    return <div>Unauthorized</div>
   }
 
   return (
@@ -83,23 +72,24 @@ export default function EditUser() {
           <StyledForm onSubmit={doEditUser}>
             <label htmlFor="username">Username</label>
             <StyledInputField id="username"
-                              type="text"
-                              value={username}
-                              $validInput={true}
-                              placeholder="Username"
-                              onChange={(event) => setUsername(event.target.value)} />
+              type="text"
+              value={username}
+              $validInput={true}
+              placeholder="Username"
+              onChange={(event) => setUsername(event.target.value)} />
             <label htmlFor="email">Email</label>
             <StyledInputField id="email"
-                              type="text"
-                              value={email}
-                              $validInput={isInputValid}
-                              placeholder="Email"
-                              onBlur={(event) => validateEmail(event.target.value)}
-                              onChange={(event) => setEmail(event.target.value)} />
+              type="text"
+              value={email}
+              $validInput={isInputValid}
+              placeholder="Email"
+              onBlur={(event) => validateEmail(event.target.value)}
+              onChange={(event) => setEmail(event.target.value)} />
             <StyledPrimaryButton
-              disabled={(username === "" || email === "" || !isInputValid)}
+              disabled={username === "" || email === "" || !isInputValid ||
+                (username === loggedInUser.username && email === loggedInUser.email)}
               type="submit">Save Changes</StyledPrimaryButton>
-            <StyledPrimaryButton onClick={() => navigate("/user/" + userId)}>Cancel</StyledPrimaryButton>
+            <StyledPrimaryButton onClick={() => navigate("/profile")}>Cancel</StyledPrimaryButton>
             {error && <StyledError>{error}</StyledError>}
           </StyledForm>
         </StyledLoginContainer>

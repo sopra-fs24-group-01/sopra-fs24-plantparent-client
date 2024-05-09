@@ -1,6 +1,12 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { getPlantById, login, createUser, getUserById } from "../service/appService";
-import { Plant, User } from "../types";
+import {
+  getPlantById,
+  login,
+  createUser,
+  getAllPlantsCaredFor,
+  getAllPlantsOwned, updateUser,
+} from "../service/appService";
+import { Plant, User, UserSimple } from "../types";
 
 
 interface IUserState {
@@ -8,7 +14,7 @@ interface IUserState {
   plantsCaredFor: Plant[];
   loggedInUser: User | null;
   status: string;
-  loggedInDate: Date;
+  loggedInDate: string;
   error: null | any;
 }
 
@@ -28,7 +34,7 @@ export const registerUser = createAsyncThunk(
       return await createUser(newUser);
     } catch (err) {
       console.log(err);
-      
+
       return rejectWithValue(err.message);
     }
   },
@@ -41,22 +47,43 @@ export const loginUser = createAsyncThunk(
       return await login(user);
     } catch (err) {
       console.log(err);
-      
+
       return rejectWithValue(err.message);
     }
   },
 );
 
-export const getUserDataById = createAsyncThunk(
-  "users/getUserDataById",
-  async (userId: number) => {
-    return await getUserById(userId);
-  });
+export const updateUserRedux = createAsyncThunk(
+  "users/updateUser",
+  async (user: UserSimple, { rejectWithValue }) => {
+    try {
+      return await updateUser(user);
+    } catch (err) {
+      console.log(err);
 
-export const updatePlant = createAsyncThunk(
+      return rejectWithValue(err.message);
+    }
+  },
+);
+
+export const updatePlantInPlantStore = createAsyncThunk(
   "plants/updatePlant",
   async (plantId: number) => {
     return await getPlantById(plantId);
+  },
+);
+
+export const updateGetAllPlantsOwned = createAsyncThunk(
+  "plants/updateGetAllPlantsOwned",
+  async (userId: number) => {
+    return await getAllPlantsOwned(userId);
+  },
+);
+
+export const updateGetAllPlantsCaredFor = createAsyncThunk(
+  "plants/updateGetAllPlantsCaredFor",
+  async (userId: number) => {
+    return await getAllPlantsCaredFor(userId);
   },
 );
 
@@ -71,7 +98,8 @@ export const appSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, { payload }) => {
         state.status = "succeeded";
-        state.loggedInDate = new Date();
+        const date = new Date();
+        state.loggedInDate = date.toISOString();
         state.loggedInUser = payload;
         state.plantsOwned = payload.plantsOwned;
         state.plantsCaredFor = payload.plantsCaredFor;
@@ -88,7 +116,8 @@ export const appSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, { payload }) => {
         state.status = "succeeded";
-        state.loggedInDate = new Date();
+        const date = new Date();
+        state.loggedInDate = date.toISOString();
         state.loggedInUser = payload;
         state.plantsOwned = payload.plantsOwned;
         state.plantsCaredFor = payload.plantsCaredFor;
@@ -97,12 +126,14 @@ export const appSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
-      .addCase(getUserDataById.fulfilled, (state, { payload }) => {
+      .addCase(updateUserRedux.fulfilled, (state, { payload }) => {
         state.status = "succeeded";
+        console.log(payload);
+        state.loggedInUser = payload;
         state.plantsOwned = payload.plantsOwned;
         state.plantsCaredFor = payload.plantsCaredFor;
       })
-      .addCase(updatePlant.fulfilled, (state, { payload }) => {
+      .addCase(updatePlantInPlantStore.fulfilled, (state, { payload }) => {
         const newPlantsOwned = state.plantsOwned.map((plant) => {
           if (plant.plantId === payload.plantId) {
             return payload;
@@ -119,6 +150,12 @@ export const appSlice = createSlice({
         });
         state.plantsOwned = newPlantsOwned;
         state.plantsCaredFor = newPlantsCaredFor;
+      })
+      .addCase(updateGetAllPlantsOwned.fulfilled, (state, { payload }) => {
+        state.plantsOwned = payload;
+      })
+      .addCase(updateGetAllPlantsCaredFor.fulfilled, (state, { payload }) => {
+        state.plantsCaredFor = payload;
       });
   },
 });
@@ -154,7 +191,7 @@ export const selectAllPlants = createSelector(
 
 export const selectOwnedPlants = createSelector(
   [
-    (state: RootState) => state.appData.plantsOwned
+    (state: RootState) => state.appData.plantsOwned,
   ],
   (plantsOwned) => {
     return [...plantsOwned].sort((a, b) => {
@@ -181,7 +218,10 @@ export const logOutUser = (state: RootState) => {
   state.appData.loggedInDate = null;
 };
 
-export const getLoggedInDate = (state: RootState) => state.appData.loggedInDate;
+export const getLoggedInDate = createSelector(
+  [(state: RootState) => state.appData.loggedInDate],
+  (loggedInDateString) => new Date(loggedInDateString),
+);
 
 
 export const getStatus = (state: RootState) => state.appData.status;

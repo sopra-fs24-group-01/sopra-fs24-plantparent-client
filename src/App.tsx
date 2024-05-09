@@ -34,6 +34,10 @@ function App() {
           <Route path="/" element={<Home/>} />
         </Route>
 
+        <Route path="/profile" element={<LoginGuard/>}>
+          <Route path="/profile" element={<UserProfile/>} />
+        </Route>
+
         <Route path="/myPlants" element={<LoginGuard/>}>
           <Route path="/myPlants" element={<MyPlants/>} />
         </Route>
@@ -54,16 +58,12 @@ function App() {
           <Route path="/plant/:plantId" element={<PlantView/>} />
         </Route>
 
-        <Route path="/user/:userId" element={<LoginGuard/>}>
-          <Route path="/user/:userId" element={<UserProfile/>} />
+        <Route path="/editUser" element={<LoginGuard/>}>
+          <Route path="/editUser" element={<EditUser/>} />
         </Route>
 
-        <Route path="/editUser/:userId" element={<LoginGuard/>}>
-          <Route path="/editUser/:userId" element={<EditUser/>} />
-        </Route>
-
-        <Route path="/editPassword/:userId" element={<LoginGuard/>}>
-          <Route path="/editPassword/:userId" element={<EditPassword/>} />
+        <Route path="/editPassword" element={<LoginGuard/>}>
+          <Route path="/editPassword" element={<EditPassword/>} />
         </Route>
 
       </Routes>
