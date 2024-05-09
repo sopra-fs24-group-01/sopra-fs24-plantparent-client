@@ -6,12 +6,12 @@ import {
   getAllPlantsCaredFor,
   getAllPlantsOwned, updateUser,
 } from "../service/appService";
-import { Plant, User, UserSimple } from "../types";
+import { Plant, PlantFull, User, UserSimple } from "../types";
 
 
 interface IUserState {
-  plantsOwned: Plant[];
-  plantsCaredFor: Plant[];
+  plantsOwned: PlantFull[];
+  plantsCaredFor: PlantFull[];
   loggedInUser: User | null;
   status: string;
   loggedInDate: string;
@@ -119,8 +119,14 @@ export const appSlice = createSlice({
         const date = new Date();
         state.loggedInDate = date.toISOString();
         state.loggedInUser = payload;
-        state.plantsOwned = payload.plantsOwned;
-        state.plantsCaredFor = payload.plantsCaredFor;
+        const fullPlantsOwned: PlantFull[] = payload.plantsOwned.map((plant) => {
+          return {...plant, owner: payload, caretakers: []};
+        })
+        const fullPlantsCaredFor: PlantFull[] = payload.plantsCaredFor.map((plant) => {
+          return {...plant, owner: payload, caretakers: []};
+        })
+        state.plantsOwned = fullPlantsOwned;
+        state.plantsCaredFor = fullPlantsCaredFor;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
@@ -130,8 +136,14 @@ export const appSlice = createSlice({
         state.status = "succeeded";
         console.log(payload);
         state.loggedInUser = payload;
-        state.plantsOwned = payload.plantsOwned;
-        state.plantsCaredFor = payload.plantsCaredFor;
+        const fullPlantsOwned: PlantFull[] = payload.plantsOwned.map((plant) => {
+          return {...plant, owner: payload, caretakers: []};
+        })
+        const fullPlantsCaredFor: PlantFull[] = payload.plantsCaredFor.map((plant) => {
+          return {...plant, owner: payload, caretakers: []};
+        })
+        state.plantsOwned = fullPlantsOwned;
+        state.plantsCaredFor = fullPlantsCaredFor;
       })
       .addCase(updatePlantInPlantStore.fulfilled, (state, { payload }) => {
         const newPlantsOwned = state.plantsOwned.map((plant) => {

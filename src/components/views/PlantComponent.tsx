@@ -1,6 +1,5 @@
 import React, { ReactElement, useState } from "react";
 import styled, { css } from "styled-components";
-import { Plant } from "../../types";
 import { ReactComponent as ImagePlaceholderSVG } from "../../assets/image_placeholder.svg";
 import { calculateDifferenceInDays, isInThePast } from "../../helpers/util";
 import { ReactComponent as HappyFaceSVG } from "../../assets/emoji-smile-fill.svg";
@@ -9,13 +8,15 @@ import { ReactComponent as AngryFaceSVG } from "../../assets/emoji-dizzy-fill.sv
 import { ReactComponent as DropSVG } from "../../assets/droplet-half.svg";
 import { ReactComponent as BandaidSVG } from "../../assets/bandaid.svg";
 import { ReactComponent as CheckSVG } from "../../assets/check-circle.svg";
+import { ReactComponent as HouseSVG } from "../../assets/house-door.svg";
+import { ReactComponent as KeySVG } from "../../assets/key.svg";
 import { ReactComponent as CheckFillSVG } from "../../assets/check-circle-fill.svg";
 import { Modal } from "./PopupMsgComponent";
 import { formatDistance, parseISO } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { careForPlant, waterPlant } from "../../service/appService";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { selectPlantById, updatePlantInPlantStore } from "../../store/appSlice";
+import { useAppSelector } from "../../hooks";
+import { selectPlantById } from "../../store/appSlice";
 
 
 const StyledPlantComponentContainer = styled.div`
@@ -124,6 +125,15 @@ const StyledGreenText = styled.span`
   font-style: italic;
 `;
 
+export const StyledOwnerContainer = styled.div`
+  position: absolute;
+  top: 8px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: fit-content;
+`;
+
 
 export function Schedule({ plantId, userId, text, date, svg, watering, showText = true }: {
   plantId: number,
@@ -199,6 +209,10 @@ export default function PlantComponent({ plantId, userId }: { plantId: number, u
         {mood === "neutral" && <NeutralFaceSVG style={{ color: "orange", width: "50px", height: "50px" }} />}
         {mood === "angry" && <AngryFaceSVG style={{ color: "red", width: "50px", height: "50px" }} />}
       </StyledMoodContainer>
+      <StyledOwnerContainer title={userId === plant.owner.id ? "My plant" : "Cared for plant"}>
+        {userId === plant.owner.id && <HouseSVG style={{ color: "#83b271", width: "35px", height: "35px" }} />}
+        {userId !== plant.owner.id && <KeySVG style={{ color: "#83b271", width: "40px", height: "40px" }} />}
+      </StyledOwnerContainer>
       <StyledPlantImageContainer>
         <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />
         <StyledPlantTitle $underline={true} onClick={() => navigate("/plant/" + plant.plantId)}>{plant.plantName}</StyledPlantTitle>

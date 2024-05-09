@@ -9,8 +9,7 @@ import {
   StyledLogoContainerLarge,
   StyledMainContainer, StyledPrimaryButton,
 } from "./Login";
-import { useDispatch } from "react-redux";
-import { Plant, PlantFull, PlantSimple } from "../../types";
+import { PlantSimple } from "../../types";
 import Header from "./Header";
 import { createPlant } from "../../service/appService";
 import { selectLoggedInUser } from "../../store/appSlice";
@@ -23,9 +22,9 @@ export default function CreatePlant() {
   const [species, setSpecies] = useState<string>("");
   const [careInstructions, setCareInstructions] = useState<string>("");
   const [lastWateringDate, setLastWateringDate] = useState<string>("");
-  const [wateringInterval, setWateringInterval] = useState<number>(0);
+  const [wateringInterval, setWateringInterval] = useState<string>("");
   const [lastCaringDate, setLastCaringDate] = useState<string>("");
-  const [caringInterval, setCaringInterval] = useState<number>(0);
+  const [caringInterval, setCaringInterval] = useState<string>("");
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
@@ -47,10 +46,10 @@ export default function CreatePlant() {
       species: species,
       careInstructions: careInstructions,
       lastWateringDate: lastWateringDate,
-      wateringInterval: wateringInterval,
+      wateringInterval: Number(wateringInterval),
       nextWateringDate: nextWateringDate,
       lastCaringDate: lastCaringDate,
-      caringInterval: caringInterval,
+      caringInterval: Number(caringInterval),
       nextCaringDate: nextCaringDate,
       owner: { id: user.id, username: user.username, email: user.email, password: user.password},
       caretakers: []
