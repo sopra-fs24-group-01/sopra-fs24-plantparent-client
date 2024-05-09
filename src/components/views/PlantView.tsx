@@ -15,10 +15,11 @@ import { CaretakerSelectorComponent } from "./CaretakerSelectorComponent";
 import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
 import { CaretakerComponent } from "./CaretakerComponent";
 import { PlantFull } from "../../types";
-import { getPlantById } from "../../service/appService";
+import { deletePlantById, getPlantById } from "../../service/appService";
 import { ReactComponent as HappyFaceSVG } from "../../assets/emoji-smile-fill.svg";
 import { ReactComponent as NeutralFaceSVG } from "../../assets/emoji-neutral-fill.svg";
 import { ReactComponent as AngryFaceSVG } from "../../assets/emoji-dizzy-fill.svg";
+import { Modal } from "./PopupMsgComponent";
 
 
 const StyledMainContainer = styled.div`
@@ -227,6 +228,13 @@ export default function PlantView() {
   const [showSelectCaretakers, setShowSelectCaretakers] = useState<boolean>(false);
   const [reloadCaretakers, setReloadCaretakers] = useState<boolean>(false);
   const [mood, setMood] = useState<string>("happy");
+  const [modal, setModal] = useState<boolean>(false);
+
+  function confirmDelete() {
+    deletePlantById(Number(plantId)).then();
+    setModal(false);
+    navigate("/");
+  }
 
   useEffect(() => {
     async function fetchPlant() {
@@ -257,6 +265,8 @@ export default function PlantView() {
 
   return (
     <>
+      {modal && <Modal setModal={setModal} action={confirmDelete}
+          text={`Are you sure you want to delete the plant?`} />}
       <Header />
       {appStatus === "loading" ? <div>Loading...</div> :
         <StyledMainContainer>
@@ -335,7 +345,7 @@ export default function PlantView() {
           <CaretakerComponent plantId={plantId} setShowSelectCaretakers={setShowSelectCaretakers}
             reloadCaretakers={reloadCaretakers} setReloadCaretakers={setReloadCaretakers} />
           {plant.owner.id === user.id && (
-            <StyledDeleteButton onClick={() => navigate("/deletePlant/" + plant.plantId)}>Delete Plant</StyledDeleteButton>
+            <StyledDeleteButton onClick={() => setModal(true)}>Delete Plant</StyledDeleteButton>
           )}
         </StyledMainContainer>
       }
