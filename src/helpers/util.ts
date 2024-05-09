@@ -7,12 +7,14 @@ export function isInThePast(date: string) {
   return givenDate < currentDate;
 }
 
-export function calculateDifferenceInDays(date: string) {
+export function calculateDifferenceInDays(date: string): string {
   const givenDate = new Date(date);
   const currentDate = new Date();
   const differenceInTime = currentDate.getTime() - givenDate.getTime();
   
-  return Math.ceil(differenceInTime / (1000 * 60 * 60 * 25)) * - 1;
+  const result = Math.ceil(differenceInTime / (1000 * 60 * 60 * 25)) * - 1;
+
+  return result > 0 ? "+" + result : result.toString();
 }
 
 export function formatDate(date: string) {

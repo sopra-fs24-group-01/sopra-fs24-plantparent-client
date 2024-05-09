@@ -1,7 +1,6 @@
 import React from "react";
 import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import { ReactComponent as ProfileSVG } from "../../assets/person-circle.svg";
-import { ReactComponent as BellSVG } from "../../assets/bell-fill.svg";
 import styled, { css } from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -103,9 +102,6 @@ function Header() {
       <StyledDateHeader>{formattedDate}</StyledDateHeader>
       <StyledIconContainer onClick={() => navigate("/profile")}>
         <ProfileSVG style={{width: "50px", height: "50px"}} />
-      </StyledIconContainer>
-      <StyledIconContainer>
-        <BellSVG style={{width: "50px", height: "50px"}} />
       </StyledIconContainer>
     </StyledHeaderContainer>
   )

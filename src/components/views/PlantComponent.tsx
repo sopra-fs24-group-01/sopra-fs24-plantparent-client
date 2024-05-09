@@ -14,6 +14,8 @@ import { Modal } from "./PopupMsgComponent";
 import { formatDistance, parseISO } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { careForPlant, waterPlant } from "../../service/appService";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { selectPlantById, updatePlantInPlantStore } from "../../store/appSlice";
 
 
 const StyledPlantComponentContainer = styled.div`
@@ -132,7 +134,7 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
   watering: boolean,
   showText?: boolean
 }) {
-  const [day, setDay] = useState(0);
+  const [day, setDay] = useState<string>("0");
   const [modal, setModal] = useState<boolean>(false);
   const past = isInThePast(date);
   const now = new Date();
@@ -143,13 +145,11 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
 
   function action() {
     if (watering) {
-      waterPlant(plantId).then();
+      waterPlant(plantId).then(() => window.location.reload());
     } else {
-      careForPlant(plantId).then();
-      console.log("caring");
+      careForPlant(plantId).then(() => window.location.reload());
     }
     setModal(false);
-    window.location.reload();
   }
 
   return (
@@ -165,7 +165,7 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
         <ScheduleIconsContainer>
           <CaringSVGContainer>
             {svg}
-            <CaringDay $past={past}>{past ? "" : "+"}{day}</CaringDay>
+            <CaringDay $past={past}>{day}</CaringDay>
           </CaringSVGContainer>
           <CaringSVGContainer $hover={true} onClick={() => setModal(true)}>
             {past ?
@@ -178,7 +178,8 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
   );
 }
 
-export default function PlantComponent({ plant, userId }: { plant: Plant, userId: number }) {
+export default function PlantComponent({ plantId, userId }: { plantId: number, userId: number }) {
+  const plant = useAppSelector(state => selectPlantById(state, plantId));
   const navigate = useNavigate();
   let mood = "happy";
   // next watering date or next caring date in the past
