@@ -1,15 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { ReactComponent as TooltipSVG } from "../../assets/info-square.svg";
 
 export const StyledInputFiledContainer = styled.div`
   position: relative
 `;
+
 const StyledInputField = styled.input<{ $backgroundImage?: string, $validInput?: boolean }>`
   font-size: 1.5rem;
   padding: 0 15px;
   width: 350px;
   height: 40px;
+  background-image: url("${props => props.$backgroundImage || ""}");
+  border: ${props => props.$validInput !== false ? "" : "2px solid red"};
+  margin: 20px auto;
+  border-radius: 5px;
+`;
+
+const StyledInputTextArea = styled.textarea<{ $backgroundImage?: string, $validInput?: boolean }>`
+  font-size: 1.5rem;
+  padding: 0 15px;
+  width: 350px;
   background-image: url("${props => props.$backgroundImage || ""}");
   border: ${props => props.$validInput !== false ? "" : "2px solid red"};
   margin: 20px auto;
@@ -40,7 +51,8 @@ export interface InputFieldComponentProps {
   validInput: boolean,
   placeholder: string,
   value: string | number | Date,
-  onChange: React.Dispatch<React.SetStateAction<any>>
+  onChange: React.Dispatch<React.SetStateAction<any>>,
+  lengthLimit?: number,
   max?: string,
   tooltip?: string
 }
@@ -52,9 +64,13 @@ export function InputFieldComponent({
   placeholder,
   value,
   onChange,
+  lengthLimit,
   max,
   tooltip,
 }: InputFieldComponentProps) {
+  const [valid, setValid] = useState<boolean>(validInput);
+  const charLimit = lengthLimit || 25;
+  const rowCount = Math.ceil(lengthLimit / 25);
   function eventHandler(event: React.ChangeEvent<HTMLInputElement>) {
     if (type === "number") {
       let value = Number(event.target.value);
@@ -62,6 +78,13 @@ export function InputFieldComponent({
         value = 0;
       }
       onChange(value);
+    } else if (type === "text") {
+      if (event.target.value.length <= charLimit) {
+        onChange(event.target.value);
+        setValid(true);
+      } else {
+        setValid(false);
+      }
     } else {
       onChange(event.target.value);
     }
@@ -69,14 +92,22 @@ export function InputFieldComponent({
 
   return (
     <StyledInputFiledContainer>
-      <StyledInputField id={id}
-        type={type}
-        min={type === "number" ? 0 : undefined}
-        max={max !== undefined ? max : ""}
-        value={value}
-        $validInput={validInput}
-        placeholder={placeholder}
-        onChange={eventHandler} />
+      {lengthLimit !== undefined && rowCount > 1 ?
+        <StyledInputTextArea
+          id={id}
+          rows={rowCount}
+          $validInput={valid}
+          placeholder={placeholder}
+          value={value}
+          onChange={eventHandler} /> :
+        <StyledInputField id={id}
+          type={type}
+          min={type === "number" ? 0 : undefined}
+          max={max !== undefined ? max : ""}
+          value={value}
+          $validInput={valid}
+          placeholder={placeholder}
+          onChange={eventHandler} />}
       {tooltip &&
         <StyledTooltipContainer title={tooltip} $toTheRight={type === "number"}>
           <TooltipSVG style={{

@@ -95,6 +95,7 @@ export default function CreatePlant() {
               validInput={true}
               placeholder={"Care Instructions"}
               value={careInstructions}
+              lengthLimit={150}
               onChange={setCareInstructions}
               tooltip={"What are the important steps one needs to follow to care for this plant?"}/>
             <label htmlFor="lastWateringDate">Last Watering Date</label>

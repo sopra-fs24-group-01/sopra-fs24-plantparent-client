@@ -4,7 +4,6 @@ import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import {
   StyledError,
   StyledForm,
-  StyledInputField,
   StyledLoginContainer,
   StyledLogoContainerLarge,
   StyledMainContainer, StyledPrimaryButton,
@@ -109,6 +108,7 @@ export default function EditPlant() {
               type={"text"}
               validInput={true}
               placeholder={"Care Instructions"}
+              lengthLimit={150}
               value={careInstructions}
               onChange={setCareInstructions}
               tooltip={"What are the important steps one needs to follow to care for this plant?"}/>
