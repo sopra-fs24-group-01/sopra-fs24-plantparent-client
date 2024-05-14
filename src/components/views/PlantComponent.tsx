@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { ReactComponent as ImagePlaceholderSVG } from "../../assets/image_placeholder.svg";
 import { calculateDifferenceInDays, isInThePast } from "../../helpers/util";
@@ -15,8 +15,8 @@ import { Modal } from "./PopupMsgComponent";
 import { formatDistance, parseISO } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { careForPlant, waterPlant } from "../../service/appService";
-import { useAppSelector } from "../../hooks";
-import { selectPlantById } from "../../store/appSlice";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { selectPlantById, updatePlantInPlantStore } from "../../store/appSlice";
 
 
 const StyledPlantComponentContainer = styled.div`
@@ -109,6 +109,9 @@ const CaringSVGContainer = styled.div<{ $hover?: boolean }>`
       cursor: pointer;
       scale: 0.95;`
 }
+    ${props => !props.$hover && css`
+      cursor: not-allowed;`
+}
   }
 `;
 
@@ -148,16 +151,17 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
   const [modal, setModal] = useState<boolean>(false);
   const past = isInThePast(date);
   const now = new Date();
+  const dispatch = useAppDispatch();
 
-  useState(() => {
+  useEffect(() => {
     setDay(calculateDifferenceInDays(date));
-  });
+  }, [past]);
 
   function action() {
     if (watering) {
-      waterPlant(plantId).then(() => window.location.reload());
+      waterPlant(plantId).then(() => dispatch(updatePlantInPlantStore(plantId)));
     } else {
-      careForPlant(plantId).then(() => window.location.reload());
+      careForPlant(plantId).then(() => dispatch(updatePlantInPlantStore(plantId)));
     }
     setModal(false);
   }

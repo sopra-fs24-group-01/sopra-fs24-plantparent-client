@@ -169,8 +169,6 @@ export function waterPlant(plantId: number) {
         return response.text().then(err => {
           throw new Error(err);
         });
-      } else {
-        return response.json();
       }
     });
 }
@@ -184,8 +182,6 @@ export function careForPlant(plantId: number) {
         return response.text().then(err => {
           throw new Error(err);
         });
-      } else {
-        return response.json();
       }
     });
 }
@@ -203,8 +199,6 @@ export function addCaretaker(plantId: number, userId: number) {
         return response.text().then(err => {
           throw new Error(err);
         });
-      } else {
-        return response.json();
       }
     });
 }
@@ -218,8 +212,6 @@ export function removeCaretaker(plantId: number, userId: number) {
         return response.text().then(err => {
           throw new Error(err);
         });
-      } else {
-        return response.json();
       }
     });
 }

@@ -62,7 +62,7 @@ export function CaretakerSelectorComponent({ plantId, setShowSelectCaretakers, r
   }
 
   useEffect(() => {
-    getPotentialCaretakers().then((users) => console.log(users));
+    getPotentialCaretakers().then();
   }, []);
 
   useEffect(() => {

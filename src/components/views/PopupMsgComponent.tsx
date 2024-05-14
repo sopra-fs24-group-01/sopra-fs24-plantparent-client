@@ -33,6 +33,10 @@ const StyledModalButton = styled(StyledPrimaryButton)`
   width: 100px;
 `;
 
+const StyledModalButtonRed = styled(StyledModalButton)`
+  background-color: red;
+`;
+
 
 export function Modal({ text, action, setModal }: {
   text: string,
@@ -50,7 +54,7 @@ export function Modal({ text, action, setModal }: {
         {text}
         <StyledModalButtonContainer>
           <StyledModalButton onClick={performAction}>Yes</StyledModalButton>
-          <StyledModalButton onClick={() => setModal(false)}>No</StyledModalButton>
+          <StyledModalButtonRed onClick={() => setModal(false)}>No</StyledModalButtonRed>
         </StyledModalButtonContainer>
       </StyledModalContainer>
     </StyledModalBackground>

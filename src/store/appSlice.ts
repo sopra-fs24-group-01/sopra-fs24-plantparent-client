@@ -172,6 +172,7 @@ export const appSlice = createSlice({
         state.plantsOwned = newPlantsOwned;
         state.plantsCaredFor = newPlantsCaredFor;
         state.error = null;
+        console.log("plant updated");
       })
       .addCase(updateGetAllPlantsOwned.fulfilled, (state, { payload }) => {
         state.plantsOwned = payload;
