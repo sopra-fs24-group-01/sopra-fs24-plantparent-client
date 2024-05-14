@@ -11,8 +11,9 @@ import {
 } from "./Login";
 import { Plant, PlantFull, PlantSimple } from "../../types";
 import { useAppSelector } from "../../hooks";
-import { getStatus, selectLoggedInUser, selectPlantById } from "../../store/appSlice";
+import { getStatus, selectLoggedInUser } from "../../store/appSlice";
 import { getPlantById, updatePlant } from "../../service/appService";
+import { formatDate, formatDateYMD } from "../../helpers/util";
 
 
 export default function EditPlant() {
@@ -37,8 +38,8 @@ export default function EditPlant() {
     async function fetchPlant() {
       const fetchedPlant = await getPlantById(Number(plantId));
       setPlant(fetchedPlant);
-      setLastWateringDate(fetchedPlant.nextWateringDate);
-      setLastCaringDate(fetchedPlant.nextCaringDate);
+      setLastWateringDate(formatDateYMD(fetchedPlant.nextWateringDate));
+      setLastCaringDate(formatDateYMD(fetchedPlant.nextCaringDate));
       setWateringInterval(fetchedPlant.wateringInterval);
       setCaringInterval(fetchedPlant.caringInterval);
     }
@@ -98,6 +99,7 @@ export default function EditPlant() {
               value={lastWateringDate}
               $validInput={true}
               placeholder="Last Watering Date"
+              max={new Date().toISOString().split("T")[0]}
               onChange={(event) => setLastWateringDate(event.target.value)} />
             <label htmlFor="wateringInterval">Watering Interval</label>
             <StyledInputField id="wateringInterval"
@@ -112,6 +114,7 @@ export default function EditPlant() {
               value={lastCaringDate}
               $validInput={true}
               placeholder="Last Caring Date"
+              max={new Date().toISOString().split("T")[0]}
               onChange={(event) => setLastCaringDate(event.target.value)} />
             <label htmlFor="caringInterval">Caring Interval</label>
             <StyledInputField id="caringInterval"

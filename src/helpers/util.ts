@@ -20,3 +20,12 @@ export function calculateDifferenceInDays(date: string): string {
 export function formatDate(date: string) {
   return new Date(date).toLocaleDateString("de-DE", { year: "numeric", month: "2-digit", day: "2-digit" })
 }
+
+export function formatDateYMD(date: string) {
+  const dateObj = new Date(date);
+  const year = dateObj.getFullYear();
+  const month = ("0" + (dateObj.getMonth() + 1)).slice(-2);
+  const day = ("0" + dateObj.getDate()).slice(-2);
+
+  return `${year}-${month}-${day}`;
+}

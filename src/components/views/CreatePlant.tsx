@@ -83,6 +83,7 @@ export default function CreatePlant() {
               value={species}
               $validInput={true}
               placeholder="Species"
+              max={new Date().toISOString().split("T")[0]}
               onChange={(event) => setSpecies(event.target.value)} />
             <StyledInputField id="careInstructions"
               type="text"
@@ -96,6 +97,7 @@ export default function CreatePlant() {
               value={lastWateringDate}
               $validInput={true}
               placeholder="Last Watering Date"
+              max={new Date().toISOString().split("T")[0]}
               onChange={(event) => setLastWateringDate(event.target.value)} />
             <StyledInputField id="wateringInterval"
               type="number"
