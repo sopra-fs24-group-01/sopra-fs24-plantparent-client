@@ -9,11 +9,18 @@ import {
   StyledLogoContainerLarge,
   StyledMainContainer, StyledPrimaryButton,
 } from "./Login";
-import { useDispatch } from "react-redux";
-import { Plant, PlantFull, PlantSimple } from "../../types";
+import { PlantFull, PlantSimple } from "../../types";
 import { useAppSelector } from "../../hooks";
 import { getStatus, selectLoggedInUser, selectPlantById } from "../../store/appSlice";
 import { getPlantById, updatePlant } from "../../service/appService";
+import styled from "styled-components";
+import { InputFieldComponent } from "./InputFieldComponent";
+
+export const StyledPageTitle = styled.h1`
+  color: #83b271;
+  font-size: 2rem;
+  margin: 0 auto 50px auto;
+`;
 
 
 export default function EditPlant() {
@@ -79,28 +86,32 @@ export default function EditPlant() {
           <StyledLogoContainerLarge>
             <LogoSVG style={{ height: "100px", maxWidth: "100%" }} />
           </StyledLogoContainerLarge>
+          <StyledPageTitle>Edit Plant</StyledPageTitle>
           <StyledForm onSubmit={doEditPlant}>
-            <label htmlFor="plantName">Plant Name</label>
-            <StyledInputField id="plantName"
-              type="text"
+            <InputFieldComponent
+              id={"plantName"}
+              type={"text"}
+              validInput={true}
+              placeholder={"Plant name"}
               value={plantName}
-              $validInput={true}
-              placeholder="Plant Name"
-              onChange={(event) => setPlantName(event.target.value)} />
-            <label htmlFor="species">Species</label>
-            <StyledInputField id="species"
-              type="text"
+              onChange={setPlantName}
+              tooltip={"The name you would like to call your plant."}/>
+            <InputFieldComponent
+              id={"species"}
+              type={"text"}
+              validInput={true}
+              placeholder={"Species"}
               value={species}
-              $validInput={true}
-              placeholder="Species"
-              onChange={(event) => setSpecies(event.target.value)} />
-            <label htmlFor="careInstructions">Care Instructions</label>
-            <StyledInputField id="careInstructions"
-              type="text"
+              onChange={setSpecies}
+              tooltip={"Specify the type of plant you want to create."}/>
+            <InputFieldComponent
+              id={"careInstruction"}
+              type={"text"}
+              validInput={true}
+              placeholder={"Care Instructions"}
               value={careInstructions}
-              $validInput={true}
-              placeholder="Care Instructions"
-              onChange={(event) => setCareInstructions(event.target.value)} />
+              onChange={setCareInstructions}
+              tooltip={"What are the important steps one needs to follow to care for this plant?"}/>
             <StyledPrimaryButton
               disabled={(plantName === "" || species === "") || (plantName === plant.plantName && species === plant.species && careInstructions === plant.careInstructions)}
               type="submit">Save Changes</StyledPrimaryButton>

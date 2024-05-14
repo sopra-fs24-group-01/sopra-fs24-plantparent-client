@@ -14,6 +14,7 @@ import Header from "./Header";
 import { createPlant } from "../../service/appService";
 import { selectLoggedInUser } from "../../store/appSlice";
 import { useAppSelector } from "../../hooks";
+import { InputFieldComponent } from "./InputFieldComponent";
 
 
 export default function CreatePlant() {
@@ -72,52 +73,66 @@ export default function CreatePlant() {
             <LogoSVG style={{ height: "100px", maxWidth: "100%" }} />
           </StyledLogoContainerLarge>
           <StyledForm onSubmit={doCreatePlant}>
-            <StyledInputField id="plantName"
-              type="text"
+            <InputFieldComponent
+              id={"plantName"}
+              type={"text"}
+              validInput={true}
+              placeholder={"Plant name"}
               value={plantName}
-              $validInput={true}
-              placeholder="Plant Name"
-              onChange={(event) => setPlantName(event.target.value)} />
-            <StyledInputField id="species"
-              type="text"
+              onChange={setPlantName}
+              tooltip={"The name you would like to call your plant."}/>
+            <InputFieldComponent
+              id={"species"}
+              type={"text"}
+              validInput={true}
+              placeholder={"Species"}
               value={species}
-              $validInput={true}
-              placeholder="Species"
-              max={new Date().toISOString().split("T")[0]}
-              onChange={(event) => setSpecies(event.target.value)} />
-            <StyledInputField id="careInstructions"
-              type="text"
+              onChange={setSpecies}
+              tooltip={"Specify the type of plant you want to create."}/>
+            <InputFieldComponent
+              id={"careInstruction"}
+              type={"text"}
+              validInput={true}
+              placeholder={"Care Instructions"}
               value={careInstructions}
-              $validInput={true}
-              placeholder="Care Instructions"
-              onChange={(event) => setCareInstructions(event.target.value)} />
+              onChange={setCareInstructions}
+              tooltip={"What are the important steps one needs to follow to care for this plant?"}/>
             <label htmlFor="lastWateringDate">Last Watering Date</label>
-            <StyledInputField id="lastWateringDate"
-              type="date"
+            <InputFieldComponent
+              id={"lastWateringDate"}
+              type={"date"}
+              validInput={true}
+              placeholder={"Last Watering Date"}
               value={lastWateringDate}
-              $validInput={true}
-              placeholder="Last Watering Date"
+              onChange={setLastWateringDate}
               max={new Date().toISOString().split("T")[0]}
-              onChange={(event) => setLastWateringDate(event.target.value)} />
-            <StyledInputField id="wateringInterval"
-              type="number"
+              tooltip={"When was the last time this plant was watered?"}/>
+            <InputFieldComponent
+              id={"wateringInterval"}
+              type={"number"}
+              validInput={true}
+              placeholder={"Watering Interval (in days)"}
               value={wateringInterval}
-              $validInput={true}
-              placeholder="Watering Interval (in days)"
-              onChange={(event) => setWateringInterval(event.target.value)} />
+              onChange={setWateringInterval}
+              tooltip={"How often does this plant need to be watered? (in days)"}/>
             <label htmlFor="lastCaringDate">Last Caring Date</label>
-            <StyledInputField id="lastCaringDate"
-              type="date"
+            <InputFieldComponent
+              id={"lastCaringDate"}
+              type={"date"}
+              validInput={true}
+              placeholder={"Last Caring Date"}
               value={lastCaringDate}
-              $validInput={true}
-              placeholder="Last Caring Date"
-              onChange={(event) => setLastCaringDate(event.target.value)} />
-            <StyledInputField id="caringInterval"
-              type="number"
+              onChange={setLastCaringDate}
+              max={new Date().toISOString().split("T")[0]}
+              tooltip={"When was the last time this plant was cared for? (fertilized, etc.)"}/>
+            <InputFieldComponent
+              id={"caringInterval"}
+              type={"number"}
+              validInput={true}
+              placeholder={"Caring Interval (in days)"}
               value={caringInterval}
-              $validInput={true}
-              placeholder="Caring Interval (in days)"
-              onChange={(event) => setCaringInterval(event.target.value)} />
+              onChange={setCaringInterval}
+              tooltip={"How often does this plant need to be cared for? (in days)"}/>
             <StyledPrimaryButton disabled={!plantName || !species || !careInstructions || !lastWateringDate || !wateringInterval || !lastCaringDate || !caringInterval}
               type="submit">Create Plant</StyledPrimaryButton>
             {error && <StyledError>{error}</StyledError>}

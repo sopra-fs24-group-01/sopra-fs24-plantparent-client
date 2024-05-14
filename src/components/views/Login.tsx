@@ -27,7 +27,7 @@ export const StyledLoginContainer = styled.div`
 
 export const StyledLogoContainerLarge = styled.div`
   height: fit-content;
-  margin: 0 auto 100px auto;
+  margin: 0 auto 50px auto;
 `;
 
 export const StyledForm = styled.form`
