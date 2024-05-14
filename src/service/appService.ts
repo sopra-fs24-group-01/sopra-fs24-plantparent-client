@@ -73,6 +73,27 @@ export function updateUser(user: UserSimple): Promise<User> {
     });
 }
 
+export function uploadImage(plantId: number, file: File) {
+  // Create a new FormData instance
+  const formData = new FormData();
+
+  // Append the image file to the FormData instance
+  formData.append('image', file);
+
+  return fetch(baseurl + "plants/" + plantId + "/image", {
+    method: "POST",
+    // Remove the Content-Type header, the browser will set it automatically
+    // including the necessary multipart boundary
+    body: formData,
+  })
+    .then(response => response.json())
+    .then(data => {
+      return data;
+    })
+    .catch(error => {
+      console.error("Error updating user:", error);
+    });
+}
 
 export function getAllUsers(): Promise<User[]> {
   return fetch(baseurl + "users")
