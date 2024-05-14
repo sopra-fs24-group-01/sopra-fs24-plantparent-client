@@ -118,7 +118,7 @@ export default function CreatePlant() {
               $validInput={true}
               placeholder="Caring Interval (in days)"
               onChange={(event) => setCaringInterval(event.target.value)} />
-            <StyledPrimaryButton disabled={!plantName || !species}
+            <StyledPrimaryButton disabled={!plantName || !species || !careInstructions || !lastWateringDate || !wateringInterval || !lastCaringDate || !caringInterval}
               type="submit">Create Plant</StyledPrimaryButton>
             {error && <StyledError>{error}</StyledError>}
           </StyledForm>
