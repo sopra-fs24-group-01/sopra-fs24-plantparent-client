@@ -6,7 +6,7 @@ import {
   getAllPlantsCaredFor,
   getAllPlantsOwned, updateUser,
 } from "../service/appService";
-import { Plant, PlantFull, User, UserSimple } from "../types";
+import { PlantFull, User, UserSimple } from "../types";
 
 
 interface IUserState {
@@ -15,6 +15,8 @@ interface IUserState {
   loggedInUser: User | null;
   status: string;
   loggedInDate: string;
+  plantWatered: boolean;
+  plantCaredFor: boolean;
   error: null | any;
 }
 
@@ -23,6 +25,8 @@ const initialState: IUserState = {
   plantsCaredFor: [],
   loggedInUser: null,
   loggedInDate: null,
+  plantWatered: false,
+  plantCaredFor: false,
   status: "idle",
   error: null,
 };
@@ -93,6 +97,12 @@ export const appSlice = createSlice({
   reducers: {
     clearError: (state) => {
       state.error = null;
+    },
+    setPlantWatered: (state) => {
+      state.plantWatered = true;
+    },
+    resetPlantWatered: (state) => {
+      state.plantWatered = false;
     }
   },
   extraReducers(builder) {
@@ -126,12 +136,8 @@ export const appSlice = createSlice({
         const date = new Date();
         state.loggedInDate = date.toISOString();
         state.loggedInUser = payload;
-        const fullPlantsOwned: PlantFull[] = payload.plantsOwned.map((plant) => {
-          return {...plant, owner: payload, caretakers: []};
-        })
-        const fullPlantsCaredFor: PlantFull[] = payload.plantsCaredFor.map((plant) => {
-          return {...plant, owner: payload, caretakers: []};
-        })
+        const {fullPlantsOwned, fullPlantsCaredFor, plantWatered} = updatePlantsOfUser(payload);
+        state.plantWatered = plantWatered;
         state.plantsOwned = fullPlantsOwned;
         state.plantsCaredFor = fullPlantsCaredFor;
         state.error = null;
@@ -144,12 +150,8 @@ export const appSlice = createSlice({
         state.status = "succeeded";
         console.log(payload);
         state.loggedInUser = payload;
-        const fullPlantsOwned: PlantFull[] = payload.plantsOwned.map((plant) => {
-          return {...plant, owner: payload, caretakers: []};
-        })
-        const fullPlantsCaredFor: PlantFull[] = payload.plantsCaredFor.map((plant) => {
-          return {...plant, owner: payload, caretakers: []};
-        })
+        const {fullPlantsOwned, fullPlantsCaredFor, plantWatered} = updatePlantsOfUser(payload);
+        state.plantWatered = plantWatered;
         state.plantsOwned = fullPlantsOwned;
         state.plantsCaredFor = fullPlantsCaredFor;
         state.error = null;
@@ -185,7 +187,29 @@ export const appSlice = createSlice({
   },
 });
 
-export const {clearError} = appSlice.actions;
+function updatePlantsOfUser(user: User) {
+  let plantWatered = false;
+  const fullPlantsOwned: PlantFull[] = user.plantsOwned.map((plant) => {
+    const oldPlant = selectPlantById({appData: initialState}, plant.plantId);
+    if (oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
+      plantWatered = true;
+    }
+
+    return {...plant, owner: user, caretakers: []};
+  })
+  const fullPlantsCaredFor: PlantFull[] = user.plantsCaredFor.map((plant) => {
+    const oldPlant = selectPlantById({appData: initialState}, plant.plantId);
+    if (oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
+      plantWatered = true;
+    }
+
+    return {...plant, owner: user, caretakers: []};
+  })
+
+  return {fullPlantsOwned, fullPlantsCaredFor, plantWatered};
+}
+
+export const {clearError, resetPlantWatered} = appSlice.actions;
 
 export default appSlice.reducer;
 
@@ -250,5 +274,7 @@ export const getLoggedInDate = createSelector(
 
 
 export const getStatus = (state: RootState) => state.appData.status;
+
+export const getPlantWatered = (state: RootState) => state.appData.plantWatered;
 
 export const appError = (state: RootState) => state.appData.error;

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "./Header";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
@@ -6,12 +6,14 @@ import PlantComponent from "./PlantComponent";
 import { StyledPrimaryButton } from "./Login";
 import { useNavigate } from "react-router-dom";
 import {
-  getStatus,
+  getPlantWatered,
+  getStatus, resetPlantWatered,
   selectAllPlants,
   selectLoggedInUser, updateGetAllPlantsCaredFor,
   updateGetAllPlantsOwned,
 } from "../../store/appSlice";
 import { Plant } from "../../types";
+import { RainAnimation } from "./RainAnimationComponent";
 
 
 export const StyledMainContainer = styled.div`
@@ -39,21 +41,38 @@ export const StyledMainContainerContainer = styled.div`
 `;
 
 function Home() {
+  const plants: Plant[] = useAppSelector(selectAllPlants);
   const user = useAppSelector(selectLoggedInUser);
   const status = useAppSelector(getStatus);
+  const showRain = useAppSelector(getPlantWatered);
+
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(updateGetAllPlantsOwned(user.id));
-    dispatch(updateGetAllPlantsCaredFor(user.id));
+    if (showRain) {
+      setTimeout(() => dispatch(resetPlantWatered()), 5000);
+    }
+  })
+
+  useEffect(() => {
+    getPlants();
+    const timeoutId = setInterval(getPlants, 5000);
+
+    return () => {
+      clearInterval(timeoutId);
+    };
   }, []);
 
-  const plants: Plant[] = useAppSelector(selectAllPlants);
-  const navigate = useNavigate();
+  function getPlants() {
+    dispatch(updateGetAllPlantsOwned(user.id));
+    dispatch(updateGetAllPlantsCaredFor(user.id));
+  }
 
   return (
     <>
       <Header />
+      {showRain && <RainAnimation />}
       {status === "loading" ? <div>Loading...</div> :
         <StyledMainContainer>
           <StyledSideBar />

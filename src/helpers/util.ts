@@ -29,3 +29,7 @@ export function formatDateYMD(date: string) {
 
   return `${year}-${month}-${day}`;
 }
+
+export function getRandomNumberBetween(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
