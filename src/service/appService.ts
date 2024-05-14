@@ -10,22 +10,29 @@ export function login(user: { username: string, password: string }): Promise<Use
     },
     body: JSON.stringify(user),
   })
-    .then(response => response.json())
-    .catch(error => {
-      console.log(error);
+    .then(response => {
+
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
     });
 }
 
 export function getUserById(userId: number): Promise<User> {
   return fetch(baseurl + "users/" + userId)
-    .then(response => response.json())
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.log(error);
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
     });
-
 }
 
 export function createUser(user: User) {
@@ -38,14 +45,12 @@ export function createUser(user: User) {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error("User already exists");
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
       }
-
-      return response.json();
-    })
-    .catch(error => {
-      console.log(error);
-      throw error;
     });
 }
 
@@ -64,24 +69,28 @@ export function updateUser(user: UserSimple): Promise<User> {
       password: user.password,
     }),
   })
-    .then(response => response.json())
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.error("Error updating user:", error);
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
     });
 }
 
 
 export function getAllUsers(): Promise<User[]> {
   return fetch(baseurl + "users")
-    .then(response => response.json())
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.log(error);
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
     });
 }
 
@@ -93,9 +102,14 @@ export function createPlant(plant: Plant) {
     },
     body: JSON.stringify(plant),
   })
-    .then(response => response.json())
-    .catch(error => {
-      console.log(error);
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
     });
 }
 
@@ -107,9 +121,14 @@ export function updatePlant(plant: Plant) {
     },
     body: JSON.stringify(plant),
   })
-    .then(response => response.json())
-    .catch(error => {
-      console.log(error);
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
     });
 }
 
@@ -117,22 +136,28 @@ export function deletePlantById(plantId: number) {
   return fetch(baseurl + "plants/" + plantId, {
     method: "DELETE",
   })
-    .then(response => response.json())
-    .catch(error => {
-      console.log(error);
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
     });
 }
 
 export function getPlantById(plantId: number): Promise<PlantFull> {
   return fetch(baseurl + "plants/" + plantId)
-    .then(response => response.json())
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.log(error);
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
     });
-
 }
 
 export function waterPlant(plantId: number) {
@@ -141,11 +166,12 @@ export function waterPlant(plantId: number) {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
       }
-    })
-    .catch(error => {
-      console.log(error);
     });
 }
 
@@ -155,11 +181,12 @@ export function careForPlant(plantId: number) {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
       }
-    })
-    .catch(error => {
-      console.log(error);
     });
 }
 
@@ -173,11 +200,12 @@ export function addCaretaker(plantId: number, userId: number) {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
       }
-    })
-    .catch(error => {
-      console.log(error);
     });
 }
 
@@ -187,11 +215,12 @@ export function removeCaretaker(plantId: number, userId: number) {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
       }
-    })
-    .catch(error => {
-      console.log(error);
     });
 }
 
@@ -199,16 +228,12 @@ export function getAllPlantsOwned(userId: number): Promise<PlantFull[]> {
   return fetch(baseurl + "plants/owned?ownerId=" + userId)
     .then(response => {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
       }
-
-      return response.json();
-    })
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.log(error);
     });
 }
 
@@ -216,15 +241,11 @@ export function getAllPlantsCaredFor(userId: number): Promise<PlantFull[]> {
   return fetch(baseurl + "plants/caredFor?careTakerId=" + userId)
     .then(response => {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
       }
-
-      return response.json();
-    })
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.log(error);
     });
 }

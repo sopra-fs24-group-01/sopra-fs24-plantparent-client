@@ -90,11 +90,16 @@ export const updateGetAllPlantsCaredFor = createAsyncThunk(
 export const appSlice = createSlice({
   name: "appData",
   initialState,
-  reducers: {},
+  reducers: {
+    clearError: (state) => {
+      state.error = null;
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(registerUser.pending, (state, { payload }) => {
         state.status = "loading";
+        state.error = null;
       })
       .addCase(registerUser.fulfilled, (state, { payload }) => {
         state.status = "succeeded";
@@ -103,6 +108,7 @@ export const appSlice = createSlice({
         state.loggedInUser = payload;
         state.plantsOwned = payload.plantsOwned;
         state.plantsCaredFor = payload.plantsCaredFor;
+        state.error = null;
       })
       .addCase(registerUser.rejected, (state, action) => {
         if (action.payload) {
@@ -113,6 +119,7 @@ export const appSlice = createSlice({
       })
       .addCase(loginUser.pending, (state, { payload }) => {
         state.status = "loading";
+        state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, { payload }) => {
         state.status = "succeeded";
@@ -127,6 +134,7 @@ export const appSlice = createSlice({
         })
         state.plantsOwned = fullPlantsOwned;
         state.plantsCaredFor = fullPlantsCaredFor;
+        state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
@@ -144,6 +152,7 @@ export const appSlice = createSlice({
         })
         state.plantsOwned = fullPlantsOwned;
         state.plantsCaredFor = fullPlantsCaredFor;
+        state.error = null;
       })
       .addCase(updatePlantInPlantStore.fulfilled, (state, { payload }) => {
         const newPlantsOwned = state.plantsOwned.map((plant) => {
@@ -162,17 +171,20 @@ export const appSlice = createSlice({
         });
         state.plantsOwned = newPlantsOwned;
         state.plantsCaredFor = newPlantsCaredFor;
+        state.error = null;
       })
       .addCase(updateGetAllPlantsOwned.fulfilled, (state, { payload }) => {
         state.plantsOwned = payload;
+        state.error = null;
       })
       .addCase(updateGetAllPlantsCaredFor.fulfilled, (state, { payload }) => {
         state.plantsCaredFor = payload;
+        state.error = null;
       });
   },
 });
 
-export const {} = appSlice.actions;
+export const {clearError} = appSlice.actions;
 
 export default appSlice.reducer;
 
