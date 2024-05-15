@@ -33,6 +33,7 @@ export type PlantFull = {
   nextCaringDate: string;
   owner: User;
   caretakers: User[];
+  plantImageUrl: string;
 };
 
 export type PlantSimple = {

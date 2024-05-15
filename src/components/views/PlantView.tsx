@@ -346,7 +346,10 @@ export default function PlantView() {
             </StyledPlantProfileHeader>
             <StyledPlantProfileDetails>
               <StyledPlantImageContainer>
-                <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />
+                {!plant.plantImageUrl &&
+                <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />}
+                {plant.plantImageUrl &&
+                <img src={plant.plantImageUrl} style={{ width: "200px", height: "200px" }} />}
                 {user.id === plant.owner.id &&
                 <UploadAndDisplayImage/>}
               </StyledPlantImageContainer>
