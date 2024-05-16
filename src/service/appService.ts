@@ -78,7 +78,7 @@ export function uploadImage(plantId: number, file: File) {
   const formData = new FormData();
 
   // Append the image file to the FormData instance
-  formData.append('image', file);
+  formData.append("image", file);
 
   return fetch(baseurl + "plants/" + plantId + "/image", {
     method: "POST",

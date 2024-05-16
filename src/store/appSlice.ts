@@ -120,10 +120,10 @@ export const appSlice = createSlice({
         state.loggedInDate = date.toISOString();
         state.loggedInUser = payload;
         const fullPlantsOwned: PlantFull[] = payload.plantsOwned.map((plant) => {
-          return {...plant, owner: payload, caretakers: []};
+          return {...plant, owner: payload, caretakers: [], plantImageUrl: plant.plantImageUrl || "",};
         })
         const fullPlantsCaredFor: PlantFull[] = payload.plantsCaredFor.map((plant) => {
-          return {...plant, owner: payload, caretakers: []};
+          return {...plant, owner: payload, caretakers: [], plantImageUrl: plant.plantImageUrl || "",};
         })
         state.plantsOwned = fullPlantsOwned;
         state.plantsCaredFor = fullPlantsCaredFor;

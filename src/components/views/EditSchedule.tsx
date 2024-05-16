@@ -69,7 +69,8 @@ export default function EditPlant() {
       caringInterval: caringInterval,
       nextCaringDate: nextCaringDate,
       owner: { id: user.id, username: user.username, email: user.email, password: user.password },
-      caretakers: plant.caretakers
+      caretakers: plant.caretakers,
+      plantImageUrl: "",
     };
     try {
       await updatePlant(new_plant);

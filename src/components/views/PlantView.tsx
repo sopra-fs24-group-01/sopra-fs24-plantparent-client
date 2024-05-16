@@ -267,7 +267,7 @@ const UploadAndDisplayImage = () => {
       <input
         type="file"
         ref={fileInput}
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
         onChange={handleFileChange}
       />
     </>
@@ -347,9 +347,9 @@ export default function PlantView() {
             <StyledPlantProfileDetails>
               <StyledPlantImageContainer>
                 {!plant.plantImageUrl &&
-                <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />}
+                  <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />}
                 {plant.plantImageUrl &&
-                <img src={plant.plantImageUrl} style={{ width: "200px", height: "200px" }} />}
+                  <img src={plant.plantImageUrl} style={{ width: "200px", height: "200px" }} />}
                 {user.id === plant.owner.id &&
                 <UploadAndDisplayImage/>}
               </StyledPlantImageContainer>

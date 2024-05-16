@@ -18,6 +18,7 @@ export type Plant = {
   lastCaringDate: string;
   caringInterval: number;
   nextCaringDate: string;
+  plantImageUrl: string;
 };
 
 export type PlantFull = {
@@ -49,6 +50,7 @@ export type PlantSimple = {
   nextCaringDate: string;
   owner: UserSimple;
   caretakers: UserSimple[];
+  plantImageUrl: string;
 }
 
 export type UserSimple = {

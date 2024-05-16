@@ -52,7 +52,8 @@ export default function CreatePlant() {
       caringInterval: Number(caringInterval),
       nextCaringDate: nextCaringDate,
       owner: { id: user.id, username: user.username, email: user.email, password: user.password},
-      caretakers: []
+      caretakers: [],
+      plantImageUrl: "",
     };
     try {
       await createPlant(plant);
