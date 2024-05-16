@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import Header from "./Header";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
@@ -6,14 +6,13 @@ import PlantComponent from "./PlantComponent";
 import { StyledPrimaryButton } from "./Login";
 import { useNavigate } from "react-router-dom";
 import {
-  getPlantWatered,
-  getStatus, resetPlantWatered,
+  getStatus,
   selectAllPlants,
   selectLoggedInUser, updateGetAllPlantsCaredFor,
   updateGetAllPlantsOwned,
 } from "../../store/appSlice";
 import { Plant } from "../../types";
-import { RainAnimation } from "./RainAnimationComponent";
+import { SpacesMenu } from "./SpacesMenu";
 
 
 export const StyledMainContainer = styled.div`
@@ -21,14 +20,6 @@ export const StyledMainContainer = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: row;
-`;
-
-export const StyledSideBar = styled.div`
-  width: 20vw;
-  min-width: 200px;
-  height: calc(100vh - 80px);
-  margin-top: 79px;
-  border: 1px solid black;
 `;
 
 export const StyledMainContainerContainer = styled.div`
@@ -67,7 +58,7 @@ function Home() {
       <Header />
       {status === "loading" ? <div>Loading...</div> :
         <StyledMainContainer>
-          <StyledSideBar />
+          <SpacesMenu />
           <StyledMainContainerContainer>
             {plants.length < 1 ? <div>You have no plants yet. Create one!</div> : plants.map(plant => (
               <PlantComponent key={plant.plantName} plantId={plant.plantId} userId={user.id} />
