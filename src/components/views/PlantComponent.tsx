@@ -167,9 +167,9 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
 
   function action() {
     if (watering) {
-      waterPlant(plantId).then(() => dispatch(updatePlantInPlantStore(plantId)));
+      waterPlant(plantId).then(() => dispatch(updatePlantInPlantStore({plantId: plantId, animate: false})));
     } else {
-      careForPlant(plantId).then(() => dispatch(updatePlantInPlantStore(plantId)));
+      careForPlant(plantId).then(() => dispatch(updatePlantInPlantStore({plantId: plantId, animate: false})));
     }
     setModal(false);
   }

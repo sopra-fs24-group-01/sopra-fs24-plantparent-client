@@ -76,8 +76,12 @@ export const updateUserRedux = createAsyncThunk(
 
 export const updatePlantInPlantStore = createAsyncThunk(
   "plants/updatePlant",
-  async (plantId: number) => {
-    return await getPlantById(plantId);
+  async ({plantId, animate}: {plantId: number, animate: boolean}, thunkAPI) => {
+    const state = thunkAPI.getState() as RootState;
+    const updatedPlant = await getPlantById(plantId);
+    const { plant, plantWatered, plantCaredFor } = updatePlant(updatedPlant, state, animate);
+
+    return { plant, plantWatered, plantCaredFor };
   },
 );
 
@@ -174,21 +178,23 @@ export const appSlice = createSlice({
       })
       .addCase(updatePlantInPlantStore.fulfilled, (state, { payload }) => {
         const newPlantsOwned = state.plantsOwned.map((plant) => {
-          if (plant.plantId === payload.plantId) {
-            return payload;
+          if (plant.plantId === payload.plant.plantId) {
+            return payload.plant;
           } else {
             return plant;
           }
         });
         const newPlantsCaredFor = state.plantsCaredFor.map((plant) => {
-          if (plant.plantId === payload.plantId) {
-            return payload;
+          if (plant.plantId === payload.plant.plantId) {
+            return payload.plant;
           } else {
             return plant;
           }
         });
         state.plantsOwned = newPlantsOwned;
         state.plantsCaredFor = newPlantsCaredFor;
+        state.plantWatered = payload.plantWatered;
+        state.plantCaredFor = payload.plantCaredFor;
         state.error = null;
         console.log("plant updated");
       })
@@ -260,6 +266,20 @@ function updatePlants(plants: PlantFull[], state: RootState) {
   });
 
   return { newPlants, plantWatered, plantCaredFor };
+}
+
+function updatePlant(plant: PlantFull, state: RootState, animate: boolean) {
+  let plantWatered = 0;
+  let plantCaredFor = 0;
+  const oldPlant = selectPlantById(state, plant.plantId);
+  if (animate && oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
+    plantWatered = plant.plantId;
+  }
+  if (animate && oldPlant && oldPlant.lastCaringDate !== plant.lastCaringDate) {
+    plantCaredFor = plant.plantId;
+  }
+
+  return { plant, plantWatered, plantCaredFor };
 }
 
 export const { clearError, resetPlantWatered, resetPlantCaredFor } = appSlice.actions;

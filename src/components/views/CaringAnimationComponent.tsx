@@ -1,10 +1,9 @@
 import React from "react";
-import styled from "styled-components";
 import { ReactComponent as BandAidSVG } from "../../assets/bandaid.svg";
 import { getRandomNumberBetween } from "../../helpers/util";
 import { StyledAnimationContainer, StyledCaringContainer, StyledPlantInfo } from "./RainAnimationComponent";
 
-export function CaringAnimation({ plantName }: { plantName: string }) {
+export function CaringAnimation({ plantName, large }: { plantName: string, large?: boolean}) {
   const numItems = 25;
 
   return (
@@ -14,8 +13,9 @@ export function CaringAnimation({ plantName }: { plantName: string }) {
           key={i}
           $size={getRandomNumberBetween(20, 40)}
           $left={getRandomNumberBetween(0, 100)}
-          $speed={getRandomNumberBetween(1, 5)}
-          $color={"#ffaf00"}>
+          $speed={getRandomNumberBetween(large ? 3 : 1, 5)}
+          $color={"#ffaf00"}
+          $large={large}>
           <BandAidSVG />
         </StyledAnimationContainer>
       ))}

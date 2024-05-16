@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
 import Header from "./Header";
 import styled, { css } from "styled-components";
-import { useAppSelector } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { ReactComponent as DropSVG } from "../../assets/droplet-half.svg";
 import { ReactComponent as BandaidSVG } from "../../assets/bandaid.svg";
 import { ReactComponent as ImagePlaceholderSVG } from "../../assets/image_placeholder.svg";
-import { getStatus, selectLoggedInUser } from "../../store/appSlice";
+import {
+  getPlantCaredFor,
+  getPlantWatered,
+  getStatus, resetPlantCaredFor,
+  resetPlantWatered,
+  selectLoggedInUser, selectPlantById, updatePlantInPlantStore,
+} from "../../store/appSlice";
 import { Schedule, StyledOwnerContainer, StyledPlantTitle } from "./PlantComponent";
 import { formatDate, isInThePast } from "../../helpers/util";
 import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
@@ -15,7 +21,7 @@ import { CaretakerSelectorComponent } from "./CaretakerSelectorComponent";
 import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
 import { CaretakerComponent } from "./CaretakerComponent";
 import { PlantFull } from "../../types";
-import { deletePlantById, getPlantById } from "../../service/appService";
+import { deletePlantById } from "../../service/appService";
 import { ReactComponent as HappyFaceSVG } from "../../assets/emoji-smile-fill.svg";
 import { ReactComponent as NeutralFaceSVG } from "../../assets/emoji-neutral-fill.svg";
 import { ReactComponent as AngryFaceSVG } from "../../assets/emoji-dizzy-fill.svg";
@@ -23,6 +29,8 @@ import { Modal } from "./PopupMsgComponent";
 import { ReactComponent as KeySVG } from "../../assets/key.svg";
 import { ReactComponent as HouseSVG } from "../../assets/house-door.svg";
 import { QRCodeComponent } from "./QRCodeComponent";
+import { RainAnimation } from "./RainAnimationComponent";
+import { CaringAnimation } from "./CaringAnimationComponent";
 
 
 const StyledMainContainer = styled.div`
@@ -202,7 +210,7 @@ const StyledDeleteButton = styled.button`
     ${props => !props.disabled && css`
       cursor: pointer;
       scale: 0.95;`
-}
+    }
   }
 `;
 
@@ -229,28 +237,41 @@ export default function PlantView() {
   const user = useAppSelector(selectLoggedInUser);
   const appStatus = useAppSelector(getStatus);
   const { plantId } = useParams<{ plantId: string }>();
-  const [plant, setPlant] = useState<PlantFull | null>(null);
+  // const [plant, setPlant] = useState<PlantFull | null>(null);
+  const plant = useAppSelector(state => selectPlantById(state, Number(plantId)));
   const navigate = useNavigate();
   const [showSelectCaretakers, setShowSelectCaretakers] = useState<boolean>(false);
   const [reloadCaretakers, setReloadCaretakers] = useState<boolean>(false);
   const [mood, setMood] = useState<string>("happy");
   const [modal, setModal] = useState<boolean>(false);
-
-  function confirmDelete() {
-    setModal(false);
-    deletePlantById(Number(plantId)).then(() => {
-      navigate("/");
-    });
-  }
+  const plantWatered = useAppSelector(getPlantWatered);
+  const plantCaredFor = useAppSelector(getPlantCaredFor);
+  const [showRain, setShowRain] = useState<boolean>(plantWatered === Number(plantId));
+  const [showCaringAnimation, setShowCaringAnimation] = useState<boolean>(plantCaredFor === Number(plantId));
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    async function fetchPlant() {
-      const fetchedPlant = await getPlantById(Number(plantId));
-      setPlant(fetchedPlant);
+    setShowRain(plantWatered === Number(plantId));
+    if (plantWatered === Number(plantId)) {
+      setTimeout(() => dispatch(resetPlantWatered()), 5000);
     }
+  }, [plantWatered]);
 
-    fetchPlant();
-  }, [plantId]);
+  useEffect(() => {
+    setShowCaringAnimation(plantCaredFor === Number(plantId));
+    if (plantCaredFor === Number(plantId)) {
+      setTimeout(() => dispatch(resetPlantCaredFor()), 5000);
+    }
+  }, [plantCaredFor]);
+
+  useEffect(() => {
+    getPlant();
+    const timeout = setInterval(getPlant, 5000);
+
+    return () => {
+      clearInterval(timeout);
+    };
+  }, []);
 
   useEffect(() => {
     if (plant) {
@@ -266,8 +287,19 @@ export default function PlantView() {
     }
   }, [plant]);
 
+  function getPlant() {
+    dispatch(updatePlantInPlantStore({plantId: Number(plantId), animate: true}));
+  }
+
   if (!plant) {
     return <div>Loading...</div>;
+  }
+
+  function confirmDelete() {
+    setModal(false);
+    deletePlantById(Number(plantId)).then(() => {
+      navigate("/");
+    });
   }
 
   return (
@@ -277,6 +309,8 @@ export default function PlantView() {
       <Header />
       {appStatus === "loading" ? <div>Loading...</div> :
         <StyledMainContainer>
+          {showRain && <RainAnimation key={"rainAnimation_" + plantId} plantName={plant.plantName} large={true} />}
+          {showCaringAnimation && <CaringAnimation key={"caringAnimation_" + plantId} plantName={plant.plantName} large={true} />}
           {showSelectCaretakers &&
             <CaretakerSelectorComponent plantId={plantId} setShowSelectCaretakers={setShowSelectCaretakers}
               reloadCaretakers={reloadCaretakers}

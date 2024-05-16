@@ -22,8 +22,17 @@ function MyPlants() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(updateGetAllPlantsOwned(user.id));
+    getPlants();
+    const timeoutId = setInterval(getPlants, 5000);
+
+    return () => {
+      clearInterval(timeoutId);
+    };
   }, []);
+
+  function getPlants() {
+    dispatch(updateGetAllPlantsOwned(user.id));
+  }
 
   return (
     <>

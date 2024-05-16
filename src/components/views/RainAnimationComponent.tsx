@@ -12,7 +12,12 @@ export const StyledCaringContainer = styled.div`
   z-index: 1;
 `;
 
-export const StyledAnimationContainer = styled.div<{ $size: number, $left: number, $speed: number, $color: string }>`
+export const StyledAnimationContainer = styled.div<{
+  $size: number,
+  $left: number,
+  $speed: number,
+  $color: string,
+  $large?: boolean}>`
   position: absolute;
   left: ${props => props.$left}%;
   animation: fall ${props => props.$speed}s linear infinite;
@@ -30,7 +35,7 @@ export const StyledAnimationContainer = styled.div<{ $size: number, $left: numbe
       transform: translateY(-10px);
     }
     100% {
-      transform: translateY(20vh);
+      transform: translateY(${props => props.$large ? "100vh" : "20vh}"});
     }
   }
 `;
@@ -49,7 +54,7 @@ export const StyledPlantInfo = styled.div`
   align-items: center;
 `;
 
-export function RainAnimation({ plantName }: { plantName: string }) {
+export function RainAnimation({ plantName, large }: { plantName: string, large?: boolean}) {
   const numRaindrops = 25;
 
   return (
@@ -59,8 +64,9 @@ export function RainAnimation({ plantName }: { plantName: string }) {
           key={i}
           $size={getRandomNumberBetween(20, 40)}
           $left={getRandomNumberBetween(0, 100)}
-          $speed={getRandomNumberBetween(1, 5)}
-          $color={"#00beff"}>
+          $speed={getRandomNumberBetween(large ? 3 : 1, 5)}
+          $color={"#00beff"}
+          $large={large}>
           <DropSVG />
         </StyledAnimationContainer>
       ))}
