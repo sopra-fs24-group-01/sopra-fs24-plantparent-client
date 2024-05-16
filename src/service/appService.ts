@@ -379,7 +379,7 @@ export function getOwnedSpaces(userId: number) {
     });
 }
 
-export function getAllMembershipSpaces(userId: number) {
+export function getMembershipSpaces(userId: number) {
   return fetch(baseurl + "spaces/member?memberId=" + userId)
     .then(response => {
       if (!response.ok) {

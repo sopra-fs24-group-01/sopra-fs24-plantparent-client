@@ -4,9 +4,9 @@ import {
   login,
   createUser,
   getAllPlantsCaredFor,
-  getAllPlantsOwned, updateUser,
+  getAllPlantsOwned, updateUser, getOwnedSpaces, getMembershipSpaces,
 } from "../service/appService";
-import { Plant, PlantFull, User, UserSimple } from "../types";
+import { Plant, PlantFull, Space, User, UserSimple } from "../types";
 
 
 interface IUserState {
@@ -17,6 +17,7 @@ interface IUserState {
   loggedInDate: string;
   plantWatered: number;
   plantCaredFor: number;
+  spaces: Space[];
   error: null | any;
 }
 
@@ -25,6 +26,7 @@ const initialState: IUserState = {
   plantsCaredFor: [],
   loggedInUser: null,
   loggedInDate: null,
+  spaces: [],
   plantWatered: 0,
   plantCaredFor: 0,
   status: "idle",
@@ -104,6 +106,22 @@ export const updateGetAllPlantsCaredFor = createAsyncThunk(
     const { newPlants, plantWatered, plantCaredFor } = updatePlants(plants, state);
 
     return { newPlants, plantWatered, plantCaredFor };
+  },
+);
+
+export const getSpaces = createAsyncThunk(
+  "spaces/getSpaces",
+  async (userId: number, thunkAPI) => {
+    try {
+      const ownedSpaces =  await getOwnedSpaces(userId);
+      const memberSpaces =  await getMembershipSpaces(userId);
+
+      return [...ownedSpaces, ...memberSpaces];
+    } catch (err) {
+      console.log(err);
+
+      return thunkAPI.rejectWithValue(err.message);
+    }
   },
 );
 
@@ -208,6 +226,10 @@ export const appSlice = createSlice({
         state.plantsCaredFor = payload.newPlants;
         state.plantWatered = payload.plantWatered;
         state.plantCaredFor = payload.plantCaredFor;
+        state.error = null;
+      })
+      .addCase(getSpaces.fulfilled, (state, { payload }) => {
+        state.spaces = payload;
         state.error = null;
       });
   },
@@ -351,5 +373,7 @@ export const getStatus = (state: RootState) => state.appData.status;
 export const getPlantWatered = (state: RootState) => state.appData.plantWatered;
 
 export const getPlantCaredFor = (state: RootState) => state.appData.plantCaredFor;
+
+export const getSpacesOfUser = (state: RootState) => state.appData.spaces;
 
 export const appError = (state: RootState) => state.appData.error;
