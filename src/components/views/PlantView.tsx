@@ -195,7 +195,7 @@ const StyledMoodContainer = styled.div`
   align-items: center;
 `;
 
-const StyledDeleteButton = styled.button`
+export const StyledDeleteButton = styled.button`
   color: #ffffff;
   font-size: 1.5rem;
   background-color: red;
