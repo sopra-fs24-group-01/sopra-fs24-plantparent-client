@@ -56,3 +56,11 @@ export type UserSimple = {
   email: string;
   password: string;
 };
+
+export type Space = {
+  spaceId: number;
+  spaceName: string;
+  spaceOwner: User;
+  plantsContainer: Plant[];
+  spaceMembers: User[];
+}
