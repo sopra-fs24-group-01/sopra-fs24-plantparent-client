@@ -116,6 +116,9 @@ export const appSlice = createSlice({
     resetPlantWatered: (state) => {
       state.plantWatered = 0;
     },
+    resetPlantCaredFor: (state) => {
+      state.plantCaredFor = 0;
+    },
   },
   extraReducers(builder) {
     builder
@@ -259,7 +262,7 @@ function updatePlants(plants: PlantFull[], state: RootState) {
   return { newPlants, plantWatered, plantCaredFor };
 }
 
-export const { clearError, resetPlantWatered } = appSlice.actions;
+export const { clearError, resetPlantWatered, resetPlantCaredFor } = appSlice.actions;
 
 export default appSlice.reducer;
 

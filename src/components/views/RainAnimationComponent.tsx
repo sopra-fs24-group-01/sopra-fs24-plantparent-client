@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { ReactComponent as DropSVG } from "../../assets/droplet-half.svg";
 import { getRandomNumberBetween } from "../../helpers/util";
 
-const StyledRainContainer = styled.div`
+export const StyledCaringContainer = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -12,7 +12,7 @@ const StyledRainContainer = styled.div`
   z-index: 1;
 `;
 
-const StyledRaindrop = styled.div<{ $size: number, $left: number, $speed: number }>`
+export const StyledAnimationContainer = styled.div<{ $size: number, $left: number, $speed: number, $color: string }>`
   position: absolute;
   left: ${props => props.$left}%;
   animation: fall ${props => props.$speed}s linear infinite;
@@ -22,7 +22,7 @@ const StyledRaindrop = styled.div<{ $size: number, $left: number, $speed: number
   svg {
     width: ${props => props.$size}px;
     height: ${props => props.$size}px;
-    color: #00beff
+    color: ${props => props.$color};
   }
 
   @keyframes fall {
@@ -30,12 +30,12 @@ const StyledRaindrop = styled.div<{ $size: number, $left: number, $speed: number
       transform: translateY(-10px);
     }
     100% {
-      transform: translateY(100vh);
+      transform: translateY(20vh);
     }
   }
 `;
 
-const StyledPlantInfo = styled.div`
+export const StyledPlantInfo = styled.div`
   position: absolute;
   font-size: 3.5rem;
   font-style: italic;
@@ -49,21 +49,22 @@ const StyledPlantInfo = styled.div`
   align-items: center;
 `;
 
-export function RainAnimation(plantName) {
+export function RainAnimation({ plantName }: { plantName: string }) {
   const numRaindrops = 25;
 
   return (
-    <StyledRainContainer>
+    <StyledCaringContainer>
       {Array.from({ length: numRaindrops }).map((_, i) => (
-        <StyledRaindrop
+        <StyledAnimationContainer
           key={i}
           $size={getRandomNumberBetween(20, 40)}
           $left={getRandomNumberBetween(0, 100)}
-          $speed={getRandomNumberBetween(1, 3)}>
+          $speed={getRandomNumberBetween(1, 5)}
+          $color={"#00beff"}>
           <DropSVG />
-        </StyledRaindrop>
+        </StyledAnimationContainer>
       ))}
       <StyledPlantInfo>{plantName} was just watered!</StyledPlantInfo>
-    </StyledRainContainer>
+    </StyledCaringContainer>
   );
 }

@@ -16,8 +16,15 @@ import { formatDistance, parseISO } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { careForPlant, waterPlant } from "../../service/appService";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { getPlantWatered, resetPlantWatered, selectPlantById, updatePlantInPlantStore } from "../../store/appSlice";
+import {
+  getPlantCaredFor,
+  getPlantWatered, resetPlantCaredFor,
+  resetPlantWatered,
+  selectPlantById,
+  updatePlantInPlantStore,
+} from "../../store/appSlice";
 import { RainAnimation } from "./RainAnimationComponent";
+import { CaringAnimation } from "./CaringAnimationComponent";
 
 
 const StyledPlantComponentContainer = styled.div`
@@ -196,7 +203,9 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
 export default function PlantComponent({ plantId, userId }: { plantId: number, userId: number }) {
   const plant = useAppSelector(state => selectPlantById(state, plantId));
   const plantWatered = useAppSelector(getPlantWatered);
+  const plantCaredFor = useAppSelector(getPlantCaredFor);
   const [showRain, setShowRain] = useState<boolean>(plantWatered === plantId);
+  const [showCaringAnimation, setShowCaringAnimation] = useState<boolean>(plantCaredFor === plantId);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -205,6 +214,13 @@ export default function PlantComponent({ plantId, userId }: { plantId: number, u
       setTimeout(() => dispatch(resetPlantWatered()), 5000);
     }
   }, [plantWatered]);
+
+  useEffect(() => {
+    setShowCaringAnimation(plantCaredFor === plantId);
+    if (plantCaredFor === plantId) {
+      setTimeout(() => dispatch(resetPlantCaredFor()), 5000);
+    }
+  }, [plantCaredFor]);
 
   const navigate = useNavigate();
   let mood = "happy";
@@ -220,7 +236,8 @@ export default function PlantComponent({ plantId, userId }: { plantId: number, u
 
   return (
     <StyledPlantComponentContainer>
-      {showRain && <RainAnimation plantName={plant.plantName} />}
+      {showRain && <RainAnimation key={"rainAnimation_" + plantId} plantName={plant.plantName} />}
+      {showCaringAnimation && <CaringAnimation key={"caringAnimation_" + plantId} plantName={plant.plantName} />}
       <StyledMoodContainer>
         {mood === "happy" && <HappyFaceSVG style={{ color: "#83b271", width: "50px", height: "50px" }} />}
         {mood === "neutral" && <NeutralFaceSVG style={{ color: "orange", width: "50px", height: "50px" }} />}
