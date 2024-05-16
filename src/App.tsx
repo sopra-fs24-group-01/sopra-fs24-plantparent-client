@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Login from "./components/views/Login";
 import { LoginGuard } from "./components/routing/routeProtectors/LoginGuard";
 import { AuthGuard } from "./components/routing/routeProtectors/AuthGuard";
@@ -70,6 +70,9 @@ function App() {
         <Route path="/spaces/:spaceId" element={<LoginGuard/>}>
           <Route path="/spaces/:spaceId" element={<SpacePage/>} />
         </Route>
+
+        {/* Catch all undefined routes and redirect to home */}
+        <Route path="*" element={<Navigate to="/" />} />
 
       </Routes>
     </BrowserRouter>
