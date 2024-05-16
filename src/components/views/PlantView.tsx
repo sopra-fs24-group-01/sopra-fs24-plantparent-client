@@ -236,7 +236,6 @@ export default function PlantView() {
   const user = useAppSelector(selectLoggedInUser);
   const appStatus = useAppSelector(getStatus);
   const { plantId } = useParams<{ plantId: string }>();
-  // const [plant, setPlant] = useState<PlantFull | null>(null);
   const plant = useAppSelector(state => selectPlantById(state, Number(plantId)));
   const navigate = useNavigate();
   const [showSelectCaretakers, setShowSelectCaretakers] = useState<boolean>(false);
