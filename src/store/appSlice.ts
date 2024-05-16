@@ -1,10 +1,13 @@
 import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
+  createUser,
+  getAllPlantsCaredFor, getAllPlantsOfSpace,
+  getAllPlantsOwned,
+  getMembershipSpaces,
+  getOwnedSpaces,
   getPlantById,
   login,
-  createUser,
-  getAllPlantsCaredFor,
-  getAllPlantsOwned, updateUser, getOwnedSpaces, getMembershipSpaces,
+  updateUser,
 } from "../service/appService";
 import { Plant, PlantFull, Space, User, UserSimple } from "../types";
 
@@ -18,6 +21,7 @@ interface IUserState {
   plantWatered: number;
   plantCaredFor: number;
   spaces: Space[];
+  plantsOfSelectedSpace: PlantFull[];
   error: null | any;
 }
 
@@ -27,6 +31,7 @@ const initialState: IUserState = {
   loggedInUser: null,
   loggedInDate: null,
   spaces: [],
+  plantsOfSelectedSpace: [],
   plantWatered: 0,
   plantCaredFor: 0,
   status: "idle",
@@ -115,8 +120,24 @@ export const getSpaces = createAsyncThunk(
     try {
       const ownedSpaces =  await getOwnedSpaces(userId);
       const memberSpaces =  await getMembershipSpaces(userId);
+      const uniqueMemberSpaces = memberSpaces.filter(memberSpace =>
+        !ownedSpaces.some(ownedSpace => ownedSpace.spaceId === memberSpace.spaceId)
+      );
 
-      return [...ownedSpaces, ...memberSpaces];
+      return [...ownedSpaces, ...uniqueMemberSpaces];
+    } catch (err) {
+      console.log(err);
+
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  },
+);
+
+export const getAllPlantsSpace = createAsyncThunk(
+  "plants/getAllPlantsOfSpace",
+  async (spaceId: number, thunkAPI) => {
+    try {
+      return await getAllPlantsOfSpace(spaceId);
     } catch (err) {
       console.log(err);
 
@@ -214,7 +235,6 @@ export const appSlice = createSlice({
         state.plantWatered = payload.plantWatered;
         state.plantCaredFor = payload.plantCaredFor;
         state.error = null;
-        console.log("plant updated");
       })
       .addCase(updateGetAllPlantsOwned.fulfilled, (state, { payload }) => {
         state.plantsOwned = payload.newPlants;
@@ -231,8 +251,12 @@ export const appSlice = createSlice({
       .addCase(getSpaces.fulfilled, (state, { payload }) => {
         state.spaces = payload;
         state.error = null;
+      })
+      .addCase(getAllPlantsSpace.fulfilled, (state, { payload }) => {
+        state.plantsOfSelectedSpace = payload;
+        state.error = null;
       });
-  },
+  }
 });
 
 function plantToFullPlant(plants: Plant[], user: User) {
@@ -375,5 +399,17 @@ export const getPlantWatered = (state: RootState) => state.appData.plantWatered;
 export const getPlantCaredFor = (state: RootState) => state.appData.plantCaredFor;
 
 export const getSpacesOfUser = (state: RootState) => state.appData.spaces;
+
+export const selectSpaceById = (state: RootState, spaceId: number) => {
+  return state.appData.spaces.find((space) => space.spaceId === spaceId);
+}
+
+export const selectAllSpacePlants = (state: RootState, spaceId: number) => {
+  return state.appData.spaces.find((space) => space.spaceId === spaceId).plantsContained;
+}
+
+// export const selectSpacePlantById = (state: RootState, plantId: number) => {
+//   return selectAllSpacePlants(state).find((plant) => plant.plantId === plantId);
+// };
 
 export const appError = (state: RootState) => state.appData.error;

@@ -209,7 +209,7 @@ const StyledDeleteButton = styled.button`
     ${props => !props.disabled && css`
       cursor: pointer;
       scale: 0.95;`
-    }
+}
   }
 `;
 

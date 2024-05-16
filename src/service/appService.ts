@@ -129,8 +129,6 @@ export function updatePlant(plant: Plant) {
         return response.text().then(err => {
           throw new Error(err);
         });
-      } else {
-        return response.json();
       }
     });
 }
@@ -144,8 +142,6 @@ export function deletePlantById(plantId: number) {
         return response.text().then(err => {
           throw new Error(err);
         });
-      } else {
-        return response.json();
       }
     });
 }
@@ -315,6 +311,19 @@ export function deleteSpace(spaceId: number) {
         return response.text().then(err => {
           throw new Error(err);
         });
+      }
+    });
+}
+
+export function getAllPlantsOfSpace(spaceId: number): Promise<PlantFull[]> {
+  return fetch(baseurl + "plants/space?spaceId=" + spaceId)
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
       }
     });
 }

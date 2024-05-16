@@ -13,6 +13,7 @@ import MyPlants from "./components/views/MyPlants";
 import UserProfile from "./components/views/UserProfile";
 import EditUser from "./components/views/EditUser";
 import EditPassword from "./components/views/EditPassword";
+import SpacePage from "./components/views/SpacePage";
 
 
 function App() {
@@ -64,6 +65,10 @@ function App() {
 
         <Route path="/editPassword" element={<LoginGuard/>}>
           <Route path="/editPassword" element={<EditPassword/>} />
+        </Route>
+
+        <Route path="/spaces/:spaceId" element={<LoginGuard/>}>
+          <Route path="/spaces/:spaceId" element={<SpacePage/>} />
         </Route>
 
       </Routes>
