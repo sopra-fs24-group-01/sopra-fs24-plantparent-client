@@ -44,16 +44,9 @@ function Home() {
   const plants: Plant[] = useAppSelector(selectAllPlants);
   const user = useAppSelector(selectLoggedInUser);
   const status = useAppSelector(getStatus);
-  const showRain = useAppSelector(getPlantWatered);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (showRain) {
-      setTimeout(() => dispatch(resetPlantWatered()), 5000);
-    }
-  })
 
   useEffect(() => {
     getPlants();
@@ -72,7 +65,6 @@ function Home() {
   return (
     <>
       <Header />
-      {showRain && <RainAnimation />}
       {status === "loading" ? <div>Loading...</div> :
         <StyledMainContainer>
           <StyledSideBar />

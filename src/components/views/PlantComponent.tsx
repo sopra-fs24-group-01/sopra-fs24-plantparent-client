@@ -16,7 +16,8 @@ import { formatDistance, parseISO } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { careForPlant, waterPlant } from "../../service/appService";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { selectPlantById, updatePlantInPlantStore } from "../../store/appSlice";
+import { getPlantWatered, resetPlantWatered, selectPlantById, updatePlantInPlantStore } from "../../store/appSlice";
+import { RainAnimation } from "./RainAnimationComponent";
 
 
 const StyledPlantComponentContainer = styled.div`
@@ -194,6 +195,17 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
 
 export default function PlantComponent({ plantId, userId }: { plantId: number, userId: number }) {
   const plant = useAppSelector(state => selectPlantById(state, plantId));
+  const plantWatered = useAppSelector(getPlantWatered);
+  const [showRain, setShowRain] = useState<boolean>(plantWatered === plantId);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setShowRain(plantWatered === plantId);
+    if (plantWatered === plantId) {
+      setTimeout(() => dispatch(resetPlantWatered()), 5000);
+    }
+  }, [plantWatered]);
+
   const navigate = useNavigate();
   let mood = "happy";
   // next watering date or next caring date in the past
@@ -208,6 +220,7 @@ export default function PlantComponent({ plantId, userId }: { plantId: number, u
 
   return (
     <StyledPlantComponentContainer>
+      {showRain && <RainAnimation plantName={plant.plantName} />}
       <StyledMoodContainer>
         {mood === "happy" && <HappyFaceSVG style={{ color: "#83b271", width: "50px", height: "50px" }} />}
         {mood === "neutral" && <NeutralFaceSVG style={{ color: "orange", width: "50px", height: "50px" }} />}

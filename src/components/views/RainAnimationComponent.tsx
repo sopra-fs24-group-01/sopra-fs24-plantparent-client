@@ -4,10 +4,9 @@ import { ReactComponent as DropSVG } from "../../assets/droplet-half.svg";
 import { getRandomNumberBetween } from "../../helpers/util";
 
 const StyledRainContainer = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  //background-color: #ffffff80;
+  position: absolute;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   pointer-events: none;
   z-index: 1;
@@ -50,8 +49,8 @@ const StyledPlantInfo = styled.div`
   align-items: center;
 `;
 
-export function RainAnimation() {
-  const numRaindrops = 50;
+export function RainAnimation(plantName) {
+  const numRaindrops = 25;
 
   return (
     <StyledRainContainer>
@@ -60,11 +59,11 @@ export function RainAnimation() {
           key={i}
           $size={getRandomNumberBetween(20, 40)}
           $left={getRandomNumberBetween(0, 100)}
-          $speed={getRandomNumberBetween(2, 5)}>
+          $speed={getRandomNumberBetween(1, 3)}>
           <DropSVG />
         </StyledRaindrop>
       ))}
-      <StyledPlantInfo>Plant xyz watered</StyledPlantInfo>
+      <StyledPlantInfo>{plantName} was just watered!</StyledPlantInfo>
     </StyledRainContainer>
   );
 }
