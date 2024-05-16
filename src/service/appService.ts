@@ -1,7 +1,8 @@
-import { Plant, PlantFull, User, UserSimple } from "../types";
+import { Plant, PlantFull, Space, User, UserSimple } from "../types";
 
 const baseurl = process.env.REACT_APP_BACKEND_BASEURL;
 
+/**************************************** USER STUFF ****************************************/
 export function login(user: { username: string, password: string }): Promise<User> {
   return fetch(baseurl + "login", {
     method: "POST",
@@ -94,6 +95,8 @@ export function getAllUsers(): Promise<User[]> {
     });
 }
 
+
+/****************************** PLANT STUFF ******************************/
 export function createPlant(plant: Plant) {
   return fetch(baseurl + "plants", {
     method: "POST",
@@ -239,5 +242,152 @@ export function getAllPlantsCaredFor(userId: number): Promise<PlantFull[]> {
       } else {
         return response.json();
       }
+    });
+}
+
+
+/****************************** SPACE STUFF ******************************/
+export function getSpace(spaceId: number): Promise<Space> {
+  return fetch(baseurl + "spaces/" + spaceId)
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
+    });
+}
+
+export function createSpace(space: Space) {
+  return fetch(baseurl + "spaces", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      spaceName: space.spaceName,
+      spaceOwner: space.spaceOwner,
+      plantsContained: space.plantsContained
+    })
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
+    });
+}
+
+export function updateSpace(space: Space) {
+  return fetch(baseurl + "spaces/" + space.spaceId, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      spaceName: space.spaceName,
+      spaceOwner: space.spaceOwner,
+      plantsContained: space.plantsContained
+    })
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
+    });
+}
+
+export function deleteSpace(spaceId: number) {
+  return fetch(baseurl + "spaces/" + spaceId, {
+    method: "DELETE",
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      }
+    });
+}
+
+export function addUserToSpace(spaceId: number, userId: number) {
+  return fetch(baseurl + "spaces/" + spaceId + "/members", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ "memberId": userId })
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      }
+    });
+}
+
+export function removeUserFromSpace(spaceId: number, userId: number) {
+  return fetch(baseurl + "spaces/" + spaceId + "/members/" + userId, {
+    method: "DELETE",
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      }
+    });
+}
+
+export function addPlantToSpace(spaceId: number, plantId: number) {
+  return fetch(baseurl + "spaces/" + spaceId + "/plants", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ "plantId": plantId })
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      }
+    });
+}
+
+export function getOwnedSpaces(userId: number) {
+  return fetch(baseurl + "spaces/owned?ownerId=" + userId)
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      }
+
+      return response.json();
+    });
+}
+
+export function getAllMembershipSpaces(userId: number) {
+  return fetch(baseurl + "spaces/member?memberId=" + userId)
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      }
+
+      return response.json();
     });
 }

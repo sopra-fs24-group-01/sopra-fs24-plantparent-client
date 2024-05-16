@@ -20,7 +20,6 @@ import PropTypes from "prop-types";
 import { CaretakerSelectorComponent } from "./CaretakerSelectorComponent";
 import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
 import { CaretakerComponent } from "./CaretakerComponent";
-import { PlantFull } from "../../types";
 import { deletePlantById } from "../../service/appService";
 import { ReactComponent as HappyFaceSVG } from "../../assets/emoji-smile-fill.svg";
 import { ReactComponent as NeutralFaceSVG } from "../../assets/emoji-neutral-fill.svg";

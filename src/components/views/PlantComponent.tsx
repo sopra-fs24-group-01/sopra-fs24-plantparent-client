@@ -12,7 +12,7 @@ import { ReactComponent as HouseSVG } from "../../assets/house-door.svg";
 import { ReactComponent as KeySVG } from "../../assets/key.svg";
 import { ReactComponent as CheckFillSVG } from "../../assets/check-circle-fill.svg";
 import { Modal } from "./PopupMsgComponent";
-import { formatDistance, parseISO } from "date-fns";
+import { formatDistance } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { careForPlant, waterPlant } from "../../service/appService";
 import { useAppDispatch, useAppSelector } from "../../hooks";
@@ -25,6 +25,7 @@ import {
 } from "../../store/appSlice";
 import { RainAnimation } from "./RainAnimationComponent";
 import { CaringAnimation } from "./CaringAnimationComponent";
+
 
 
 const StyledPlantComponentContainer = styled.div`

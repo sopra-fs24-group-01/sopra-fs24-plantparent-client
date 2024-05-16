@@ -58,9 +58,9 @@ export type UserSimple = {
 };
 
 export type Space = {
-  spaceId: number;
+  spaceId?: number;
   spaceName: string;
   spaceOwner: User;
-  plantsContainer: Plant[];
+  plantsContained: Plant[];
   spaceMembers: User[];
 }
