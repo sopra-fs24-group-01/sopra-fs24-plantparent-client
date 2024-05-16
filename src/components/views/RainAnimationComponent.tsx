@@ -7,7 +7,7 @@ const StyledRainContainer = styled.div`
   position: fixed;
   width: 100vw;
   height: 100vh;
-  background-color: #ffffff80;
+  //background-color: #ffffff80;
   overflow: hidden;
   pointer-events: none;
   z-index: 1;

@@ -6,7 +6,7 @@ import {
   getAllPlantsCaredFor,
   getAllPlantsOwned, updateUser,
 } from "../service/appService";
-import { PlantFull, User, UserSimple } from "../types";
+import { Plant, PlantFull, User, UserSimple } from "../types";
 
 
 interface IUserState {
@@ -33,39 +33,43 @@ const initialState: IUserState = {
 
 export const registerUser = createAsyncThunk(
   "users/registerUser",
-  async (newUser: User, { rejectWithValue }) => {
+  async (newUser: User, thunkAPI) => {
     try {
       return await createUser(newUser);
     } catch (err) {
       console.log(err);
 
-      return rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   },
 );
 
 export const loginUser = createAsyncThunk(
   "users/loginUser",
-  async (user: { username: string, password: string }, { rejectWithValue }) => {
+  async (user: { username: string, password: string }, thunkAPI) => {
     try {
       return await login(user);
     } catch (err) {
       console.log(err);
 
-      return rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   },
 );
 
 export const updateUserRedux = createAsyncThunk(
   "users/updateUser",
-  async (user: UserSimple, { rejectWithValue }) => {
+  async (user: UserSimple, thunkAPI) => {
     try {
-      return await updateUser(user);
+      const state = thunkAPI.getState() as RootState;
+      const updatedUser =  await updateUser(user);
+      const { fullPlantsOwned, fullPlantsCaredFor, plantWatered } = updatePlantsOfUser(updatedUser, state);
+
+      return { ...updatedUser, plantsOwned: fullPlantsOwned, plantsCaredFor: fullPlantsCaredFor, plantWatered };
     } catch (err) {
       console.log(err);
 
-      return rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   },
 );
@@ -79,15 +83,23 @@ export const updatePlantInPlantStore = createAsyncThunk(
 
 export const updateGetAllPlantsOwned = createAsyncThunk(
   "plants/updateGetAllPlantsOwned",
-  async (userId: number) => {
-    return await getAllPlantsOwned(userId);
+  async (userId: number, thunkAPI) => {
+    const state = thunkAPI.getState() as RootState;
+    const plants = await getAllPlantsOwned(userId);
+    const { newPlants, plantWatered } = updatePlants(plants, state);
+
+    return { newPlants, plantWatered };
   },
 );
 
 export const updateGetAllPlantsCaredFor = createAsyncThunk(
   "plants/updateGetAllPlantsCaredFor",
-  async (userId: number) => {
-    return await getAllPlantsCaredFor(userId);
+  async (userId: number, thunkAPI) => {
+    const state = thunkAPI.getState() as RootState;
+    const plants = await getAllPlantsCaredFor(userId);
+    const { newPlants, plantWatered } = updatePlants(plants, state);
+
+    return { newPlants, plantWatered };
   },
 );
 
@@ -103,7 +115,7 @@ export const appSlice = createSlice({
     },
     resetPlantWatered: (state) => {
       state.plantWatered = false;
-    }
+    },
   },
   extraReducers(builder) {
     builder
@@ -136,10 +148,9 @@ export const appSlice = createSlice({
         const date = new Date();
         state.loggedInDate = date.toISOString();
         state.loggedInUser = payload;
-        const {fullPlantsOwned, fullPlantsCaredFor, plantWatered} = updatePlantsOfUser(payload);
-        state.plantWatered = plantWatered;
-        state.plantsOwned = fullPlantsOwned;
-        state.plantsCaredFor = fullPlantsCaredFor;
+        state.plantWatered = false;
+        state.plantsOwned = plantToFullPlant(payload.plantsOwned, payload);
+        state.plantsCaredFor = plantToFullPlant(payload.plantsCaredFor, payload);
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -148,12 +159,10 @@ export const appSlice = createSlice({
       })
       .addCase(updateUserRedux.fulfilled, (state, { payload }) => {
         state.status = "succeeded";
-        console.log(payload);
         state.loggedInUser = payload;
-        const {fullPlantsOwned, fullPlantsCaredFor, plantWatered} = updatePlantsOfUser(payload);
-        state.plantWatered = plantWatered;
-        state.plantsOwned = fullPlantsOwned;
-        state.plantsCaredFor = fullPlantsCaredFor;
+        state.plantWatered = payload.plantWatered;
+        state.plantsOwned = payload.plantsOwned;
+        state.plantsCaredFor = payload.plantsCaredFor;
         state.error = null;
       })
       .addCase(updatePlantInPlantStore.fulfilled, (state, { payload }) => {
@@ -177,39 +186,67 @@ export const appSlice = createSlice({
         console.log("plant updated");
       })
       .addCase(updateGetAllPlantsOwned.fulfilled, (state, { payload }) => {
-        state.plantsOwned = payload;
+        state.plantsOwned = payload.newPlants;
+        state.plantWatered = payload.plantWatered;
         state.error = null;
       })
       .addCase(updateGetAllPlantsCaredFor.fulfilled, (state, { payload }) => {
-        state.plantsCaredFor = payload;
+        state.plantsCaredFor = payload.newPlants;
+        state.plantWatered = payload.plantWatered;
         state.error = null;
       });
   },
 });
 
-function updatePlantsOfUser(user: User) {
-  let plantWatered = false;
-  const fullPlantsOwned: PlantFull[] = user.plantsOwned.map((plant) => {
-    const oldPlant = selectPlantById({appData: initialState}, plant.plantId);
-    if (oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
-      plantWatered = true;
-    }
-
-    return {...plant, owner: user, caretakers: []};
-  })
-  const fullPlantsCaredFor: PlantFull[] = user.plantsCaredFor.map((plant) => {
-    const oldPlant = selectPlantById({appData: initialState}, plant.plantId);
-    if (oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
-      plantWatered = true;
-    }
-
-    return {...plant, owner: user, caretakers: []};
-  })
-
-  return {fullPlantsOwned, fullPlantsCaredFor, plantWatered};
+function plantToFullPlant(plants: Plant[], user: User) {
+  const fullPlants: PlantFull[] = plants.map((plant) => {
+    return { ...plant, owner: user, caretakers: [] };
+  });
+  return fullPlants;
 }
 
-export const {clearError, resetPlantWatered} = appSlice.actions;
+function updatePlantsOfUser(user: User, state: RootState) {
+  let plantWatered = false;
+  const fullPlantsOwned: PlantFull[] = user.plantsOwned.map((plant) => {
+    const oldPlant = selectPlantById(state, plant.plantId);
+    if (oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
+      plantWatered = true;
+    }
+
+    return { ...plant, owner: user, caretakers: [] };
+  });
+  const fullPlantsCaredFor: PlantFull[] = user.plantsCaredFor.map((plant) => {
+    console.log("plants cared for loaded");
+    const oldPlant = selectPlantById(state, plant.plantId);
+    if (oldPlant.plantName === "regular plant") {
+      console.log(oldPlant);
+      console.log(plant);
+    }
+    if (oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
+      plantWatered = true;
+    }
+
+    return { ...plant, owner: user, caretakers: [] };
+  });
+
+  return { fullPlantsOwned, fullPlantsCaredFor, plantWatered };
+}
+
+function updatePlants(plants: PlantFull[], state: RootState) {
+  let plantWatered = false;
+  const newPlants = plants.map((plant) => {
+    const oldPlant = selectPlantById(state, plant.plantId);
+    if (oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
+      plantWatered = true;
+    }
+
+    return { ...plant };
+  });
+
+  return { newPlants, plantWatered };
+}
+
+export const { clearError, resetPlantWatered } = appSlice.actions;
 
 export default appSlice.reducer;
 
