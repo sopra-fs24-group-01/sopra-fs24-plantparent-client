@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { ReactComponent as ImagePlaceholderSVG } from "../../assets/image_placeholder.svg";
 import { calculateDifferenceInDays, isInThePast } from "../../helpers/util";
@@ -15,8 +15,16 @@ import { Modal } from "./PopupMsgComponent";
 import { formatDistance, parseISO } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { careForPlant, waterPlant } from "../../service/appService";
-import { useAppSelector } from "../../hooks";
-import { selectPlantById } from "../../store/appSlice";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import {
+  getPlantCaredFor,
+  getPlantWatered, resetPlantCaredFor,
+  resetPlantWatered,
+  selectPlantById,
+  updatePlantInPlantStore,
+} from "../../store/appSlice";
+import { RainAnimation } from "./RainAnimationComponent";
+import { CaringAnimation } from "./CaringAnimationComponent";
 
 
 const StyledPlantComponentContainer = styled.div`
@@ -109,6 +117,9 @@ const CaringSVGContainer = styled.div<{ $hover?: boolean }>`
       cursor: pointer;
       scale: 0.95;`
 }
+    ${props => !props.$hover && css`
+      cursor: not-allowed;`
+}
   }
 `;
 
@@ -148,16 +159,17 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
   const [modal, setModal] = useState<boolean>(false);
   const past = isInThePast(date);
   const now = new Date();
+  const dispatch = useAppDispatch();
 
-  useState(() => {
+  useEffect(() => {
     setDay(calculateDifferenceInDays(date));
-  });
+  }, [past]);
 
   function action() {
     if (watering) {
-      waterPlant(plantId).then(() => window.location.reload());
+      waterPlant(plantId).then(() => dispatch(updatePlantInPlantStore({plantId: plantId, animate: false})));
     } else {
-      careForPlant(plantId).then(() => window.location.reload());
+      careForPlant(plantId).then(() => dispatch(updatePlantInPlantStore({plantId: plantId, animate: false})));
     }
     setModal(false);
   }
@@ -190,6 +202,26 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
 
 export default function PlantComponent({ plantId, userId }: { plantId: number, userId: number }) {
   const plant = useAppSelector(state => selectPlantById(state, plantId));
+  const plantWatered = useAppSelector(getPlantWatered);
+  const plantCaredFor = useAppSelector(getPlantCaredFor);
+  const [showRain, setShowRain] = useState<boolean>(plantWatered === plantId);
+  const [showCaringAnimation, setShowCaringAnimation] = useState<boolean>(plantCaredFor === plantId);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setShowRain(plantWatered === plantId);
+    if (plantWatered === plantId) {
+      setTimeout(() => dispatch(resetPlantWatered()), 5000);
+    }
+  }, [plantWatered]);
+
+  useEffect(() => {
+    setShowCaringAnimation(plantCaredFor === plantId);
+    if (plantCaredFor === plantId) {
+      setTimeout(() => dispatch(resetPlantCaredFor()), 5000);
+    }
+  }, [plantCaredFor]);
+
   const navigate = useNavigate();
   let mood = "happy";
   // next watering date or next caring date in the past
@@ -204,6 +236,8 @@ export default function PlantComponent({ plantId, userId }: { plantId: number, u
 
   return (
     <StyledPlantComponentContainer>
+      {showRain && <RainAnimation key={"rainAnimation_" + plantId} plantName={plant.plantName} />}
+      {showCaringAnimation && <CaringAnimation key={"caringAnimation_" + plantId} plantName={plant.plantName} />}
       <StyledMoodContainer>
         {mood === "happy" && <HappyFaceSVG style={{ color: "#83b271", width: "50px", height: "50px" }} />}
         {mood === "neutral" && <NeutralFaceSVG style={{ color: "orange", width: "50px", height: "50px" }} />}

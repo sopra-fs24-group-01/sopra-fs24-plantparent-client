@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { appError, loginUser } from "../../store/appSlice";
+import { appError, clearError, loginUser } from "../../store/appSlice";
 
 
 export const StyledMainContainer = styled.div`
@@ -27,7 +27,7 @@ export const StyledLoginContainer = styled.div`
 
 export const StyledLogoContainerLarge = styled.div`
   height: fit-content;
-  margin: 0 auto 100px auto;
+  margin: 0 auto 50px auto;
 `;
 
 export const StyledForm = styled.form`
@@ -37,7 +37,7 @@ export const StyledForm = styled.form`
   justify-content: center;
 `;
 
-export const StyledInputField = styled.input<{ $backgroundImage?: string, $validInput?: boolean}>`
+export const StyledInputField = styled.input<{ $backgroundImage?: string, $validInput?: boolean }>`
   font-size: 1.5rem;
   padding: 0 15px;
   width: 350px;
@@ -48,7 +48,7 @@ export const StyledInputField = styled.input<{ $backgroundImage?: string, $valid
   border-radius: 5px;
 `;
 
-export const StyledPrimaryButton = styled.button<{disabled?: boolean }>`
+export const StyledPrimaryButton = styled.button<{ disabled?: boolean }>`
   color: #ffffff;
   font-size: 1.5rem;
   background-color: #83b271;
@@ -60,13 +60,12 @@ export const StyledPrimaryButton = styled.button<{disabled?: boolean }>`
 
   ${props => props.disabled && css`
     opacity: 0.5;`
-}
-  
+  }
   &:hover {
     ${props => !props.disabled && css`
       cursor: pointer;
       scale: 0.95;`
-}
+    }
   }
 `;
 
@@ -84,11 +83,12 @@ export const StyledLink = styled.a`
   &:visited {
     color: #83b271;
   }
-  &:hover{
+
+  &:hover {
     cursor: pointer;
     scale: 0.95;
   }
-  
+
   &:after {
     content: "";
     background-color: #000000;
@@ -99,6 +99,7 @@ export const StyledLink = styled.a`
     width: 0;
     transition: 0.2s;
   }
+
   &:hover:after {
     width: 100%;
   }
@@ -118,14 +119,27 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const errorMsg = useAppSelector(appError);
 
+  function clearAppError() {
+    dispatch(clearError());
+  }
+
+  useEffect(() => {
+    clearAppError();
+  }, []);
+
+  useEffect(() => {
+    if (errorMsg) {
+      setError(errorMsg);
+    }
+  }, [errorMsg]);
+
   async function doLogin(event: React.FormEvent) {
     event.preventDefault();
     try {
-      const user = {username: username, password: password};
+      const user = { username: username, password: password };
       await dispatch(loginUser(user)).unwrap();
     } catch (err) {
       console.log(err);
-      setError(errorMsg);
     }
   }
 
@@ -133,21 +147,21 @@ export default function Login() {
     <StyledMainContainer>
       <StyledLoginContainer>
         <StyledLogoContainerLarge>
-          <LogoSVG style={{height: "100px", maxWidth: "100%"}} />
+          <LogoSVG style={{ height: "100px", maxWidth: "100%" }} />
         </StyledLogoContainerLarge>
         <StyledForm onSubmit={doLogin}>
           <StyledInputField id="username"
-            type="text"
-            value={username}
-            $validInput={true}
-            placeholder="Username"
-            onChange={(event) => setUsername(event.target.value)} />
+                            type="text"
+                            value={username}
+                            $validInput={true}
+                            placeholder="Username"
+                            onChange={(event) => setUsername(event.target.value)} />
           <StyledInputField id="password"
-            type="password"
-            value={password}
-            $validInput={true}
-            placeholder="Password"
-            onChange={(event) => setPassword(event.target.value)} />
+                            type="password"
+                            value={password}
+                            $validInput={true}
+                            placeholder="Password"
+                            onChange={(event) => setPassword(event.target.value)} />
           <StyledPrimaryButton disabled={!username || !password} type="submit">Login</StyledPrimaryButton>
           <StyledP>No account yet? <StyledLink onClick={() => navigate("/signUp")}>Sign Up</StyledLink></StyledP>
           {error && <StyledError>{error}</StyledError>}
