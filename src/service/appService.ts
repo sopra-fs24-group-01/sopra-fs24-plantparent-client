@@ -329,12 +329,8 @@ export function getAllPlantsOfSpace(spaceId: number): Promise<PlantFull[]> {
 }
 
 export function addUserToSpace(spaceId: number, userId: number) {
-  return fetch(baseurl + "spaces/" + spaceId + "/members", {
+  return fetch(baseurl + "spaces/" + spaceId + "/members/" + userId, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ "memberId": userId })
   })
     .then(response => {
       if (!response.ok) {
@@ -359,12 +355,21 @@ export function removeUserFromSpace(spaceId: number, userId: number) {
 }
 
 export function addPlantToSpace(spaceId: number, plantId: number) {
-  return fetch(baseurl + "spaces/" + spaceId + "/plants", {
+  return fetch(baseurl + "spaces/" + spaceId + "/plants/" + plantId, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ "plantId": plantId })
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      }
+    });
+}
+
+export function removePlantFromSpace(spaceId: number, plantId: number) {
+  return fetch(baseurl + "spaces/" + spaceId + "/plants/" + plantId, {
+    method: "DELETE",
   })
     .then(response => {
       if (!response.ok) {

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
 
 export const StyledItemsListContainer = styled.div<{ $right?: boolean, $top?: boolean }>`
   position: absolute;
@@ -62,9 +61,11 @@ export function ItemsSelectorComponent({
   addItem,
   getAllItems,
   fullItemKey,
+  idKey,
   nameKey,
   ignoreId,
   itemName,
+  AddSVG,
   top,
   right
 }: {
@@ -76,9 +77,11 @@ export function ItemsSelectorComponent({
   addItem: (mainItemId: number, itemId: number) => Promise<void>,
   getAllItems: () => Promise<any>,
   fullItemKey: string,
+  idKey: string,
   nameKey: string,
   ignoreId: number
   itemName: string,
+  AddSVG: React.FunctionComponent<React.SVGProps<SVGSVGElement>>,
   top?: boolean,
   right?: boolean;
 }) {
@@ -88,8 +91,8 @@ export function ItemsSelectorComponent({
     const fullItem = await getPotentialItem(Number(itemId));
     getAllItems().then(fullItems => {
       const is: { id: number, name: string }[] = fullItems.map((i) => {
-        if (!fullItem[fullItemKey].find(containedItem => containedItem.id === i.id) && i.id !== ignoreId) {
-          return { id: i.id, name: i[nameKey] };
+        if (!fullItem[fullItemKey].find(containedItem => containedItem[idKey] === i[idKey]) && i[idKey] !== ignoreId) {
+          return { id: i[idKey], name: i[nameKey] };
         }
       }).filter(Boolean);
       setItems(is);
@@ -126,7 +129,7 @@ export function ItemsSelectorComponent({
                 return (
                   <StyledItemsListItemContainer key={i.id}>{i.name}
                     <div title="Add as caretaker">
-                      <AddUserSVG onClick={() => addItemToMainItem(Number(itemId), Number(i.id))}
+                      <AddSVG onClick={() => addItemToMainItem(Number(itemId), Number(i.id))}
                         style={{ width: "30px", height: "30px" }} />
                     </div>
                   </StyledItemsListItemContainer>

@@ -414,6 +414,8 @@ export const selectAllSpacePlants = (state: RootState, spaceId: number) => {
   return state.appData.spaces.find((space) => space.spaceId === spaceId).plantsContained;
 }
 
+export const selectPlantsOfSelectedSpace = (state: RootState) => state.appData.plantsOfSelectedSpace;
+
 export const selectColorById = (state: RootState, id: number) => {
   if (String(id).length > 2) {
     id = Number(String(id).slice(-2));

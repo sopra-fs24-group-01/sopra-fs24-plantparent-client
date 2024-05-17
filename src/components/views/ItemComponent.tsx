@@ -58,6 +58,7 @@ export function ItemsComponent({
   getPotentialItem,
   removeItem,
   fullItemKey,
+  idKey,
   nameKey,
   ignoreId,
   itemTitle,
@@ -72,6 +73,7 @@ export function ItemsComponent({
   getPotentialItem: (id: number) => Promise<any>,
   removeItem: (mainItemId: number, itemId: number) => Promise<void>,
   fullItemKey: string,
+  idKey: string,
   nameKey: string,
   ignoreId: number,
   itemTitle: string,
@@ -84,8 +86,8 @@ export function ItemsComponent({
   async function getItems() {
     const fullItem = await getPotentialItem(Number(itemId));
     const is = fullItem[fullItemKey].reduce((unique, i) => {
-      if (unique.findIndex(u => u.id === i.id) === -1) {
-        unique.push({ id: i.id, name: i[nameKey] });
+      if (unique.findIndex(u => u[idKey] === i[idKey]) === -1) {
+        unique.push({ id: i[idKey], name: i[nameKey] });
       }
 
       return unique;

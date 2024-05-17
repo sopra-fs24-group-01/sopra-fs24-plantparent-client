@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   getAllPlantsSpace,
   getStatus, selectAllSpacePlants,
-  selectLoggedInUser, selectSpaceById,
+  selectLoggedInUser, selectPlantsOfSelectedSpace, selectSpaceById,
 } from "../../store/appSlice";
 import { StyledMainContainer, StyledMainContainerContainer } from "./Home";
 import { Plant } from "../../types";
@@ -18,8 +18,17 @@ import { ReactComponent as HouseSVG } from "../../assets/house-door.svg";
 import { ReactComponent as KeySVG } from "../../assets/key.svg";
 import { ReactComponent as RemoveUserSVG } from "../../assets/person-fill-dash.svg";
 import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
+import { ReactComponent as AddPlantSVG } from "../../assets/plant-add.svg";
+import { ReactComponent as RemovePlantSVG } from "../../assets/plant-remove.svg";
 import { ItemsSelectorComponent } from "./ItemSelectorComponent";
-import { addUserToSpace, getAllUsers, getSpace, removeUserFromSpace } from "../../service/appService";
+import {
+  addPlantToSpace,
+  addUserToSpace,
+  getAllPlantsOwned,
+  getAllUsers,
+  getSpace, removePlantFromSpace,
+  removeUserFromSpace,
+} from "../../service/appService";
 import { ItemsComponent } from "./ItemComponent";
 
 
@@ -82,7 +91,7 @@ const StyledSelectorContainer = styled.div`
   border: 2px solid #83b271;
 `;
 
-export const StyledAddUserContainer = styled.div`
+export const StyledAddItemContainer = styled.div`
   position: absolute;
   top: 5px;
   right: 5px;
@@ -104,9 +113,11 @@ function SpacePage() {
   const status = useAppSelector(getStatus);
   const { spaceId } = useParams<{ spaceId: string }>();
   const space = useAppSelector(state => selectSpaceById(state, Number(spaceId)));
-  const plants: Plant[] = useAppSelector(state => selectAllSpacePlants(state, Number(spaceId)));
+  const plants: Plant[] = useAppSelector(selectPlantsOfSelectedSpace);
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false);
   const [reloadUsers, setReloadUsers] = useState<boolean>(false);
+  const [showSelectPlants, setShowSelectPlants] = useState<boolean>(false);
+  const [reloadPlants, setReloadPlants] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -119,8 +130,21 @@ function SpacePage() {
     };
   }, []);
 
+  useEffect(() => {
+    getPlants()
+  }, [space])
+
+  function setDoubleReloadPlants(condition: boolean) {
+    getPlants();
+    setReloadPlants(condition);
+  }
+
   function getPlants() {
     dispatch(getAllPlantsSpace(Number(spaceId)));
+  }
+
+  async function getAllPlants() {
+    return await getAllPlantsOwned(user.id);
   }
 
   return (
@@ -146,10 +170,10 @@ function SpacePage() {
             <StyledSelectorContainerContainer>
               <StyledSelectorContainer>
                 {user.id === space.spaceOwner.id &&
-                  <StyledAddUserContainer>
+                  <StyledAddItemContainer>
                     <AddUserSVG onClick={() => setShowSelectUsers(!showSelectUsers)}
                       style={{ width: "50px", height: "50px", margin: "auto" }} />
-                  </StyledAddUserContainer>}
+                  </StyledAddItemContainer>}
                 {showSelectUsers &&
                 <ItemsSelectorComponent
                   itemId={spaceId}
@@ -160,9 +184,11 @@ function SpacePage() {
                   addItem={addUserToSpace}
                   getAllItems={getAllUsers}
                   fullItemKey={"spaceMembers"}
+                  idKey={"id"}
                   nameKey={"username"}
                   ignoreId={space.spaceOwner.id}
                   itemName={"user"}
+                  AddSVG={AddUserSVG}
                   right={true}
                   top={true}/>}
                 <ItemsComponent
@@ -173,6 +199,7 @@ function SpacePage() {
                   getPotentialItem={getSpace}
                   removeItem={removeUserFromSpace}
                   fullItemKey={"spaceMembers"}
+                  idKey={"id"}
                   nameKey={"username"}
                   ignoreId={space.spaceOwner.id}
                   itemTitle={"Space Members"}
@@ -181,6 +208,43 @@ function SpacePage() {
                   edit={space.spaceOwner.id === user.id} />
               </StyledSelectorContainer>
               <StyledSelectorContainer>
+                {user.id === space.spaceOwner.id &&
+                  <StyledAddItemContainer>
+                    <AddPlantSVG onClick={() => setShowSelectPlants(!showSelectPlants)}
+                      style={{ width: "50px", height: "50px", margin: "auto" }} />
+                  </StyledAddItemContainer>}
+                {showSelectPlants &&
+                  <ItemsSelectorComponent
+                    itemId={spaceId}
+                    setShowSelectItems={setShowSelectPlants}
+                    reloadItems={reloadPlants}
+                    setReloadItems={setDoubleReloadPlants}
+                    getPotentialItem={getSpace}
+                    addItem={addPlantToSpace}
+                    getAllItems={getAllPlants}
+                    fullItemKey={"plantsContained"}
+                    idKey={"plantId"}
+                    nameKey={"plantName"}
+                    ignoreId={99999999999999999999999999}
+                    itemName={"plant"}
+                    AddSVG={AddPlantSVG}
+                    right={true}
+                    top={true}/>}
+                <ItemsComponent
+                  itemId={spaceId}
+                  setShowSelectItems={setShowSelectPlants}
+                  reloadItems={reloadPlants}
+                  setReloadItems={setDoubleReloadPlants}
+                  getPotentialItem={getSpace}
+                  removeItem={removePlantFromSpace}
+                  fullItemKey={"plantsContained"}
+                  idKey={"plantId"}
+                  nameKey={"plantName"}
+                  ignoreId={99999999999999999999999999}
+                  itemTitle={"Plants"}
+                  itemName={"plant"}
+                  RemoveSVG={RemovePlantSVG}
+                  edit={space.spaceOwner.id === user.id} />
 
               </StyledSelectorContainer>
             </StyledSelectorContainerContainer>

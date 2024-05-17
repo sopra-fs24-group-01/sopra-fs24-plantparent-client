@@ -322,9 +322,11 @@ export default function PlantView() {
             addItem={addCaretaker}
             getAllItems={getAllUsers}
             fullItemKey={"caretakers"}
+            idKey={"id"}
             nameKey={"username"}
             ignoreId={plant.owner.id}
-            itemName={"user"} />}
+            itemName={"user"}
+            AddSVG={AddUserSVG}/>}
           {user.id === plant.owner.id &&
             <StyledEditPlantContainer onClick={() => navigate("/editPlant/" + plant.plantId)}>
               <EditPlantSVG style={{ width: "35px", height: "35px" }} />
@@ -410,6 +412,7 @@ export default function PlantView() {
             getPotentialItem={getPlantById}
             removeItem={removeCaretaker}
             fullItemKey={"caretakers"}
+            idKey={"id"}
             nameKey={"username"}
             ignoreId={plant.owner.id}
             itemTitle={"Caretakers"}
