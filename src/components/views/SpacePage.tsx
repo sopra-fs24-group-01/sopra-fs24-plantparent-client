@@ -23,13 +23,14 @@ import { ReactComponent as RemovePlantSVG } from "../../assets/plant-remove.svg"
 import { ItemsSelectorComponent } from "./ItemSelectorComponent";
 import {
   addPlantToSpace,
-  addUserToSpace,
+  addUserToSpace, deleteSpace,
   getAllPlantsOwned,
   getAllUsers,
   getSpace, removePlantFromSpace,
   removeUserFromSpace,
 } from "../../service/appService";
 import { ItemsComponent } from "./ItemComponent";
+import { Modal, StyledModalButtonRed } from "./PopupMsgComponent";
 
 
 const StyledSpaceTitleContainer = styled.div`
@@ -107,6 +108,12 @@ export const StyledAddItemContainer = styled.div`
   }
 `;
 
+const StyledDeleteButtonContainer = styled.div`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+`;
+
 
 function SpacePage() {
   const user = useAppSelector(selectLoggedInUser);
@@ -118,6 +125,7 @@ function SpacePage() {
   const [reloadUsers, setReloadUsers] = useState<boolean>(false);
   const [showSelectPlants, setShowSelectPlants] = useState<boolean>(false);
   const [reloadPlants, setReloadPlants] = useState<boolean>(false);
+  const [modal, setModal] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -147,8 +155,15 @@ function SpacePage() {
     return await getAllPlantsOwned(user.id);
   }
 
+  async function confirmDelete() {
+    setModal(false);
+    await deleteSpace(Number(spaceId)).then(() => navigate("/"));
+  }
+
   return (
     <>
+      {modal && <Modal setModal={setModal} action={confirmDelete}
+        text={"Are you sure you want to delete the space?"} />}
       <Header />
       {status === "loading" ? <div>Loading...</div> :
         <StyledMainContainer>
@@ -158,6 +173,10 @@ function SpacePage() {
               {user.id === space.spaceOwner.id ? <HouseSVG /> : <KeySVG />}
               {space.spaceName}
               {space.spaceOwner.id === user.id && <EditSVG onClick={() => navigate(`/editSpace/${spaceId}`)} />}
+              {space.spaceOwner.id === user.id &&
+                <StyledDeleteButtonContainer>
+                  <StyledModalButtonRed $small={true} onClick={() => setModal(true)}>Delete Space</StyledModalButtonRed>
+                </StyledDeleteButtonContainer>}
             </StyledSpaceTitleContainer>
             <StyledSpacesPlantsContainer>
               {plants.length < 1 ? <div>You have no plants yet. Create one!</div> : plants.map(plant => (
