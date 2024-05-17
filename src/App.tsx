@@ -14,6 +14,7 @@ import UserProfile from "./components/views/UserProfile";
 import EditUser from "./components/views/EditUser";
 import EditPassword from "./components/views/EditPassword";
 import SpacePage from "./components/views/SpacePage";
+import EditSpace from "./components/views/EditSpace";
 
 
 function App() {
@@ -69,6 +70,10 @@ function App() {
 
         <Route path="/spaces/:spaceId" element={<LoginGuard/>}>
           <Route path="/spaces/:spaceId" element={<SpacePage/>} />
+        </Route>
+
+        <Route path="/editSpace/:spaceId" element={<LoginGuard/>}>
+          <Route path="/editSpace/:spaceId" element={<EditSpace/>} />
         </Route>
 
         {/* Catch all undefined routes and redirect to home */}

@@ -1,4 +1,4 @@
-import { Plant, PlantFull, Space, User, UserSimple } from "../types";
+import { Plant, PlantFull, Space, SpaceSimple, User, UserSimple } from "../types";
 
 const baseurl = process.env.REACT_APP_BACKEND_BASEURL;
 
@@ -279,7 +279,7 @@ export function createSpace(space: Space) {
     });
 }
 
-export function updateSpace(space: Space) {
+export function updateSpace(space: SpaceSimple) {
   return fetch(baseurl + "spaces/" + space.spaceId, {
     method: "PUT",
     headers: {

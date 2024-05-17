@@ -64,3 +64,11 @@ export type Space = {
   plantsContained: Plant[];
   spaceMembers: User[];
 }
+
+export type SpaceSimple = {
+  spaceId?: number;
+  spaceName: string;
+  spaceOwner: UserSimple;
+  plantsContained: Plant[];
+  spaceMembers: UserSimple[];
+}
