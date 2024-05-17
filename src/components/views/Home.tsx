@@ -29,6 +29,15 @@ export const StyledMainContainerContainer = styled.div`
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 `;
 
 function Home() {

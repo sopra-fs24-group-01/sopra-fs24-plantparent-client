@@ -13,8 +13,9 @@ const StyledHeaderContainer = styled.div`
   left: 0;
   top: 0;
   display: flex;
-  border-bottom: 1px solid #000000;
+  border-bottom: 1px solid #83b271;
   padding-bottom: 5px;
+  background-color: #E6F4EA50;
 `;
 
 const StyledLogoContainerHeader = styled.div`

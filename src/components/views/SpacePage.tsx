@@ -39,9 +39,13 @@ const StyledSpaceTitleContainer = styled.div`
   }
 `;
 
+const StyledPrimaryButtonSpace = styled(StyledPrimaryButton)`
+  margin-top: 10px;
+`;
+
 const StyledSpacesPlantsContainer = styled.div`
   display: flex;
-  height: 520px;
+  height: 480px;
   overflow-y: auto;
   flex-wrap: wrap;
   
@@ -95,9 +99,9 @@ function SpacePage() {
                 <PlantComponent key={plant.plantName} plantId={plant.plantId} userId={user.id} light={true}/>
               ))}
             </StyledSpacesPlantsContainer>
-            <StyledPrimaryButton
+            <StyledPrimaryButtonSpace
               disabled={false}
-              onClick={() => navigate("/createPlant")}>Create new plant</StyledPrimaryButton>
+              onClick={() => navigate("/createPlant")}>Create new plant</StyledPrimaryButtonSpace>
           </StyledMainContainerContainer>
         </StyledMainContainer>
       }

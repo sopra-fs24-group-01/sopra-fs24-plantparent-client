@@ -15,6 +15,25 @@ const StyledSpacesMenuContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background-color: #E6F4EA50;
+`;
+
+const SpacesMenuItemsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  overflow-y: auto;
+  height: 50vh;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
   
 `;
 
@@ -53,6 +72,10 @@ const StyledSpaceMenuItem = styled.div<{selected?: boolean}>`
   }
 `;
 
+const StyledSecondaryButtonSpaces = styled(StyledSecondaryButton)`
+  margin-top: 10px;
+`;
+
 export function SpacesMenu() {
   const spaces = useAppSelector(getSpacesOfUser);
   const loggedInUser = useAppSelector(selectLoggedInUser);
@@ -66,16 +89,18 @@ export function SpacesMenu() {
 
   return (
     <StyledSpacesMenuContainer>
-      {spaces.map((space) => (
-        <StyledSpaceMenuItem key={space.spaceId} selected={space.spaceId === Number(spaceId)} onClick={() => navigate("/spaces/" + space.spaceId)}>
-          {space.spaceName}
-          {loggedInUser.id === space.spaceOwner.id && <HouseSVG style={{ color: "#83b271", width: "25px", height: "25px" }} />}
-          {loggedInUser.id !== space.spaceOwner.id && <KeySVG style={{ color: "#83b271", width: "30px", height: "30px" }} />}
-        </StyledSpaceMenuItem>
-      ))}
-      <StyledSecondaryButton
+      <SpacesMenuItemsContainer>
+        {spaces.map((space) => (
+          <StyledSpaceMenuItem key={space.spaceId} selected={space.spaceId === Number(spaceId)} onClick={() => navigate("/spaces/" + space.spaceId)}>
+            {space.spaceName}
+            {loggedInUser.id === space.spaceOwner.id && <HouseSVG style={{ color: "#83b271", width: "25px", height: "25px" }} />}
+            {loggedInUser.id !== space.spaceOwner.id && <KeySVG style={{ color: "#83b271", width: "30px", height: "30px" }} />}
+          </StyledSpaceMenuItem>
+        ))}
+      </SpacesMenuItemsContainer>
+      <StyledSecondaryButtonSpaces
         disabled={false}
-        onClick={() => navigate("/createSpace")}>Create new space</StyledSecondaryButton>
+        onClick={() => navigate("/createSpace")}>Create new space</StyledSecondaryButtonSpaces>
     </StyledSpacesMenuContainer>
   )
 }
