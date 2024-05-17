@@ -10,7 +10,7 @@ import {
   getPlantCaredFor,
   getPlantWatered,
   getStatus, resetPlantCaredFor,
-  resetPlantWatered,
+  resetPlantWatered, selectColorById,
   selectLoggedInUser, selectPlantById, updatePlantInPlantStore,
 } from "../../store/appSlice";
 import { Schedule, StyledOwnerContainer, StyledPlantTitle } from "./PlantComponent";
@@ -32,7 +32,7 @@ import { RainAnimation } from "./RainAnimationComponent";
 import { CaringAnimation } from "./CaringAnimationComponent";
 
 
-const StyledMainContainer = styled.div`
+const StyledMainContainer = styled.div<{$bgColor: string }>`
   position: relative;
   width: 60vw;
   min-width: 750px;
@@ -45,6 +45,7 @@ const StyledMainContainer = styled.div`
   padding: 10px;
   border: 2px solid #83b271;
   border-radius: 5px;
+  background-color: ${props => props.$bgColor};
 `;
 
 const StyledPlantProfileContainer = styled.div`
@@ -236,6 +237,7 @@ export default function PlantView() {
   const user = useAppSelector(selectLoggedInUser);
   const appStatus = useAppSelector(getStatus);
   const { plantId } = useParams<{ plantId: string }>();
+  const backgroundColor = useAppSelector(state => selectColorById(state, Number(plantId)));
   const plant = useAppSelector(state => selectPlantById(state, Number(plantId)));
   const navigate = useNavigate();
   const [showSelectCaretakers, setShowSelectCaretakers] = useState<boolean>(false);
@@ -306,7 +308,7 @@ export default function PlantView() {
         text={"Are you sure you want to delete the plant?"} />}
       <Header />
       {appStatus === "loading" ? <div>Loading...</div> :
-        <StyledMainContainer>
+        <StyledMainContainer $bgColor={backgroundColor}>
           {showRain && <RainAnimation key={"rainAnimation_" + plantId} plantName={plant.plantName} large={true} />}
           {showCaringAnimation && <CaringAnimation key={"caringAnimation_" + plantId} plantName={plant.plantName} large={true} />}
           {showSelectCaretakers &&

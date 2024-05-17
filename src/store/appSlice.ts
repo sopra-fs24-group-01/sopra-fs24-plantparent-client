@@ -10,6 +10,7 @@ import {
   updateUser,
 } from "../service/appService";
 import { Plant, PlantFull, Space, User, UserSimple } from "../types";
+import { getRandomColor } from "../helpers/colorPicker";
 
 
 interface IUserState {
@@ -23,6 +24,7 @@ interface IUserState {
   spaces: Space[];
   plantsOfSelectedSpace: PlantFull[];
   error: null | any;
+  colors: string[];
 }
 
 const initialState: IUserState = {
@@ -36,6 +38,7 @@ const initialState: IUserState = {
   plantCaredFor: 0,
   status: "idle",
   error: null,
+  colors: Array.from({length: 100}, getRandomColor)
 };
 
 export const registerUser = createAsyncThunk(
@@ -411,8 +414,12 @@ export const selectAllSpacePlants = (state: RootState, spaceId: number) => {
   return state.appData.spaces.find((space) => space.spaceId === spaceId).plantsContained;
 }
 
-// export const selectSpacePlantById = (state: RootState, plantId: number) => {
-//   return selectAllSpacePlants(state).find((plant) => plant.plantId === plantId);
-// };
+export const selectColorById = (state: RootState, id: number) => {
+  if (String(id).length > 2) {
+    id = Number(String(id).slice(-2));
+  }
+
+  return state.appData.colors[id];
+}
 
 export const appError = (state: RootState) => state.appData.error;

@@ -17,7 +17,7 @@ export const StyledAnimationContainer = styled.div<{
   $left: number,
   $speed: number,
   $color: string,
-  $large?: boolean}>`
+  $large: boolean}>`
   position: absolute;
   left: ${props => props.$left}%;
   animation: fall ${props => props.$speed}s linear infinite;
@@ -35,7 +35,7 @@ export const StyledAnimationContainer = styled.div<{
       transform: translateY(-10px);
     }
     100% {
-      transform: translateY(${props => props.$large ? "100vh" : "20vh}"});
+      transform: translateY(${props => props.$large ? "100vh" : "20vh"});
     }
   }
 `;
