@@ -173,7 +173,7 @@ const StyledEditScheduleContainer = styled.span`
   }
 `;
 
-const StyledAddCaretakerContainer = styled.div`
+export const StyledAddCaretakerContainer = styled.div`
   position: absolute;
   top: 15px;
   right: 15px;

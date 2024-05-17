@@ -17,6 +17,7 @@ import { ReactComponent as EditSVG } from "../../assets/pencil-square.svg";
 import { ReactComponent as HouseSVG } from "../../assets/house-door.svg";
 import { ReactComponent as KeySVG } from "../../assets/key.svg";
 import { ReactComponent as RemoveUserSVG } from "../../assets/person-fill-dash.svg";
+import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
 import { ItemsSelectorComponent } from "./ItemSelectorComponent";
 import { addUserToSpace, getAllUsers, getSpace, removeUserFromSpace } from "../../service/appService";
 import { ItemsComponent } from "./ItemComponent";
@@ -67,6 +68,7 @@ const StyledSelectorContainerContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
+  flex-grow: 1;
 `;
 
 const StyledSelectorContainer = styled.div`
@@ -75,9 +77,25 @@ const StyledSelectorContainer = styled.div`
   width: 50%;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   margin: 20px;
   border: 2px solid #83b271;
+`;
+
+export const StyledAddUserContainer = styled.div`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 1rem;
+  color: #83b271;
+
+  &:hover {
+    cursor: pointer;
+    color: #4f7343;
+  }
 `;
 
 
@@ -127,6 +145,12 @@ function SpacePage() {
               onClick={() => navigate("/createPlant")}>Create new plant</StyledPrimaryButtonSpace>
             <StyledSelectorContainerContainer>
               <StyledSelectorContainer>
+                {user.id === space.spaceOwner.id &&
+                  <StyledAddUserContainer>
+                    <AddUserSVG onClick={() => setShowSelectUsers(!showSelectUsers)}
+                      style={{ width: "50px", height: "50px", margin: "auto" }} />
+                  </StyledAddUserContainer>}
+                {showSelectUsers &&
                 <ItemsSelectorComponent
                   itemId={spaceId}
                   setShowSelectItems={setShowSelectUsers}
@@ -138,7 +162,9 @@ function SpacePage() {
                   fullItemKey={"spaceMembers"}
                   nameKey={"username"}
                   ignoreId={space.spaceOwner.id}
-                  itemName={"user"} />
+                  itemName={"user"}
+                  right={true}
+                  top={true}/>}
                 <ItemsComponent
                   itemId={spaceId}
                   setShowSelectItems={setShowSelectUsers}

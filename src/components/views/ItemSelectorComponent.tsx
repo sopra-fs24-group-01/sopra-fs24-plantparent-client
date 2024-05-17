@@ -2,12 +2,27 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
 
-export const StyledItemsListContainer = styled.div`
+export const StyledItemsListContainer = styled.div<{ $right?: boolean, $top?: boolean }>`
   position: absolute;
-  right: 10px;
-  top: 100px;
+  right: ${props => props.$right ? "0" :  "10px"};
+  top: ${props => props.$top ? "50px" :  "100px"};
   width: 200px;
   z-index: 100;
+  
+`;
+
+const StyledItemsScrollContainer = styled.div`
+  max-height: 250px;
+  overflow-y: auto;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 `;
 
 export const StyledItemsList = styled.div`
@@ -49,7 +64,9 @@ export function ItemsSelectorComponent({
   fullItemKey,
   nameKey,
   ignoreId,
-  itemName
+  itemName,
+  top,
+  right
 }: {
   itemId: string,
   setShowSelectItems: (value: boolean) => void,
@@ -61,7 +78,9 @@ export function ItemsSelectorComponent({
   fullItemKey: string,
   nameKey: string,
   ignoreId: number
-  itemName: string
+  itemName: string,
+  top?: boolean,
+  right?: boolean;
 }) {
   const [items, setItems] = useState<{ id: number, name: string }[] | null>(null);
 
@@ -98,20 +117,22 @@ export function ItemsSelectorComponent({
   }
 
   return (
-    <StyledItemsListContainer>
+    <StyledItemsListContainer $right={right} $top={top}>
       {items === null ? <div>Loading...</div> :
         <StyledItemsList>
-          {items.length === 0 ? <div>All {itemName}s already assigned</div> :
-            items.map((i) => {
-              return (
-                <StyledItemsListItemContainer key={i.id}>{i.name}
-                  <div title="Add as caretaker">
-                    <AddUserSVG onClick={() => addItemToMainItem(Number(itemId), Number(i.id))}
-                                style={{ width: "30px", height: "30px" }} />
-                  </div>
-                </StyledItemsListItemContainer>
-              );
-            })}
+          <StyledItemsScrollContainer>
+            {items.length === 0 ? <div>All {itemName}s already assigned</div> :
+              items.map((i) => {
+                return (
+                  <StyledItemsListItemContainer key={i.id}>{i.name}
+                    <div title="Add as caretaker">
+                      <AddUserSVG onClick={() => addItemToMainItem(Number(itemId), Number(i.id))}
+                        style={{ width: "30px", height: "30px" }} />
+                    </div>
+                  </StyledItemsListItemContainer>
+                );
+              })}
+          </StyledItemsScrollContainer>
         </StyledItemsList>}
     </StyledItemsListContainer>
   );
