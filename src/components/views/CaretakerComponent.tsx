@@ -2,7 +2,6 @@ import { getPlantById, removeCaretaker } from "../../service/appService";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { ReactComponent as RemoveUserSVG } from "../../assets/person-fill-dash.svg";
-import { StyledUsersList } from "./CaretakerSelectorComponent";
 
 const StyledCaretakersTitle = styled.div`
   color: #000000;

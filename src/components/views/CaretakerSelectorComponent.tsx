@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
 
 
-const StyledUsersListContainer = styled.div`
+export const StyledItemsListContainer = styled.div`
   position: absolute;
   right: 10px;
   top: 100px;
@@ -12,14 +12,14 @@ const StyledUsersListContainer = styled.div`
   z-index: 100;
 `;
 
-export const StyledUsersList = styled.div`
+export const StyledItemsList = styled.div`
   min-height: 20px;
   background-color: white;
   border: 2px solid #83b271;
   border-radius: 5px;
 `;
 
-const StyledUserListItemContainer = styled.div`
+export const StyledItemsListItemContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,22 +81,22 @@ export function CaretakerSelectorComponent({ plantId, setShowSelectCaretakers, r
   }
 
   return (
-    <StyledUsersListContainer>
+    <StyledItemsListContainer>
       {users === null ? <div>Loading...</div> :
-        <StyledUsersList>
+        <StyledItemsList>
           {users.length === 0 ? <div>All users already assigned</div> :
             users.map((u) => {
               return (
-                <StyledUserListItemContainer key={u.id}>{u.username}
+                <StyledItemsListItemContainer key={u.id}>{u.username}
                   <div title="Add as caretaker">
                     <AddUserSVG onClick={() => addCaretakerToPlant(Number(plantId), Number(u.id))}
                       style={{ width: "30px", height: "30px" }} />
                   </div>
-                </StyledUserListItemContainer>
+                </StyledItemsListItemContainer>
               );
             })}
-        </StyledUsersList>}
-    </StyledUsersListContainer>
+        </StyledItemsList>}
+    </StyledItemsListContainer>
   );
 
 }

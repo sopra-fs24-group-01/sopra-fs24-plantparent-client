@@ -17,10 +17,9 @@ import { Schedule, StyledOwnerContainer, StyledPlantTitle } from "./PlantCompone
 import { formatDate, isInThePast } from "../../helpers/util";
 import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
 import PropTypes from "prop-types";
-import { CaretakerSelectorComponent } from "./CaretakerSelectorComponent";
 import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
 import { CaretakerComponent } from "./CaretakerComponent";
-import { deletePlantById } from "../../service/appService";
+import { addCaretaker, deletePlantById, getAllUsers, getPlantById } from "../../service/appService";
 import { ReactComponent as HappyFaceSVG } from "../../assets/emoji-smile-fill.svg";
 import { ReactComponent as NeutralFaceSVG } from "../../assets/emoji-neutral-fill.svg";
 import { ReactComponent as AngryFaceSVG } from "../../assets/emoji-dizzy-fill.svg";
@@ -30,6 +29,7 @@ import { ReactComponent as HouseSVG } from "../../assets/house-door.svg";
 import { QRCodeComponent } from "./QRCodeComponent";
 import { RainAnimation } from "./RainAnimationComponent";
 import { CaringAnimation } from "./CaringAnimationComponent";
+import { ItemsSelectorComponent } from "./ItemSelectorComponent";
 
 
 const StyledMainContainer = styled.div<{$bgColor: string }>`
@@ -312,9 +312,21 @@ export default function PlantView() {
           {showRain && <RainAnimation key={"rainAnimation_" + plantId} plantName={plant.plantName} large={true} />}
           {showCaringAnimation && <CaringAnimation key={"caringAnimation_" + plantId} plantName={plant.plantName} large={true} />}
           {showSelectCaretakers &&
-            <CaretakerSelectorComponent plantId={plantId} setShowSelectCaretakers={setShowSelectCaretakers}
-              reloadCaretakers={reloadCaretakers}
-              setReloadCaretakers={setReloadCaretakers} />}
+            // <CaretakerSelectorComponent plantId={plantId} setShowSelectCaretakers={setShowSelectCaretakers}
+            //   reloadCaretakers={reloadCaretakers}
+            //   setReloadCaretakers={setReloadCaretakers} />
+          <ItemsSelectorComponent
+            itemId={plantId}
+            setShowSelectItems={setShowSelectCaretakers}
+            reloadItems={reloadCaretakers}
+            setReloadItems={setReloadCaretakers}
+            getPotentialItem={getPlantById}
+            addItem={addCaretaker}
+            getAllItems={getAllUsers}
+            fullItemKey={"caretakers"}
+            nameKey={"username"}
+            ignoreId={plant.owner.id}
+            itemName={"user"} />}
           {user.id === plant.owner.id &&
             <StyledEditPlantContainer onClick={() => navigate("/editPlant/" + plant.plantId)}>
               <EditPlantSVG style={{ width: "35px", height: "35px" }} />
