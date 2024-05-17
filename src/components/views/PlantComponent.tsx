@@ -27,7 +27,7 @@ import { RainAnimation } from "./RainAnimationComponent";
 import { CaringAnimation } from "./CaringAnimationComponent";
 
 
-const StyledPlantComponentContainer = styled.div<{color: string}>`
+const StyledPlantComponentContainer = styled.div<{color: string, $light?: boolean}>`
   display: flex;
   align-items: center;
   flex-direction: row;
@@ -38,6 +38,10 @@ const StyledPlantComponentContainer = styled.div<{color: string}>`
   height: 250px;
   position: relative;
   background-color: ${props => props.color};
+  
+  ${props => props.$light && css`
+    width: calc(50% - 50px);
+  `};
   
   &:hover {
     border-width: 3px;
@@ -75,13 +79,16 @@ export const StyledPlantTitle = styled.div<{$underline?: boolean}>`
   }
 `;
 
-const StyledPlantMainInfo = styled.div`
+const StyledPlantMainInfo = styled.div<{$light?: boolean}>`
   display: flex;
   flex-direction: column;
   font-size: 1.25rem;
   align-items: flex-start;
   height: 100%;
   width: 100%;
+  ${props => props.$light && css`
+    justify-content: center;
+  `};
 `;
 
 const StyledDividerSmall = styled.hr`
@@ -141,12 +148,12 @@ const StyledGreenText = styled.span`
   font-style: italic;
 `;
 
-export const StyledOwnerContainer = styled.div`
+export const StyledOwnerContainer = styled.div<{ $light?: boolean }>`
   position: absolute;
-  top: 8px;
-  left: 0;
+  top: ${props => props.$light ? "5px" : "8px"};
+  left: ${props => props.$light ? "10px" : 0};
   right: 0;
-  margin: 0 auto;
+  margin: ${props => props.$light ? "0" : "0 auto"};
   width: fit-content;
 `;
 
@@ -194,7 +201,10 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
             {svg}
             <CaringDay $past={past}>{day}</CaringDay>
           </CaringSVGContainer>
-          <CaringSVGContainer $hover={true} onClick={() => setModal(true)}>
+          <CaringSVGContainer $hover={true} onClick={(event) => {
+            event.stopPropagation();
+            setModal(true);
+          }}>
             {past ?
               <CheckFillSVG style={{ width: "40px", height: "40px", color: "#83b271" }} /> :
               <CheckSVG style={{ width: "40px", height: "40px", color: "#83b271" }} />}
@@ -205,7 +215,7 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
   );
 }
 
-export default function PlantComponent({ plantId, userId }: { plantId: number, userId: number }) {
+export default function PlantComponent({ plantId, userId, light }: { plantId: number, userId: number, light?: boolean }) {
   const plant = useAppSelector(state => selectPlantById(state, plantId));
   const plantWatered = useAppSelector(getPlantWatered);
   const plantCaredFor = useAppSelector(getPlantCaredFor);
@@ -241,7 +251,7 @@ export default function PlantComponent({ plantId, userId }: { plantId: number, u
   }
 
   return (
-    <StyledPlantComponentContainer color={backgroundColor}>
+    <StyledPlantComponentContainer color={backgroundColor} $light={light} onClick={() => navigate("/plant/" + plant.plantId)}>
       {showRain && <RainAnimation key={"rainAnimation_" + plantId} plantName={plant.plantName} large={false} />}
       {showCaringAnimation && <CaringAnimation key={"caringAnimation_" + plantId} plantName={plant.plantName} large={false}/>}
       <StyledMoodContainer>
@@ -249,7 +259,7 @@ export default function PlantComponent({ plantId, userId }: { plantId: number, u
         {mood === "neutral" && <NeutralFaceSVG style={{ color: "orange", width: "50px", height: "50px" }} />}
         {mood === "angry" && <AngryFaceSVG style={{ color: "red", width: "50px", height: "50px" }} />}
       </StyledMoodContainer>
-      <StyledOwnerContainer title={userId === plant.owner.id ? "My plant" : "Cared for plant"}>
+      <StyledOwnerContainer $light={light} title={userId === plant.owner.id ? "My plant" : "Cared for plant"}>
         {userId === plant.owner.id && <HouseSVG style={{ color: "#83b271", width: "35px", height: "35px" }} />}
         {userId !== plant.owner.id && <KeySVG style={{ color: "#83b271", width: "40px", height: "40px" }} />}
       </StyledOwnerContainer>
@@ -257,17 +267,20 @@ export default function PlantComponent({ plantId, userId }: { plantId: number, u
         <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />
         <StyledPlantTitle $underline={true} onClick={() => navigate("/plant/" + plant.plantId)}>{plant.plantName}</StyledPlantTitle>
       </StyledPlantImageContainer>
-      <StyledPlantMainInfo>
+      <StyledPlantMainInfo $light={light}>
         <StyledPlantDescription>{plant.species}</StyledPlantDescription>
         <StyledDividerSmall />
         {plant.careInstructions}
-        <StyledDividerSmall style={{ marginBottom: "auto" }} />
-        <Schedule plantId={plant.plantId} userId={userId} text={"Next watering date:"} date={plant.nextWateringDate}
-          svg={<DropSVG style={{ color: "#00beff", width: "50px", height: "50px" }} />}
-          watering={true} />
-        <Schedule plantId={plant.plantId} userId={userId} text={"Next caring date:"} date={plant.nextCaringDate}
-          svg={<BandaidSVG style={{ color: "#ffaf00", width: "50px", height: "50px" }} />}
-          watering={false} />
+        {!light && 
+          <>
+            <StyledDividerSmall style={{ marginBottom: "auto" }} />
+            <Schedule plantId={plant.plantId} userId={userId} text={"Next watering date:"} date={plant.nextWateringDate}
+              svg={<DropSVG style={{ color: "#00beff", width: "50px", height: "50px" }} />}
+              watering={true} />
+            <Schedule plantId={plant.plantId} userId={userId} text={"Next caring date:"} date={plant.nextCaringDate}
+              svg={<BandaidSVG style={{ color: "#ffaf00", width: "50px", height: "50px" }} />}
+              watering={false} />
+          </>}
       </StyledPlantMainInfo>
     </StyledPlantComponentContainer>
   );

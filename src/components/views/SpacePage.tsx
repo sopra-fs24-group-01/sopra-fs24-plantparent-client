@@ -39,6 +39,22 @@ const StyledSpaceTitleContainer = styled.div`
   }
 `;
 
+const StyledSpacesPlantsContainer = styled.div`
+  display: flex;
+  height: 520px;
+  overflow-y: auto;
+  flex-wrap: wrap;
+  
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+`;
+
 
 function SpacePage() {
   const user = useAppSelector(selectLoggedInUser);
@@ -74,9 +90,11 @@ function SpacePage() {
               {space.spaceName}
               {space.spaceOwner.id === user.id && <EditSVG onClick={() => navigate(`/editSpace/${spaceId}`)} />}
             </StyledSpaceTitleContainer>
-            {plants.length < 1 ? <div>You have no plants yet. Create one!</div> : plants.map(plant => (
-              <PlantComponent key={plant.plantName} plantId={plant.plantId} userId={user.id} />
-            ))}
+            <StyledSpacesPlantsContainer>
+              {plants.length < 1 ? <div>You have no plants yet. Create one!</div> : plants.map(plant => (
+                <PlantComponent key={plant.plantName} plantId={plant.plantId} userId={user.id} light={true}/>
+              ))}
+            </StyledSpacesPlantsContainer>
             <StyledPrimaryButton
               disabled={false}
               onClick={() => navigate("/createPlant")}>Create new plant</StyledPrimaryButton>

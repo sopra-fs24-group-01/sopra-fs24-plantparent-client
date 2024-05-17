@@ -405,8 +405,6 @@ export default function PlantView() {
             </TextContainer>
           </StyledCaringContainer>
           <StyledDividerSmall />
-          {/*<CaretakerComponent plantId={plantId} setShowSelectCaretakers={setShowSelectCaretakers}*/}
-          {/*  reloadCaretakers={reloadCaretakers} setReloadCaretakers={setReloadCaretakers} />*/}
           <ItemsComponent
             itemId={plantId}
             setShowSelectItems={setShowSelectCaretakers}
