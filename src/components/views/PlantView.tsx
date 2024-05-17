@@ -19,7 +19,6 @@ import { formatDate, isInThePast } from "../../helpers/util";
 import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
 import PropTypes from "prop-types";
 import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
-import { CaretakerComponent } from "./CaretakerComponent";
 import { addCaretaker, deletePlantById, getAllUsers, getPlantById, removeCaretaker } from "../../service/appService";
 import { ReactComponent as HappyFaceSVG } from "../../assets/emoji-smile-fill.svg";
 import { ReactComponent as NeutralFaceSVG } from "../../assets/emoji-neutral-fill.svg";
@@ -314,9 +313,6 @@ export default function PlantView() {
           {showRain && <RainAnimation key={"rainAnimation_" + plantId} plantName={plant.plantName} large={true} />}
           {showCaringAnimation && <CaringAnimation key={"caringAnimation_" + plantId} plantName={plant.plantName} large={true} />}
           {showSelectCaretakers &&
-            // <CaretakerSelectorComponent plantId={plantId} setShowSelectCaretakers={setShowSelectCaretakers}
-            //   reloadCaretakers={reloadCaretakers}
-            //   setReloadCaretakers={setReloadCaretakers} />
           <ItemsSelectorComponent
             itemId={plantId}
             setShowSelectItems={setShowSelectCaretakers}
@@ -336,11 +332,12 @@ export default function PlantView() {
           <StyledPlantProfileContainer>
             <StyledPlantProfileHeader>
               <StyledPlantTitle $underline={false}>{plant.plantName}</StyledPlantTitle>
+              {user.id === plant.owner.id &&
               <StyledAddCaretakerContainer>
                 <AddUserSVG onClick={() => setShowSelectCaretakers(!showSelectCaretakers)}
                   style={{ color: "#83b271", width: "60px", height: "60px", margin: "auto" }} />
                 <div>Add Caretaker</div>
-              </StyledAddCaretakerContainer>
+              </StyledAddCaretakerContainer>}
             </StyledPlantProfileHeader>
             <StyledPlantProfileDetails>
               <StyledPlantImageContainer>
@@ -417,7 +414,8 @@ export default function PlantView() {
             ignoreId={plant.owner.id}
             itemTitle={"Caretakers"}
             itemName={"user"}
-            RemoveSVG={RemoveUserSVG} />
+            RemoveSVG={RemoveUserSVG}
+            edit={user.id === plant.owner.id}/>
           {plant.owner.id === user.id && (
             <StyledDeleteButton onClick={() => setModal(true)}>Delete Plant</StyledDeleteButton>
           )}

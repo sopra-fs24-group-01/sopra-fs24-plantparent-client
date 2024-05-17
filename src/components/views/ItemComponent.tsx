@@ -62,7 +62,8 @@ export function ItemsComponent({
   ignoreId,
   itemTitle,
   itemName,
-  RemoveSVG
+  RemoveSVG,
+  edit
 }: {
   itemId: string,
   setShowSelectItems: (value: boolean) => void,
@@ -75,7 +76,8 @@ export function ItemsComponent({
   ignoreId: number,
   itemTitle: string,
   itemName: string,
-  RemoveSVG: React.FunctionComponent<React.SVGProps<SVGSVGElement>>
+  RemoveSVG: React.FunctionComponent<React.SVGProps<SVGSVGElement>>,
+  edit: boolean
 }) {
   const [items, setItems] = useState<{ id: number, name: string }[] | null>(null);
 
@@ -122,10 +124,11 @@ export function ItemsComponent({
             {items.map((i) => {
               return (
                 <StyledItemContainer key={i.id}>{i.name}
+                  {edit &&
                   <div title="Remove {itemName}">
                     <RemoveSVG onClick={() => removeItemFromMainItem(Number(itemId), Number(i.id))}
                       style={{ width: "30px", height: "30px" }} />
-                  </div>
+                  </div>}
                 </StyledItemContainer>
               );
             })}

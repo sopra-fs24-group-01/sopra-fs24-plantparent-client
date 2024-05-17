@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./Header";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import PlantComponent from "./PlantComponent";
@@ -16,6 +16,10 @@ import styled from "styled-components";
 import { ReactComponent as EditSVG } from "../../assets/pencil-square.svg";
 import { ReactComponent as HouseSVG } from "../../assets/house-door.svg";
 import { ReactComponent as KeySVG } from "../../assets/key.svg";
+import { ReactComponent as RemoveUserSVG } from "../../assets/person-fill-dash.svg";
+import { ItemsSelectorComponent } from "./ItemSelectorComponent";
+import { addUserToSpace, getAllUsers, getSpace, removeUserFromSpace } from "../../service/appService";
+import { ItemsComponent } from "./ItemComponent";
 
 
 const StyledSpaceTitleContainer = styled.div`
@@ -59,6 +63,23 @@ const StyledSpacesPlantsContainer = styled.div`
   scrollbar-width: none;  /* Firefox */
 `;
 
+const StyledSelectorContainerContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+`;
+
+const StyledSelectorContainer = styled.div`
+  position: relative;
+  display: flex;
+  width: 50%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+  border: 2px solid #83b271;
+`;
+
 
 function SpacePage() {
   const user = useAppSelector(selectLoggedInUser);
@@ -66,6 +87,8 @@ function SpacePage() {
   const { spaceId } = useParams<{ spaceId: string }>();
   const space = useAppSelector(state => selectSpaceById(state, Number(spaceId)));
   const plants: Plant[] = useAppSelector(state => selectAllSpacePlants(state, Number(spaceId)));
+  const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false);
+  const [reloadUsers, setReloadUsers] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -102,6 +125,39 @@ function SpacePage() {
             <StyledPrimaryButtonSpace
               disabled={false}
               onClick={() => navigate("/createPlant")}>Create new plant</StyledPrimaryButtonSpace>
+            <StyledSelectorContainerContainer>
+              <StyledSelectorContainer>
+                <ItemsSelectorComponent
+                  itemId={spaceId}
+                  setShowSelectItems={setShowSelectUsers}
+                  reloadItems={reloadUsers}
+                  setReloadItems={setReloadUsers}
+                  getPotentialItem={getSpace}
+                  addItem={addUserToSpace}
+                  getAllItems={getAllUsers}
+                  fullItemKey={"spaceMembers"}
+                  nameKey={"username"}
+                  ignoreId={space.spaceOwner.id}
+                  itemName={"user"} />
+                <ItemsComponent
+                  itemId={spaceId}
+                  setShowSelectItems={setShowSelectUsers}
+                  reloadItems={reloadUsers}
+                  setReloadItems={setReloadUsers}
+                  getPotentialItem={getSpace}
+                  removeItem={removeUserFromSpace}
+                  fullItemKey={"spaceMembers"}
+                  nameKey={"username"}
+                  ignoreId={space.spaceOwner.id}
+                  itemTitle={"Space Members"}
+                  itemName={"member"}
+                  RemoveSVG={RemoveUserSVG}
+                  edit={space.spaceOwner.id === user.id} />
+              </StyledSelectorContainer>
+              <StyledSelectorContainer>
+
+              </StyledSelectorContainer>
+            </StyledSelectorContainerContainer>
           </StyledMainContainerContainer>
         </StyledMainContainer>
       }
