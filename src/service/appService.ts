@@ -256,17 +256,14 @@ export function getSpace(spaceId: number): Promise<Space> {
     });
 }
 
-export function createSpace(space: Space) {
+export function createSpace(space: SpaceSimple) {
+  console.log(space);
   return fetch(baseurl + "spaces", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      spaceName: space.spaceName,
-      spaceOwner: space.spaceOwner,
-      plantsContained: space.plantsContained
-    })
+    body: JSON.stringify(space)
   })
     .then(response => {
       if (!response.ok) {
