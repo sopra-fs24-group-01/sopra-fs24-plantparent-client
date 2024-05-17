@@ -38,7 +38,19 @@ export const StyledItemsListItemContainer = styled.div`
   }
 `;
 
-export function ItemsSelectorComponent({ itemId, setShowSelectItems, reloadItems, setReloadItems, getPotentialItem, addItem, getAllItems, fullItemKey, nameKey, ignoreId, itemName}: {
+export function ItemsSelectorComponent({
+  itemId,
+  setShowSelectItems,
+  reloadItems,
+  setReloadItems,
+  getPotentialItem,
+  addItem,
+  getAllItems,
+  fullItemKey,
+  nameKey,
+  ignoreId,
+  itemName
+}: {
   itemId: string,
   setShowSelectItems: (value: boolean) => void,
   reloadItems: boolean,
@@ -71,7 +83,7 @@ export function ItemsSelectorComponent({ itemId, setShowSelectItems, reloadItems
   }, []);
 
   useEffect(() => {
-    if(reloadItems) {
+    if (reloadItems) {
       getItems().then();
     }
   }, [reloadItems]);
@@ -79,7 +91,7 @@ export function ItemsSelectorComponent({ itemId, setShowSelectItems, reloadItems
   function addItemToMainItem(mainItemId: number, itemId: number) {
     addItem(mainItemId, itemId).then(() => {
       getItems().then(() => {
-        setReloadItems(true)
+        setReloadItems(true);
         setShowSelectItems(false);
       });
     });
@@ -95,7 +107,7 @@ export function ItemsSelectorComponent({ itemId, setShowSelectItems, reloadItems
                 <StyledItemsListItemContainer key={i.id}>{i.name}
                   <div title="Add as caretaker">
                     <AddUserSVG onClick={() => addItemToMainItem(Number(itemId), Number(i.id))}
-                      style={{ width: "30px", height: "30px" }} />
+                                style={{ width: "30px", height: "30px" }} />
                   </div>
                 </StyledItemsListItemContainer>
               );
