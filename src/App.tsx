@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Login from "./components/views/Login";
 import { LoginGuard } from "./components/routing/routeProtectors/LoginGuard";
 import { AuthGuard } from "./components/routing/routeProtectors/AuthGuard";
@@ -13,6 +13,9 @@ import MyPlants from "./components/views/MyPlants";
 import UserProfile from "./components/views/UserProfile";
 import EditUser from "./components/views/EditUser";
 import EditPassword from "./components/views/EditPassword";
+import SpacePage from "./components/views/SpacePage";
+import EditSpace from "./components/views/EditSpace";
+import CreateSpace from "./components/views/CreateSpace";
 
 
 function App() {
@@ -65,6 +68,21 @@ function App() {
         <Route path="/editPassword" element={<LoginGuard/>}>
           <Route path="/editPassword" element={<EditPassword/>} />
         </Route>
+
+        <Route path="/spaces/:spaceId" element={<LoginGuard/>}>
+          <Route path="/spaces/:spaceId" element={<SpacePage/>} />
+        </Route>
+
+        <Route path="/editSpace/:spaceId" element={<LoginGuard/>}>
+          <Route path="/editSpace/:spaceId" element={<EditSpace/>} />
+        </Route>
+
+        <Route path="/createSpace" element={<LoginGuard/>}>
+          <Route path="/createSpace" element={<CreateSpace/>} />
+        </Route>
+
+        {/* Catch all undefined routes and redirect to home */}
+        <Route path="*" element={<Navigate to="/" />} />
 
       </Routes>
     </BrowserRouter>

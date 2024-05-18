@@ -1,12 +1,16 @@
-import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
+  createUser,
+  getAllPlantsCaredFor, getAllPlantsOfSpace,
+  getAllPlantsOwned,
+  getMembershipSpaces,
+  getOwnedSpaces,
   getPlantById,
   login,
-  createUser,
-  getAllPlantsCaredFor,
-  getAllPlantsOwned, updateUser,
+  updateUser,
 } from "../service/appService";
-import { Plant, PlantFull, User, UserSimple } from "../types";
+import { Plant, PlantFull, Space, User, UserSimple } from "../types";
+import { getRandomColor } from "../helpers/colorPicker";
 
 
 interface IUserState {
@@ -15,7 +19,12 @@ interface IUserState {
   loggedInUser: User | null;
   status: string;
   loggedInDate: string;
+  plantWatered: number;
+  plantCaredFor: number;
+  spaces: Space[];
+  plantsOfSelectedSpace: PlantFull[];
   error: null | any;
+  colors: string[];
 }
 
 const initialState: IUserState = {
@@ -23,86 +32,159 @@ const initialState: IUserState = {
   plantsCaredFor: [],
   loggedInUser: null,
   loggedInDate: null,
+  spaces: [],
+  plantsOfSelectedSpace: [],
+  plantWatered: 0,
+  plantCaredFor: 0,
   status: "idle",
   error: null,
+  colors: Array.from({length: 100}, getRandomColor)
 };
 
 export const registerUser = createAsyncThunk(
   "users/registerUser",
-  async (newUser: User, { rejectWithValue }) => {
+  async (newUser: User, thunkAPI) => {
     try {
       return await createUser(newUser);
     } catch (err) {
       console.log(err);
 
-      return rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   },
 );
 
 export const loginUser = createAsyncThunk(
   "users/loginUser",
-  async (user: { username: string, password: string }, { rejectWithValue }) => {
+  async (user: { username: string, password: string }, thunkAPI) => {
     try {
       return await login(user);
     } catch (err) {
       console.log(err);
 
-      return rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   },
 );
 
 export const updateUserRedux = createAsyncThunk(
   "users/updateUser",
-  async (user: UserSimple, { rejectWithValue }) => {
+  async (user: UserSimple, thunkAPI) => {
     try {
-      return await updateUser(user);
+      const state = thunkAPI.getState() as RootState;
+      const updatedUser =  await updateUser(user);
+      const { fullPlantsOwned, fullPlantsCaredFor, plantWatered, plantCaredFor } = updatePlantsOfUser(updatedUser, state);
+
+      return { ...updatedUser, plantsOwned: fullPlantsOwned, plantsCaredFor: fullPlantsCaredFor, plantWatered, plantCaredFor };
     } catch (err) {
       console.log(err);
 
-      return rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   },
 );
 
 export const updatePlantInPlantStore = createAsyncThunk(
   "plants/updatePlant",
-  async (plantId: number) => {
-    return await getPlantById(plantId);
+  async ({plantId, animate}: {plantId: number, animate: boolean}, thunkAPI) => {
+    const state = thunkAPI.getState() as RootState;
+    const updatedPlant = await getPlantById(plantId);
+    const { plant, plantWatered, plantCaredFor } = updatePlant(updatedPlant, state, animate);
+
+    return { plant, plantWatered, plantCaredFor };
   },
 );
 
 export const updateGetAllPlantsOwned = createAsyncThunk(
   "plants/updateGetAllPlantsOwned",
-  async (userId: number) => {
-    return await getAllPlantsOwned(userId);
+  async (userId: number, thunkAPI) => {
+    const state = thunkAPI.getState() as RootState;
+    const plants = await getAllPlantsOwned(userId);
+    const { newPlants, plantWatered, plantCaredFor } = updatePlants(plants, state);
+
+    return { newPlants, plantWatered, plantCaredFor };
   },
 );
 
 export const updateGetAllPlantsCaredFor = createAsyncThunk(
   "plants/updateGetAllPlantsCaredFor",
-  async (userId: number) => {
-    return await getAllPlantsCaredFor(userId);
+  async (userId: number, thunkAPI) => {
+    const state = thunkAPI.getState() as RootState;
+    const plants = await getAllPlantsCaredFor(userId);
+    const { newPlants, plantWatered, plantCaredFor } = updatePlants(plants, state);
+
+    return { newPlants, plantWatered, plantCaredFor };
+  },
+);
+
+export const getSpaces = createAsyncThunk(
+  "spaces/getSpaces",
+  async (userId: number, thunkAPI) => {
+    try {
+      const ownedSpaces =  await getOwnedSpaces(userId);
+      const memberSpaces =  await getMembershipSpaces(userId);
+      const uniqueMemberSpaces = memberSpaces.filter(memberSpace =>
+        !ownedSpaces.some(ownedSpace => ownedSpace.spaceId === memberSpace.spaceId)
+      );
+
+      return [...ownedSpaces, ...uniqueMemberSpaces];
+    } catch (err) {
+      console.log(err);
+
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  },
+);
+
+export const getAllPlantsSpace = createAsyncThunk(
+  "plants/getAllPlantsOfSpace",
+  async (spaceId: number, thunkAPI) => {
+    try {
+      return await getAllPlantsOfSpace(spaceId);
+    } catch (err) {
+      console.log(err);
+
+      return thunkAPI.rejectWithValue(err.message);
+    }
   },
 );
 
 export const appSlice = createSlice({
   name: "appData",
   initialState,
-  reducers: {},
+  reducers: {
+    clearError: (state) => {
+      state.error = null;
+    },
+    setPlantWatered: (state, action: PayloadAction<number>) => {
+      state.plantWatered = action.payload;
+    },
+    resetPlantWatered: (state) => {
+      state.plantWatered = 0;
+    },
+    resetPlantCaredFor: (state) => {
+      state.plantCaredFor = 0;
+    },
+    logoutUser: (state) => {
+      Object.assign(state, initialState);
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(registerUser.pending, (state, { payload }) => {
         state.status = "loading";
+        state.error = null;
       })
       .addCase(registerUser.fulfilled, (state, { payload }) => {
         state.status = "succeeded";
         const date = new Date();
         state.loggedInDate = date.toISOString();
+        state.plantWatered = 0;
+        state.plantCaredFor = 0;
         state.loggedInUser = payload;
         state.plantsOwned = payload.plantsOwned;
         state.plantsCaredFor = payload.plantsCaredFor;
+        state.error = null;
       })
       .addCase(registerUser.rejected, (state, action) => {
         if (action.payload) {
@@ -113,20 +195,18 @@ export const appSlice = createSlice({
       })
       .addCase(loginUser.pending, (state, { payload }) => {
         state.status = "loading";
+        state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, { payload }) => {
         state.status = "succeeded";
         const date = new Date();
         state.loggedInDate = date.toISOString();
         state.loggedInUser = payload;
-        const fullPlantsOwned: PlantFull[] = payload.plantsOwned.map((plant) => {
-          return {...plant, owner: payload, caretakers: []};
-        })
-        const fullPlantsCaredFor: PlantFull[] = payload.plantsCaredFor.map((plant) => {
-          return {...plant, owner: payload, caretakers: []};
-        })
-        state.plantsOwned = fullPlantsOwned;
-        state.plantsCaredFor = fullPlantsCaredFor;
+        state.plantWatered = 0;
+        state.plantCaredFor = 0;
+        state.plantsOwned = plantToFullPlant(payload.plantsOwned, payload);
+        state.plantsCaredFor = plantToFullPlant(payload.plantsCaredFor, payload);
+        state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
@@ -134,45 +214,127 @@ export const appSlice = createSlice({
       })
       .addCase(updateUserRedux.fulfilled, (state, { payload }) => {
         state.status = "succeeded";
-        console.log(payload);
         state.loggedInUser = payload;
-        const fullPlantsOwned: PlantFull[] = payload.plantsOwned.map((plant) => {
-          return {...plant, owner: payload, caretakers: []};
-        })
-        const fullPlantsCaredFor: PlantFull[] = payload.plantsCaredFor.map((plant) => {
-          return {...plant, owner: payload, caretakers: []};
-        })
-        state.plantsOwned = fullPlantsOwned;
-        state.plantsCaredFor = fullPlantsCaredFor;
+        state.plantWatered = payload.plantWatered;
+        state.plantCaredFor = payload.plantCaredFor;
+        state.plantsOwned = payload.plantsOwned;
+        state.plantsCaredFor = payload.plantsCaredFor;
+        state.error = null;
       })
       .addCase(updatePlantInPlantStore.fulfilled, (state, { payload }) => {
         const newPlantsOwned = state.plantsOwned.map((plant) => {
-          if (plant.plantId === payload.plantId) {
-            return payload;
+          if (plant.plantId === payload.plant.plantId) {
+            return payload.plant;
           } else {
             return plant;
           }
         });
         const newPlantsCaredFor = state.plantsCaredFor.map((plant) => {
-          if (plant.plantId === payload.plantId) {
-            return payload;
+          if (plant.plantId === payload.plant.plantId) {
+            return payload.plant;
           } else {
             return plant;
           }
         });
         state.plantsOwned = newPlantsOwned;
         state.plantsCaredFor = newPlantsCaredFor;
+        state.plantWatered = payload.plantWatered;
+        state.plantCaredFor = payload.plantCaredFor;
+        state.error = null;
       })
       .addCase(updateGetAllPlantsOwned.fulfilled, (state, { payload }) => {
-        state.plantsOwned = payload;
+        state.plantsOwned = payload.newPlants;
+        state.plantWatered = payload.plantWatered;
+        state.plantCaredFor = payload.plantCaredFor;
+        state.error = null;
       })
       .addCase(updateGetAllPlantsCaredFor.fulfilled, (state, { payload }) => {
-        state.plantsCaredFor = payload;
+        state.plantsCaredFor = payload.newPlants;
+        state.plantWatered = payload.plantWatered;
+        state.plantCaredFor = payload.plantCaredFor;
+        state.error = null;
+      })
+      .addCase(getSpaces.fulfilled, (state, { payload }) => {
+        state.spaces = payload;
+        state.error = null;
+      })
+      .addCase(getAllPlantsSpace.fulfilled, (state, { payload }) => {
+        state.plantsOfSelectedSpace = payload;
+        state.error = null;
       });
-  },
+  }
 });
 
-export const {} = appSlice.actions;
+function plantToFullPlant(plants: Plant[], user: User) {
+  const fullPlants: PlantFull[] = plants.map((plant) => {
+    return { ...plant, owner: user, caretakers: [] };
+  });
+
+  return fullPlants;
+}
+
+function updatePlantsOfUser(user: User, state: RootState) {
+  let plantWatered = 0;
+  let plantCaredFor = 0;
+  const fullPlantsOwned: PlantFull[] = user.plantsOwned.map((plant) => {
+    const oldPlant = selectPlantById(state, plant.plantId);
+    if (oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
+      plantWatered = plant.plantId;
+    }
+    if (oldPlant && oldPlant.lastCaringDate !== plant.lastCaringDate) {
+      plantCaredFor = plant.plantId;
+    }
+
+    return { ...plant, owner: user, caretakers: [] };
+  });
+  const fullPlantsCaredFor: PlantFull[] = user.plantsCaredFor.map((plant) => {
+    const oldPlant = selectPlantById(state, plant.plantId);
+    if (oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
+      plantWatered = plant.plantId;
+    }
+    if (oldPlant && oldPlant.lastCaringDate !== plant.lastCaringDate) {
+      plantCaredFor = plant.plantId;
+    }
+
+    return { ...plant, owner: user, caretakers: [] };
+  });
+
+  return { fullPlantsOwned, fullPlantsCaredFor, plantWatered, plantCaredFor };
+}
+
+function updatePlants(plants: PlantFull[], state: RootState) {
+  let plantWatered = 0;
+  let plantCaredFor = 0;
+  const newPlants = plants.map((plant) => {
+    const oldPlant = selectPlantById(state, plant.plantId);
+    if (oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
+      plantWatered = plant.plantId;
+    }
+    if (oldPlant && oldPlant.lastCaringDate !== plant.lastCaringDate) {
+      plantCaredFor = plant.plantId;
+    }
+
+    return { ...plant };
+  });
+
+  return { newPlants, plantWatered, plantCaredFor };
+}
+
+function updatePlant(plant: PlantFull, state: RootState, animate: boolean) {
+  let plantWatered = 0;
+  let plantCaredFor = 0;
+  const oldPlant = selectPlantById(state, plant.plantId);
+  if (animate && oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
+    plantWatered = plant.plantId;
+  }
+  if (animate && oldPlant && oldPlant.lastCaringDate !== plant.lastCaringDate) {
+    plantCaredFor = plant.plantId;
+  }
+
+  return { plant, plantWatered, plantCaredFor };
+}
+
+export const { clearError, resetPlantWatered, resetPlantCaredFor, logoutUser } = appSlice.actions;
 
 export default appSlice.reducer;
 
@@ -237,5 +399,29 @@ export const getLoggedInDate = createSelector(
 
 
 export const getStatus = (state: RootState) => state.appData.status;
+
+export const getPlantWatered = (state: RootState) => state.appData.plantWatered;
+
+export const getPlantCaredFor = (state: RootState) => state.appData.plantCaredFor;
+
+export const getSpacesOfUser = (state: RootState) => state.appData.spaces;
+
+export const selectSpaceById = (state: RootState, spaceId: number) => {
+  return state.appData.spaces.find((space) => space.spaceId === spaceId);
+}
+
+export const selectAllSpacePlants = (state: RootState, spaceId: number) => {
+  return state.appData.spaces.find((space) => space.spaceId === spaceId).plantsContained;
+}
+
+export const selectPlantsOfSelectedSpace = (state: RootState) => state.appData.plantsOfSelectedSpace;
+
+export const selectColorById = (state: RootState, id: number) => {
+  if (String(id).length > 2) {
+    id = Number(String(id).slice(-2));
+  }
+
+  return state.appData.colors[id];
+}
 
 export const appError = (state: RootState) => state.appData.error;
