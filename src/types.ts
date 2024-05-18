@@ -56,3 +56,19 @@ export type UserSimple = {
   email: string;
   password: string;
 };
+
+export type Space = {
+  spaceId?: number;
+  spaceName: string;
+  spaceOwner: User;
+  plantsContained: Plant[];
+  spaceMembers: User[];
+}
+
+export type SpaceSimple = {
+  spaceId?: number;
+  spaceName: string;
+  spaceOwner: UserSimple;
+  plantsContained: Plant[];
+  spaceMembers: UserSimple[];
+}

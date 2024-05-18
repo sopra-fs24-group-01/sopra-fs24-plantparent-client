@@ -14,6 +14,8 @@ import { getStatus, selectLoggedInUser, selectPlantById } from "../../store/appS
 import { getPlantById, updatePlant } from "../../service/appService";
 import styled from "styled-components";
 import { InputFieldComponent } from "./InputFieldComponent";
+import { StyledSecondaryButton } from "./QRCodeComponent";
+import { StyledDeleteButton } from "./PlantView";
 
 export const StyledPageTitle = styled.h1`
   color: #83b271;
@@ -115,7 +117,7 @@ export default function EditPlant() {
             <StyledPrimaryButton
               disabled={(plantName === "" || species === "") || (plantName === plant.plantName && species === plant.species && careInstructions === plant.careInstructions)}
               type="submit">Save Changes</StyledPrimaryButton>
-            <StyledPrimaryButton onClick={() => navigate("/plant/" + plantId)}>Cancel</StyledPrimaryButton>
+            <StyledDeleteButton onClick={() => navigate("/plant/" + plantId)}>Cancel</StyledDeleteButton>
             {error && <StyledError>{error}</StyledError>}
           </StyledForm>
         </StyledLoginContainer>

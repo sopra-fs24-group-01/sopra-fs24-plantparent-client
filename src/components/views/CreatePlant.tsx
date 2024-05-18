@@ -4,7 +4,6 @@ import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import {
   StyledError,
   StyledForm,
-  StyledInputField,
   StyledLoginContainer,
   StyledLogoContainerLarge,
   StyledMainContainer, StyledPrimaryButton,

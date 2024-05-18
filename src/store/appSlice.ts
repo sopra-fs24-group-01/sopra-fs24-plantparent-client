@@ -1,12 +1,16 @@
 import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
+  createUser,
+  getAllPlantsCaredFor, getAllPlantsOfSpace,
+  getAllPlantsOwned,
+  getMembershipSpaces,
+  getOwnedSpaces,
   getPlantById,
   login,
-  createUser,
-  getAllPlantsCaredFor,
-  getAllPlantsOwned, updateUser,
+  updateUser,
 } from "../service/appService";
-import { Plant, PlantFull, User, UserSimple } from "../types";
+import { Plant, PlantFull, Space, User, UserSimple } from "../types";
+import { getRandomColor } from "../helpers/colorPicker";
 
 
 interface IUserState {
@@ -17,7 +21,10 @@ interface IUserState {
   loggedInDate: string;
   plantWatered: number;
   plantCaredFor: number;
+  spaces: Space[];
+  plantsOfSelectedSpace: PlantFull[];
   error: null | any;
+  colors: string[];
 }
 
 const initialState: IUserState = {
@@ -25,10 +32,13 @@ const initialState: IUserState = {
   plantsCaredFor: [],
   loggedInUser: null,
   loggedInDate: null,
+  spaces: [],
+  plantsOfSelectedSpace: [],
   plantWatered: 0,
   plantCaredFor: 0,
   status: "idle",
   error: null,
+  colors: Array.from({length: 100}, getRandomColor)
 };
 
 export const registerUser = createAsyncThunk(
@@ -107,6 +117,38 @@ export const updateGetAllPlantsCaredFor = createAsyncThunk(
   },
 );
 
+export const getSpaces = createAsyncThunk(
+  "spaces/getSpaces",
+  async (userId: number, thunkAPI) => {
+    try {
+      const ownedSpaces =  await getOwnedSpaces(userId);
+      const memberSpaces =  await getMembershipSpaces(userId);
+      const uniqueMemberSpaces = memberSpaces.filter(memberSpace =>
+        !ownedSpaces.some(ownedSpace => ownedSpace.spaceId === memberSpace.spaceId)
+      );
+
+      return [...ownedSpaces, ...uniqueMemberSpaces];
+    } catch (err) {
+      console.log(err);
+
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  },
+);
+
+export const getAllPlantsSpace = createAsyncThunk(
+  "plants/getAllPlantsOfSpace",
+  async (spaceId: number, thunkAPI) => {
+    try {
+      return await getAllPlantsOfSpace(spaceId);
+    } catch (err) {
+      console.log(err);
+
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  },
+);
+
 export const appSlice = createSlice({
   name: "appData",
   initialState,
@@ -123,6 +165,9 @@ export const appSlice = createSlice({
     resetPlantCaredFor: (state) => {
       state.plantCaredFor = 0;
     },
+    logoutUser: (state) => {
+      Object.assign(state, initialState);
+    }
   },
   extraReducers(builder) {
     builder
@@ -196,7 +241,6 @@ export const appSlice = createSlice({
         state.plantWatered = payload.plantWatered;
         state.plantCaredFor = payload.plantCaredFor;
         state.error = null;
-        console.log("plant updated");
       })
       .addCase(updateGetAllPlantsOwned.fulfilled, (state, { payload }) => {
         state.plantsOwned = payload.newPlants;
@@ -209,8 +253,16 @@ export const appSlice = createSlice({
         state.plantWatered = payload.plantWatered;
         state.plantCaredFor = payload.plantCaredFor;
         state.error = null;
+      })
+      .addCase(getSpaces.fulfilled, (state, { payload }) => {
+        state.spaces = payload;
+        state.error = null;
+      })
+      .addCase(getAllPlantsSpace.fulfilled, (state, { payload }) => {
+        state.plantsOfSelectedSpace = payload;
+        state.error = null;
       });
-  },
+  }
 });
 
 function plantToFullPlant(plants: Plant[], user: User) {
@@ -282,7 +334,7 @@ function updatePlant(plant: PlantFull, state: RootState, animate: boolean) {
   return { plant, plantWatered, plantCaredFor };
 }
 
-export const { clearError, resetPlantWatered, resetPlantCaredFor } = appSlice.actions;
+export const { clearError, resetPlantWatered, resetPlantCaredFor, logoutUser } = appSlice.actions;
 
 export default appSlice.reducer;
 
@@ -351,5 +403,25 @@ export const getStatus = (state: RootState) => state.appData.status;
 export const getPlantWatered = (state: RootState) => state.appData.plantWatered;
 
 export const getPlantCaredFor = (state: RootState) => state.appData.plantCaredFor;
+
+export const getSpacesOfUser = (state: RootState) => state.appData.spaces;
+
+export const selectSpaceById = (state: RootState, spaceId: number) => {
+  return state.appData.spaces.find((space) => space.spaceId === spaceId);
+}
+
+export const selectAllSpacePlants = (state: RootState, spaceId: number) => {
+  return state.appData.spaces.find((space) => space.spaceId === spaceId).plantsContained;
+}
+
+export const selectPlantsOfSelectedSpace = (state: RootState) => state.appData.plantsOfSelectedSpace;
+
+export const selectColorById = (state: RootState, id: number) => {
+  if (String(id).length > 2) {
+    id = Number(String(id).slice(-2));
+  }
+
+  return state.appData.colors[id];
+}
 
 export const appError = (state: RootState) => state.appData.error;

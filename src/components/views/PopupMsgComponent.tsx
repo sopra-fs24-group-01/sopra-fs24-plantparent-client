@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { StyledPrimaryButton } from "./Login";
 
 const StyledModalBackground = styled.div`
@@ -33,8 +33,13 @@ const StyledModalButton = styled(StyledPrimaryButton)`
   width: 100px;
 `;
 
-const StyledModalButtonRed = styled(StyledModalButton)`
+export const StyledModalButtonRed = styled(StyledModalButton)<{$small?: boolean}>`
   background-color: red;
+  ${props => props.$small && css`
+  width: 150px;
+  font-size: 1rem;
+    margin: 0;
+`}
 `;
 
 
