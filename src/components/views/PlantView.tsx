@@ -258,6 +258,9 @@ const UploadAndDisplayImage = () => {
 
     // call your uploadImage function
     uploadImage(Number(plantId), file);
+
+    // reload the page
+    window.location.reload();
   };
 
   return (

@@ -80,7 +80,10 @@ export function uploadImage(plantId: number, file: File) {
   // Append the image file to the FormData instance
   formData.append("image", file);
 
-  return fetch(baseurl + "plants/" + plantId + "/image", {
+  // Construct the URL
+  const url = baseurl + "plants/" + plantId + "/image";
+
+  return fetch(url, {
     method: "POST",
     // Remove the Content-Type header, the browser will set it automatically
     // including the necessary multipart boundary
@@ -91,7 +94,7 @@ export function uploadImage(plantId: number, file: File) {
       return data;
     })
     .catch(error => {
-      console.error("Error updating user:", error);
+      console.error("Error uploading image:", error);
     });
 }
 
