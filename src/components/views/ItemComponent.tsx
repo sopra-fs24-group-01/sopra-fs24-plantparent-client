@@ -120,8 +120,8 @@ export function ItemsComponent({
       <StyledItemsTitle>{itemTitle}</StyledItemsTitle>
       <StyledItemsContainer>
         {items === null || items.length === 0 ?
-          <StyledNoItems>No {itemName}s added yet. <span
-            onClick={() => setShowSelectItems(true)}>Add one!</span></StyledNoItems> :
+          <StyledNoItems>No {itemName}s added yet. {edit && <span
+            onClick={() => setShowSelectItems(true)}>Add one!</span>}</StyledNoItems> :
           <>
             {items.map((i) => {
               return (

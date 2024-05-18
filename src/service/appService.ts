@@ -257,7 +257,6 @@ export function getSpace(spaceId: number): Promise<Space> {
 }
 
 export function createSpace(space: SpaceSimple) {
-  console.log(space);
   return fetch(baseurl + "spaces", {
     method: "POST",
     headers: {
@@ -267,8 +266,8 @@ export function createSpace(space: SpaceSimple) {
   })
     .then(response => {
       if (!response.ok) {
-        return response.text().then(err => {
-          throw new Error(err);
+        return response.json().then(err => {
+          throw new Error(err.message);
         });
       } else {
         return response.json();
