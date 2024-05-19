@@ -60,12 +60,12 @@ export const StyledPrimaryButton = styled.button<{ disabled?: boolean }>`
 
   ${props => props.disabled && css`
     opacity: 0.5;`
-  }
+}
   &:hover {
     ${props => !props.disabled && css`
       cursor: pointer;
       scale: 0.95;`
-    }
+}
   }
 `;
 
@@ -151,17 +151,17 @@ export default function Login() {
         </StyledLogoContainerLarge>
         <StyledForm onSubmit={doLogin}>
           <StyledInputField id="username"
-                            type="text"
-                            value={username}
-                            $validInput={true}
-                            placeholder="Username"
-                            onChange={(event) => setUsername(event.target.value)} />
+            type="text"
+            value={username}
+            $validInput={true}
+            placeholder="Username"
+            onChange={(event) => setUsername(event.target.value)} />
           <StyledInputField id="password"
-                            type="password"
-                            value={password}
-                            $validInput={true}
-                            placeholder="Password"
-                            onChange={(event) => setPassword(event.target.value)} />
+            type="password"
+            value={password}
+            $validInput={true}
+            placeholder="Password"
+            onChange={(event) => setPassword(event.target.value)} />
           <StyledPrimaryButton disabled={!username || !password} type="submit">Login</StyledPrimaryButton>
           <StyledP>No account yet? <StyledLink onClick={() => navigate("/signUp")}>Sign Up</StyledLink></StyledP>
           {error && <StyledError>{error}</StyledError>}
