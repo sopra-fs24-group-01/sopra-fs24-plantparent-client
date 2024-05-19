@@ -39,8 +39,8 @@ export default function EditPlant() {
     async function fetchPlant() {
       const fetchedPlant = await getPlantById(Number(plantId));
       setPlant(fetchedPlant);
-      setLastWateringDate(formatDateYMD(fetchedPlant.nextWateringDate));
-      setLastCaringDate(formatDateYMD(fetchedPlant.nextCaringDate));
+      setLastWateringDate(formatDateYMD(fetchedPlant.lastWateringDate));
+      setLastCaringDate(formatDateYMD(fetchedPlant.lastCaringDate));
       setWateringInterval(fetchedPlant.wateringInterval);
       setCaringInterval(fetchedPlant.caringInterval);
     }
