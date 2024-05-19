@@ -383,7 +383,8 @@ export default function PlantView() {
             nameKey={"username"}
             ignoreId={plant.owner.id}
             itemName={"user"}
-            AddSVG={AddUserSVG}/>}
+            AddSVG={AddUserSVG}
+            tooltip={"Add as caretaker"}/>}
           {user.id === plant.owner.id &&
             <StyledEditPlantContainer onClick={() => navigate("/editPlant/" + plant.plantId)}>
               <EditPlantSVG style={{ width: "35px", height: "35px" }} />

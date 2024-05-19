@@ -208,6 +208,7 @@ function SpacePage() {
                   ignoreId={space.spaceOwner.id}
                   itemName={"user"}
                   AddSVG={AddUserSVG}
+                  tooltip={"Add a user to space"}
                   right={true}
                   top={true}/>}
                 <ItemsComponent
@@ -247,6 +248,7 @@ function SpacePage() {
                     ignoreId={99999999999999999999999999}
                     itemName={"plant"}
                     AddSVG={AddPlantSVG}
+                    tooltip={"Add a plant to space"}
                     right={true}
                     top={true}/>}
                 <ItemsComponent

@@ -66,6 +66,7 @@ export function ItemsSelectorComponent({
   ignoreId,
   itemName,
   AddSVG,
+  tooltip,
   top,
   right
 }: {
@@ -82,6 +83,7 @@ export function ItemsSelectorComponent({
   ignoreId: number
   itemName: string,
   AddSVG: React.FunctionComponent<React.SVGProps<SVGSVGElement>>,
+  tooltip: string,
   top?: boolean,
   right?: boolean;
 }) {
@@ -128,7 +130,7 @@ export function ItemsSelectorComponent({
               items.map((i) => {
                 return (
                   <StyledItemsListItemContainer key={i.id}>{i.name}
-                    <div title="Add as caretaker">
+                    <div title={tooltip}>
                       <AddSVG onClick={() => addItemToMainItem(Number(itemId), Number(i.id))}
                         style={{ width: "30px", height: "30px" }} />
                     </div>
