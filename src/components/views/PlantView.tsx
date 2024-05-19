@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "./Header";
 import styled, { css } from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
@@ -19,7 +19,7 @@ import { formatDate, isInThePast } from "../../helpers/util";
 import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
 import PropTypes from "prop-types";
 import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
-import { addCaretaker, deletePlantById, getAllUsers, getPlantById, removeCaretaker } from "../../service/appService";
+import { addCaretaker, deletePlantById, getAllUsers, getPlantById, removeCaretaker, uploadImage } from "../../service/appService";
 import { ReactComponent as HappyFaceSVG } from "../../assets/emoji-smile-fill.svg";
 import { ReactComponent as NeutralFaceSVG } from "../../assets/emoji-neutral-fill.svg";
 import { ReactComponent as AngryFaceSVG } from "../../assets/emoji-dizzy-fill.svg";
@@ -215,6 +215,24 @@ export const StyledDeleteButton = styled.button`
   }
 `;
 
+const StyledImageButton = styled.button`
+  color: #ffffff;
+  font-size: 1.5rem;
+  background-color: #83b271;
+  width: 200px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  margin: 50px auto 5px auto;
+
+  &:hover {
+    ${props => !props.disabled && css`
+      cursor: pointer;
+      scale: 0.95;`
+}
+  }
+`;
+
 function TextContainer({ svg, children }) {
   return (
     <StyledIndividualCaringContainer>
@@ -231,6 +249,40 @@ function TextContainer({ svg, children }) {
 TextContainer.propTypes = {
   svg: PropTypes.element.isRequired,
   children: PropTypes.node.isRequired,
+};
+
+const UploadAndDisplayImage = () => {
+  const fileInput = useRef(null);
+  const { plantId } = useParams<{ plantId: string }>();
+
+  const handleButtonClick = () => {
+    // trigger the click event of the hidden file input
+    fileInput.current.click();
+  };
+
+  const handleFileChange = (event) => {
+    // get the selected file
+    const file = event.target.files[0];
+
+    // call your uploadImage function
+    uploadImage(Number(plantId), file).then(() => {
+      // reload the page
+      window.location.reload();
+    });
+  };
+
+  return (
+    <>
+      <StyledImageButton onClick={handleButtonClick}>Set Plant Image</StyledImageButton>
+
+      <input
+        type="file"
+        ref={fileInput}
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
+    </>
+  );
 };
 
 
@@ -343,7 +395,11 @@ export default function PlantView() {
             </StyledPlantProfileHeader>
             <StyledPlantProfileDetails>
               <StyledPlantImageContainer>
-                <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />
+                {plant.plantImageUrl ?
+                  <img alt={"plant image"} src={plant.plantImageUrl} style={{ width: "200px", height: "200px" }} /> :
+                  <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />}
+                {user.id === plant.owner.id &&
+                <UploadAndDisplayImage />}
               </StyledPlantImageContainer>
               <StyledMoodContainer>
                 {mood === "happy" && <HappyFaceSVG style={{ color: "#83b271", width: "55px", height: "55px" }} />}
