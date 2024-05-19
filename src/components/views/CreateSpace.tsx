@@ -74,7 +74,8 @@ export default function CreateSpace() {
             disabled={(spaceName === "")}
             type="submit">Save Changes</StyledPrimaryButton>
           <StyledDeleteButton onClick={(event) => {
-            event.stopPropagation()
+            event.preventDefault();
+            event.stopPropagation();
             window.history.back()}}
           >Cancel</StyledDeleteButton>
           {error && <StyledError>{error}</StyledError>}

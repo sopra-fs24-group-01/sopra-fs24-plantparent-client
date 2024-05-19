@@ -1,36 +1,41 @@
 import React, { useEffect, useRef, useState } from "react";
-import Header from "./Header";
-import styled, { css } from "styled-components";
-import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useNavigate, useParams } from "react-router-dom";
-import { ReactComponent as DropSVG } from "../../assets/droplet-half.svg";
-import { ReactComponent as BandaidSVG } from "../../assets/bandaid.svg";
-import { ReactComponent as ImagePlaceholderSVG } from "../../assets/image_placeholder.svg";
-import { ReactComponent as RemoveUserSVG } from "../../assets/person-fill-dash.svg";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
-  getPlantCaredFor,
-  getPlantWatered,
-  getStatus, resetPlantCaredFor,
-  resetPlantWatered, selectColorById,
-  selectLoggedInUser, selectPlantById, updatePlantInPlantStore,
+  getPlantCaredFor, getPlantWatered, getStatus, resetPlantCaredFor,
+  resetPlantWatered, selectColorById, selectLoggedInUser, selectPlantById,
+  updatePlantInPlantStore
 } from "../../store/appSlice";
-import { Schedule, StyledOwnerContainer, StyledPlantTitle } from "./PlantComponent";
 import { formatDate, isInThePast } from "../../helpers/util";
-import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
-import PropTypes from "prop-types";
-import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
-import { addCaretaker, deletePlantById, getAllUsers, getPlantById, removeCaretaker, uploadImage } from "../../service/appService";
-import { ReactComponent as HappyFaceSVG } from "../../assets/emoji-smile-fill.svg";
-import { ReactComponent as NeutralFaceSVG } from "../../assets/emoji-neutral-fill.svg";
-import { ReactComponent as AngryFaceSVG } from "../../assets/emoji-dizzy-fill.svg";
+import {
+  addCaretaker, deletePlantById, getAllUsers, getPlantById,
+  removeCaretaker, uploadImage
+} from "../../service/appService";
+import Header from "./Header";
+import {
+  Schedule, StyledOwnerContainer, StyledPlantTitle
+} from "./PlantComponent";
 import { Modal } from "./PopupMsgComponent";
-import { ReactComponent as KeySVG } from "../../assets/key.svg";
-import { ReactComponent as HouseSVG } from "../../assets/house-door.svg";
 import { QRCodeComponent } from "./QRCodeComponent";
 import { RainAnimation } from "./RainAnimationComponent";
 import { CaringAnimation } from "./CaringAnimationComponent";
 import { ItemsSelectorComponent } from "./ItemSelectorComponent";
 import { ItemsComponent } from "./ItemComponent";
+import styled, { css } from "styled-components";
+import PropTypes from "prop-types";
+
+// SVG Imports
+import { ReactComponent as DropSVG } from "../../assets/droplet-half.svg";
+import { ReactComponent as BandaidSVG } from "../../assets/bandaid.svg";
+import { ReactComponent as ImagePlaceholderSVG } from "../../assets/image_placeholder.svg";
+import { ReactComponent as RemoveUserSVG } from "../../assets/person-fill-dash.svg";
+import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
+import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
+import { ReactComponent as HappyFaceSVG } from "../../assets/emoji-smile-fill.svg";
+import { ReactComponent as NeutralFaceSVG } from "../../assets/emoji-neutral-fill.svg";
+import { ReactComponent as AngryFaceSVG } from "../../assets/emoji-dizzy-fill.svg";
+import { ReactComponent as KeySVG } from "../../assets/key.svg";
+import { ReactComponent as HouseSVG } from "../../assets/house-door.svg";
 
 
 const StyledMainContainer = styled.div<{$bgColor: string }>`
