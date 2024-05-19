@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { StyledPrimaryButton } from "./Login";
 
 const StyledModalBackground = styled.div`
@@ -33,6 +33,15 @@ const StyledModalButton = styled(StyledPrimaryButton)`
   width: 100px;
 `;
 
+export const StyledModalButtonRed = styled(StyledModalButton)<{$small?: boolean}>`
+  background-color: red;
+  ${props => props.$small && css`
+  width: 150px;
+  font-size: 1rem;
+    margin: 0;
+`}
+`;
+
 
 export function Modal({ text, action, setModal }: {
   text: string,
@@ -50,7 +59,7 @@ export function Modal({ text, action, setModal }: {
         {text}
         <StyledModalButtonContainer>
           <StyledModalButton onClick={performAction}>Yes</StyledModalButton>
-          <StyledModalButton onClick={() => setModal(false)}>No</StyledModalButton>
+          <StyledModalButtonRed onClick={() => setModal(false)}>No</StyledModalButtonRed>
         </StyledModalButtonContainer>
       </StyledModalContainer>
     </StyledModalBackground>

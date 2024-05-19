@@ -1,7 +1,8 @@
-import { Plant, PlantFull, User, UserSimple } from "../types";
+import { Plant, PlantFull, Space, SpaceSimple, User, UserSimple } from "../types";
 
 const baseurl = process.env.REACT_APP_BACKEND_BASEURL;
 
+/**************************************** USER STUFF ****************************************/
 export function login(user: { username: string, password: string }): Promise<User> {
   return fetch(baseurl + "login", {
     method: "POST",
@@ -10,22 +11,29 @@ export function login(user: { username: string, password: string }): Promise<Use
     },
     body: JSON.stringify(user),
   })
-    .then(response => response.json())
-    .catch(error => {
-      console.log(error);
+    .then(response => {
+
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
     });
 }
 
 export function getUserById(userId: number): Promise<User> {
   return fetch(baseurl + "users/" + userId)
-    .then(response => response.json())
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.log(error);
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
     });
-
 }
 
 export function createUser(user: User) {
@@ -38,14 +46,12 @@ export function createUser(user: User) {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error("User already exists");
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
       }
-
-      return response.json();
-    })
-    .catch(error => {
-      console.log(error);
-      throw error;
     });
 }
 
@@ -64,12 +70,14 @@ export function updateUser(user: UserSimple): Promise<User> {
       password: user.password,
     }),
   })
-    .then(response => response.json())
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.error("Error updating user:", error);
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
     });
 }
 
@@ -100,15 +108,19 @@ export function uploadImage(plantId: number, file: File) {
 
 export function getAllUsers(): Promise<User[]> {
   return fetch(baseurl + "users")
-    .then(response => response.json())
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.log(error);
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
     });
 }
 
+
+/****************************** PLANT STUFF ******************************/
 export function createPlant(plant: Plant) {
   return fetch(baseurl + "plants", {
     method: "POST",
@@ -117,9 +129,14 @@ export function createPlant(plant: Plant) {
     },
     body: JSON.stringify(plant),
   })
-    .then(response => response.json())
-    .catch(error => {
-      console.log(error);
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
     });
 }
 
@@ -131,9 +148,12 @@ export function updatePlant(plant: Plant) {
     },
     body: JSON.stringify(plant),
   })
-    .then(response => response.json())
-    .catch(error => {
-      console.log(error);
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      }
     });
 }
 
@@ -141,22 +161,26 @@ export function deletePlantById(plantId: number) {
   return fetch(baseurl + "plants/" + plantId, {
     method: "DELETE",
   })
-    .then(response => response.json())
-    .catch(error => {
-      console.log(error);
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      }
     });
 }
 
 export function getPlantById(plantId: number): Promise<PlantFull> {
   return fetch(baseurl + "plants/" + plantId)
-    .then(response => response.json())
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.log(error);
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
     });
-
 }
 
 export function waterPlant(plantId: number) {
@@ -165,11 +189,10 @@ export function waterPlant(plantId: number) {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        return response.text().then(err => {
+          throw new Error(err);
+        });
       }
-    })
-    .catch(error => {
-      console.log(error);
     });
 }
 
@@ -179,11 +202,10 @@ export function careForPlant(plantId: number) {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        return response.text().then(err => {
+          throw new Error(err);
+        });
       }
-    })
-    .catch(error => {
-      console.log(error);
     });
 }
 
@@ -197,11 +219,10 @@ export function addCaretaker(plantId: number, userId: number) {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        return response.text().then(err => {
+          throw new Error(err);
+        });
       }
-    })
-    .catch(error => {
-      console.log(error);
     });
 }
 
@@ -211,11 +232,10 @@ export function removeCaretaker(plantId: number, userId: number) {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        return response.text().then(err => {
+          throw new Error(err);
+        });
       }
-    })
-    .catch(error => {
-      console.log(error);
     });
 }
 
@@ -223,16 +243,12 @@ export function getAllPlantsOwned(userId: number): Promise<PlantFull[]> {
   return fetch(baseurl + "plants/owned?ownerId=" + userId)
     .then(response => {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
       }
-
-      return response.json();
-    })
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.log(error);
     });
 }
 
@@ -240,15 +256,172 @@ export function getAllPlantsCaredFor(userId: number): Promise<PlantFull[]> {
   return fetch(baseurl + "plants/caredFor?careTakerId=" + userId)
     .then(response => {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
+    });
+}
+
+
+/****************************** SPACE STUFF ******************************/
+export function getSpace(spaceId: number): Promise<Space> {
+  return fetch(baseurl + "spaces/" + spaceId)
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
+    });
+}
+
+export function createSpace(space: SpaceSimple) {
+  return fetch(baseurl + "spaces", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(space)
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.json().then(err => {
+          throw new Error(err.message);
+        });
+      } else {
+        return response.json();
+      }
+    });
+}
+
+export function updateSpace(space: SpaceSimple) {
+  return fetch(baseurl + "spaces/" + space.spaceId, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      spaceName: space.spaceName,
+      spaceOwner: space.spaceOwner,
+      plantsContained: space.plantsContained
+    })
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
+    });
+}
+
+export function deleteSpace(spaceId: number) {
+  return fetch(baseurl + "spaces/" + spaceId, {
+    method: "DELETE",
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      }
+    });
+}
+
+export function getAllPlantsOfSpace(spaceId: number): Promise<PlantFull[]> {
+  return fetch(baseurl + "plants/space?spaceId=" + spaceId)
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      } else {
+        return response.json();
+      }
+    });
+}
+
+export function addUserToSpace(spaceId: number, userId: number) {
+  return fetch(baseurl + "spaces/" + spaceId + "/members/" + userId, {
+    method: "POST",
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      }
+    });
+}
+
+export function removeUserFromSpace(spaceId: number, userId: number) {
+  return fetch(baseurl + "spaces/" + spaceId + "/members/" + userId, {
+    method: "DELETE",
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      }
+    });
+}
+
+export function addPlantToSpace(spaceId: number, plantId: number) {
+  return fetch(baseurl + "spaces/" + spaceId + "/plants/" + plantId, {
+    method: "POST",
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      }
+    });
+}
+
+export function removePlantFromSpace(spaceId: number, plantId: number) {
+  return fetch(baseurl + "spaces/" + spaceId + "/plants/" + plantId, {
+    method: "DELETE",
+  })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      }
+    });
+}
+
+export function getOwnedSpaces(userId: number) {
+  return fetch(baseurl + "spaces/owned?ownerId=" + userId)
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
       }
 
       return response.json();
-    })
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.log(error);
+    });
+}
+
+export function getMembershipSpaces(userId: number) {
+  return fetch(baseurl + "spaces/member?memberId=" + userId)
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      }
+
+      return response.json();
     });
 }

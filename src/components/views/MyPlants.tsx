@@ -9,8 +9,9 @@ import {
   selectLoggedInUser,
   selectOwnedPlants, updateGetAllPlantsOwned,
 } from "../../store/appSlice";
-import { StyledMainContainer, StyledMainContainerContainer, StyledSideBar } from "./Home";
+import { StyledMainContainer, StyledMainContainerContainer } from "./Home";
 import { Plant } from "../../types";
+import { SpacesMenu } from "./SpacesMenu";
 
 
 function MyPlants() {
@@ -22,15 +23,24 @@ function MyPlants() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(updateGetAllPlantsOwned(user.id));
+    getPlants();
+    const timeoutId = setInterval(getPlants, 5000);
+
+    return () => {
+      clearInterval(timeoutId);
+    };
   }, []);
+
+  function getPlants() {
+    dispatch(updateGetAllPlantsOwned(user.id));
+  }
 
   return (
     <>
       <Header />
       {status === "loading" ? <div>Loading...</div> :
         <StyledMainContainer>
-          <StyledSideBar />
+          <SpacesMenu />
           <StyledMainContainerContainer>
             {plants.length < 1 ? <div>You have no plants yet. Create one!</div> : plants.map(plant => (
               <PlantComponent key={plant.plantName} plantId={plant.plantId} userId={user.id} />

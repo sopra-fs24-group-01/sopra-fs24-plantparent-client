@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Header from "./Header";
 import styled, { css } from "styled-components";
-import { useAppSelector } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { ReactComponent as ImagePlaceholderSVG } from "../../assets/image_placeholder.svg";
-import { getStatus, selectLoggedInUser } from "../../store/appSlice";
+import { getStatus, logoutUser, selectLoggedInUser } from "../../store/appSlice";
 import { StyledPlantTitle } from "./PlantComponent";
 import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
 import { User } from "../../types";
-import { getUserById } from "../../service/appService";
+import { deletePlantById, getUserById } from "../../service/appService";
 import { StyledPrimaryButton } from "./Login";
+import { StyledDeleteButton } from "./PlantView";
+import { Modal } from "./PopupMsgComponent";
 
 
 const StyledMainContainer = styled.div`
@@ -85,13 +87,23 @@ export default function PlantView() {
   const loggedInUser = useAppSelector(selectLoggedInUser);
   const appStatus = useAppSelector(getStatus);
   const navigate = useNavigate();
+  const [modal, setModal] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
 
   if (!loggedInUser) {
     return <div>Loading...</div>;
   }
 
+  function confirmLogout() {
+    setModal(false);
+    dispatch(logoutUser());
+    navigate("/login");
+  }
+
   return (
     <>
+      {modal && <Modal setModal={setModal} action={confirmLogout}
+        text={"Are you sure you want to log out?"} />}
       <Header />
       {appStatus === "loading" ? <div>Loading...</div> :
         <StyledMainContainer>
@@ -113,6 +125,7 @@ export default function PlantView() {
                 <StyledPrimaryButton type="button" onClick={() => navigate("/editPassword")}>
                   Change Password
                 </StyledPrimaryButton>
+                <StyledDeleteButton onClick={() => setModal(true)}>Logout</StyledDeleteButton>
               </StyledUserDescription>
             </StyledUserProfileDetails>
           </StyledUserProfileContainer>

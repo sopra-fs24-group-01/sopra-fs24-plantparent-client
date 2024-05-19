@@ -1,21 +1,26 @@
 import React, { useEffect, useRef, useState } from "react";
 import Header from "./Header";
 import styled, { css } from "styled-components";
-import { useAppSelector } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { ReactComponent as DropSVG } from "../../assets/droplet-half.svg";
 import { ReactComponent as BandaidSVG } from "../../assets/bandaid.svg";
 import { ReactComponent as ImagePlaceholderSVG } from "../../assets/image_placeholder.svg";
-import { getStatus, selectLoggedInUser } from "../../store/appSlice";
+import { ReactComponent as RemoveUserSVG } from "../../assets/person-fill-dash.svg";
+import {
+  getPlantCaredFor,
+  getPlantWatered,
+  getStatus, resetPlantCaredFor,
+  resetPlantWatered, selectColorById,
+  selectLoggedInUser, selectPlantById, updatePlantInPlantStore,
+} from "../../store/appSlice";
 import { Schedule, StyledOwnerContainer, StyledPlantTitle } from "./PlantComponent";
 import { formatDate, isInThePast } from "../../helpers/util";
 import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
 import PropTypes from "prop-types";
-import { CaretakerSelectorComponent } from "./CaretakerSelectorComponent";
 import { ReactComponent as AddUserSVG } from "../../assets/person-add.svg";
-import { CaretakerComponent } from "./CaretakerComponent";
 import { PlantFull } from "../../types";
-import { deletePlantById, getPlantById, uploadImage } from "../../service/appService";
+import { addCaretaker, deletePlantById, getAllUsers, getPlantById, removeCaretaker, uploadImage } from "../../service/appService";
 import { ReactComponent as HappyFaceSVG } from "../../assets/emoji-smile-fill.svg";
 import { ReactComponent as NeutralFaceSVG } from "../../assets/emoji-neutral-fill.svg";
 import { ReactComponent as AngryFaceSVG } from "../../assets/emoji-dizzy-fill.svg";
@@ -24,9 +29,13 @@ import { ReactComponent as KeySVG } from "../../assets/key.svg";
 import { ReactComponent as HouseSVG } from "../../assets/house-door.svg";
 import { QRCodeComponent } from "./QRCodeComponent";
 import { StyledPrimaryButton } from "./Login";
+import { RainAnimation } from "./RainAnimationComponent";
+import { CaringAnimation } from "./CaringAnimationComponent";
+import { ItemsSelectorComponent } from "./ItemSelectorComponent";
+import { ItemsComponent } from "./ItemComponent";
 
 
-const StyledMainContainer = styled.div`
+const StyledMainContainer = styled.div<{$bgColor: string }>`
   position: relative;
   width: 60vw;
   min-width: 750px;
@@ -39,6 +48,7 @@ const StyledMainContainer = styled.div`
   padding: 10px;
   border: 2px solid #83b271;
   border-radius: 5px;
+  background-color: ${props => props.$bgColor};
 `;
 
 const StyledPlantProfileContainer = styled.div`
@@ -165,7 +175,7 @@ const StyledEditScheduleContainer = styled.span`
   }
 `;
 
-const StyledAddCaretakerContainer = styled.div`
+export const StyledAddCaretakerContainer = styled.div`
   position: absolute;
   top: 15px;
   right: 15px;
@@ -189,7 +199,7 @@ const StyledMoodContainer = styled.div`
   align-items: center;
 `;
 
-const StyledDeleteButton = styled.button`
+export const StyledDeleteButton = styled.button`
   color: #ffffff;
   font-size: 1.5rem;
   background-color: red;
@@ -282,28 +292,41 @@ export default function PlantView() {
   const user = useAppSelector(selectLoggedInUser);
   const appStatus = useAppSelector(getStatus);
   const { plantId } = useParams<{ plantId: string }>();
-  const [plant, setPlant] = useState<PlantFull | null>(null);
+  const backgroundColor = useAppSelector(state => selectColorById(state, Number(plantId)));
+  const plant = useAppSelector(state => selectPlantById(state, Number(plantId)));
   const navigate = useNavigate();
   const [showSelectCaretakers, setShowSelectCaretakers] = useState<boolean>(false);
   const [reloadCaretakers, setReloadCaretakers] = useState<boolean>(false);
   const [mood, setMood] = useState<string>("happy");
   const [modal, setModal] = useState<boolean>(false);
-
-  function confirmDelete() {
-    setModal(false);
-    deletePlantById(Number(plantId)).then(() => {
-      navigate("/");
-    });
-  }
+  const plantWatered = useAppSelector(getPlantWatered);
+  const plantCaredFor = useAppSelector(getPlantCaredFor);
+  const [showRain, setShowRain] = useState<boolean>(plantWatered === Number(plantId));
+  const [showCaringAnimation, setShowCaringAnimation] = useState<boolean>(plantCaredFor === Number(plantId));
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    async function fetchPlant() {
-      const fetchedPlant = await getPlantById(Number(plantId));
-      setPlant(fetchedPlant);
+    setShowRain(plantWatered === Number(plantId));
+    if (plantWatered === Number(plantId)) {
+      setTimeout(() => dispatch(resetPlantWatered()), 5000);
     }
+  }, [plantWatered]);
 
-    fetchPlant();
-  }, [plantId]);
+  useEffect(() => {
+    setShowCaringAnimation(plantCaredFor === Number(plantId));
+    if (plantCaredFor === Number(plantId)) {
+      setTimeout(() => dispatch(resetPlantCaredFor()), 5000);
+    }
+  }, [plantCaredFor]);
+
+  useEffect(() => {
+    getPlant();
+    const timeout = setInterval(getPlant, 5000);
+
+    return () => {
+      clearInterval(timeout);
+    };
+  }, []);
 
   useEffect(() => {
     if (plant) {
@@ -319,8 +342,19 @@ export default function PlantView() {
     }
   }, [plant]);
 
+  function getPlant() {
+    dispatch(updatePlantInPlantStore({plantId: Number(plantId), animate: true}));
+  }
+
   if (!plant) {
     return <div>Loading...</div>;
+  }
+
+  function confirmDelete() {
+    setModal(false);
+    deletePlantById(Number(plantId)).then(() => {
+      navigate("/");
+    });
   }
 
   return (
@@ -329,11 +363,24 @@ export default function PlantView() {
         text={"Are you sure you want to delete the plant?"} />}
       <Header />
       {appStatus === "loading" ? <div>Loading...</div> :
-        <StyledMainContainer>
+        <StyledMainContainer $bgColor={backgroundColor}>
+          {showRain && <RainAnimation key={"rainAnimation_" + plantId} plantName={plant.plantName} large={true} />}
+          {showCaringAnimation && <CaringAnimation key={"caringAnimation_" + plantId} plantName={plant.plantName} large={true} />}
           {showSelectCaretakers &&
-            <CaretakerSelectorComponent plantId={plantId} setShowSelectCaretakers={setShowSelectCaretakers}
-              reloadCaretakers={reloadCaretakers}
-              setReloadCaretakers={setReloadCaretakers} />}
+          <ItemsSelectorComponent
+            itemId={plantId}
+            setShowSelectItems={setShowSelectCaretakers}
+            reloadItems={reloadCaretakers}
+            setReloadItems={setReloadCaretakers}
+            getPotentialItem={getPlantById}
+            addItem={addCaretaker}
+            getAllItems={getAllUsers}
+            fullItemKey={"caretakers"}
+            idKey={"id"}
+            nameKey={"username"}
+            ignoreId={plant.owner.id}
+            itemName={"user"}
+            AddSVG={AddUserSVG}/>}
           {user.id === plant.owner.id &&
             <StyledEditPlantContainer onClick={() => navigate("/editPlant/" + plant.plantId)}>
               <EditPlantSVG style={{ width: "35px", height: "35px" }} />
@@ -341,11 +388,12 @@ export default function PlantView() {
           <StyledPlantProfileContainer>
             <StyledPlantProfileHeader>
               <StyledPlantTitle $underline={false}>{plant.plantName}</StyledPlantTitle>
+              {user.id === plant.owner.id &&
               <StyledAddCaretakerContainer>
                 <AddUserSVG onClick={() => setShowSelectCaretakers(!showSelectCaretakers)}
                   style={{ color: "#83b271", width: "60px", height: "60px", margin: "auto" }} />
                 <div>Add Caretaker</div>
-              </StyledAddCaretakerContainer>
+              </StyledAddCaretakerContainer>}
             </StyledPlantProfileHeader>
             <StyledPlantProfileDetails>
               <StyledPlantImageContainer>
@@ -415,8 +463,21 @@ export default function PlantView() {
             </TextContainer>
           </StyledCaringContainer>
           <StyledDividerSmall />
-          <CaretakerComponent plantId={plantId} setShowSelectCaretakers={setShowSelectCaretakers}
-            reloadCaretakers={reloadCaretakers} setReloadCaretakers={setReloadCaretakers} />
+          <ItemsComponent
+            itemId={plantId}
+            setShowSelectItems={setShowSelectCaretakers}
+            reloadItems={reloadCaretakers}
+            setReloadItems={setReloadCaretakers}
+            getPotentialItem={getPlantById}
+            removeItem={removeCaretaker}
+            fullItemKey={"caretakers"}
+            idKey={"id"}
+            nameKey={"username"}
+            ignoreId={plant.owner.id}
+            itemTitle={"Caretakers"}
+            itemName={"user"}
+            RemoveSVG={RemoveUserSVG}
+            edit={user.id === plant.owner.id}/>
           {plant.owner.id === user.id && (
             <StyledDeleteButton onClick={() => setModal(true)}>Delete Plant</StyledDeleteButton>
           )}
