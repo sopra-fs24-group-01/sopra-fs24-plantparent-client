@@ -264,7 +264,10 @@ export default function PlantComponent({ plantId, userId, light }: { plantId: nu
         {userId !== plant.owner.id && <KeySVG style={{ color: "#83b271", width: "40px", height: "40px" }} />}
       </StyledOwnerContainer>
       <StyledPlantImageContainer>
-        <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />
+        {!plant.plantImageUrl &&
+          <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />}
+        {plant.plantImageUrl &&
+          <img src={plant.plantImageUrl} style={{ width: "200px", height: "200px" }} />}
         <StyledPlantTitle $underline={true} onClick={() => navigate("/plant/" + plant.plantId)}>{plant.plantName}</StyledPlantTitle>
       </StyledPlantImageContainer>
       <StyledPlantMainInfo $light={light}>

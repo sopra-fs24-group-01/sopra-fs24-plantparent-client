@@ -267,7 +267,7 @@ export const appSlice = createSlice({
 
 function plantToFullPlant(plants: Plant[], user: User) {
   const fullPlants: PlantFull[] = plants.map((plant) => {
-    return { ...plant, owner: user, caretakers: [] };
+    return { ...plant, owner: user, caretakers: [], plantImageUrl: plant.plantImageUrl || "" };
   });
 
   return fullPlants;
