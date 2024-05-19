@@ -10,7 +10,14 @@ import {
 } from "./Login";
 import { PlantFull, PlantSimple, Space, SpaceSimple } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { getSpaces, getStatus, selectLoggedInUser, selectPlantById, selectSpaceById } from "../../store/appSlice";
+import {
+  appError,
+  getSpaces,
+  getStatus,
+  selectLoggedInUser,
+  selectPlantById,
+  selectSpaceById,
+} from "../../store/appSlice";
 import { createSpace, getPlantById, getSpace, updatePlant, updateSpace } from "../../service/appService";
 import styled from "styled-components";
 import { InputFieldComponent } from "./InputFieldComponent";
@@ -29,6 +36,13 @@ export default function CreateSpace() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const errorMsg = useAppSelector(appError);
+
+  useEffect(() => {
+    if (errorMsg) {
+      setError(errorMsg);
+    }
+  }, [errorMsg]);
 
   async function doCreateSpace(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -50,7 +64,6 @@ export default function CreateSpace() {
       navigate("/");
     } catch (err) {
       console.log(err);
-      setError(err.message);
     }
   }
 

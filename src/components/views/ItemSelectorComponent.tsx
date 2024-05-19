@@ -11,7 +11,7 @@ export const StyledItemsListContainer = styled.div<{ $right?: boolean, $top?: bo
 `;
 
 const StyledItemsScrollContainer = styled.div`
-  max-height: 250px;
+  max-height: 275px;
   overflow-y: auto;
 
   /* Hide scrollbar for Chrome, Safari and Opera */

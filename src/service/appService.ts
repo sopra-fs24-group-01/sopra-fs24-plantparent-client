@@ -292,6 +292,7 @@ export function createSpace(space: SpaceSimple) {
     .then(response => {
       if (!response.ok) {
         return response.json().then(err => {
+          console.log(err);
           throw new Error(err.message);
         });
       } else {
