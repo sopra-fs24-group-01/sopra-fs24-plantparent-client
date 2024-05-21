@@ -136,7 +136,7 @@ function SpacePage() {
     return () => {
       clearInterval(timeoutId);
     };
-  }, []);
+  }, [spaceId]);
 
   useEffect(() => {
     getPlants()
