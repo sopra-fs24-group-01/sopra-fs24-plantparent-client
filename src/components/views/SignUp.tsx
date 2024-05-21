@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import {
@@ -28,9 +28,14 @@ export default function SignUp() {
   const navigate = useNavigate();
   const errorMsg = useAppSelector(appError);
 
+  useEffect(() => {
+    if (errorMsg) {
+      setError(errorMsg);
+    }
+  }, [errorMsg]);
+
   async function doSignUp(event: React.FormEvent) {
     event.preventDefault();
-    console.log("Sign up for user with user name " + username);
 
     const user: User = {
       username: username,
@@ -44,7 +49,6 @@ export default function SignUp() {
       navigate("/");
     } catch (err) {
       console.log(err);
-      setError(errorMsg);
     }
   }
 

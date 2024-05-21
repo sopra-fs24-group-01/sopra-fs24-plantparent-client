@@ -11,7 +11,7 @@ export const StyledItemsListContainer = styled.div<{ $right?: boolean, $top?: bo
 `;
 
 const StyledItemsScrollContainer = styled.div`
-  max-height: 250px;
+  max-height: 275px;
   overflow-y: auto;
 
   /* Hide scrollbar for Chrome, Safari and Opera */
@@ -66,6 +66,7 @@ export function ItemsSelectorComponent({
   ignoreId,
   itemName,
   AddSVG,
+  tooltip,
   top,
   right
 }: {
@@ -82,6 +83,7 @@ export function ItemsSelectorComponent({
   ignoreId: number
   itemName: string,
   AddSVG: React.FunctionComponent<React.SVGProps<SVGSVGElement>>,
+  tooltip: string,
   top?: boolean,
   right?: boolean;
 }) {
@@ -102,7 +104,7 @@ export function ItemsSelectorComponent({
 
   useEffect(() => {
     getItems().then();
-  }, []);
+  }, [itemId]);
 
   useEffect(() => {
     if (reloadItems) {
@@ -116,6 +118,8 @@ export function ItemsSelectorComponent({
         setReloadItems(true);
         setShowSelectItems(false);
       });
+    }).catch((err) => {
+      window.alert(err);
     });
   }
 
@@ -128,7 +132,7 @@ export function ItemsSelectorComponent({
               items.map((i) => {
                 return (
                   <StyledItemsListItemContainer key={i.id}>{i.name}
-                    <div title="Add as caretaker">
+                    <div title={tooltip}>
                       <AddSVG onClick={() => addItemToMainItem(Number(itemId), Number(i.id))}
                         style={{ width: "30px", height: "30px" }} />
                     </div>

@@ -84,8 +84,19 @@ export function SpacesMenu() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(getSpaces(loggedInUser.id));
+    getAllSpaces();
+
+    const timeoutId = setInterval(getAllSpaces, 5000);
+
+    return () => {
+      clearInterval(timeoutId);
+    };
+
   }, []);
+
+  function getAllSpaces() {
+    dispatch(getSpaces(loggedInUser.id));
+  }
 
   return (
     <StyledSpacesMenuContainer>

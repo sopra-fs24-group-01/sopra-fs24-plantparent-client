@@ -46,8 +46,9 @@ export function createUser(user: User) {
   })
     .then(response => {
       if (!response.ok) {
-        return response.text().then(err => {
-          throw new Error(err);
+        return response.json().then(err => {
+          console.log(err);
+          throw new Error(err.message);
         });
       } else {
         return response.json();
@@ -291,6 +292,7 @@ export function createSpace(space: SpaceSimple) {
     .then(response => {
       if (!response.ok) {
         return response.json().then(err => {
+          console.log(err);
           throw new Error(err.message);
         });
       } else {
@@ -380,8 +382,8 @@ export function addPlantToSpace(spaceId: number, plantId: number) {
   })
     .then(response => {
       if (!response.ok) {
-        return response.text().then(err => {
-          throw new Error(err);
+        return response.json().then(err => {
+          throw new Error(err.message);
         });
       }
     });

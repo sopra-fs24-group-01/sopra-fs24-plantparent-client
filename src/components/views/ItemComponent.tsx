@@ -98,7 +98,7 @@ export function ItemsComponent({
 
   useEffect(() => {
     getItems().then();
-  }, []);
+  }, [itemId]);
 
   useEffect(() => {
     if (reloadItems) {

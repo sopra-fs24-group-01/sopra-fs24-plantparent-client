@@ -4,7 +4,13 @@ import styled, { css } from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { ReactComponent as ImagePlaceholderSVG } from "../../assets/image_placeholder.svg";
-import { getStatus, logoutUser, selectLoggedInUser } from "../../store/appSlice";
+import {
+  getCaredFOrPlantsCount,
+  getOwnedPlantsCount,
+  getStatus,
+  logoutUser,
+  selectLoggedInUser,
+} from "../../store/appSlice";
 import { StyledPlantTitle } from "./PlantComponent";
 import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
 import { User } from "../../types";
@@ -45,17 +51,7 @@ const StyledUserProfileHeader = styled.div`
 const StyledUserProfileDetails = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  margin-right: auto;
-`;
-
-const StyledUserImageContainer = styled.div`
-  display: flex;
-  justify-content: right;
-  flex-direction: column;
-  width: fit-content;
-  margin-right: 25px;
-  margin-left: 25px;
+  justify-content: center;
 `;
 
 const StyledUserDescription = styled.div`
@@ -64,6 +60,19 @@ const StyledUserDescription = styled.div`
   font-size: 1.5rem;
   margin-bottom: 15px;
   text-align: center;
+`;
+
+const StyledStatsContainer = styled.div`
+  margin: 20px 25px 0 25px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const StyledStatNumber = styled.div`
+  font-size: 2.5rem;
+  display: flex;
+  justify-content: center;
+  color: #83b271;
 `;
 
 const StyledSmallText = styled.div`
@@ -86,6 +95,8 @@ const StyledEditUserContainer = styled.div`
 export default function PlantView() {
   const loggedInUser = useAppSelector(selectLoggedInUser);
   const appStatus = useAppSelector(getStatus);
+  const ownedPlantsCount = useAppSelector(getOwnedPlantsCount);
+  const caredForPlantsCount = useAppSelector(getCaredFOrPlantsCount);
   const navigate = useNavigate();
   const [modal, setModal] = useState<boolean>(false);
   const dispatch = useAppDispatch();
@@ -117,9 +128,8 @@ export default function PlantView() {
               <StyledPlantTitle $underline={false}>{loggedInUser.username}</StyledPlantTitle>
             </StyledUserProfileHeader>
             <StyledUserProfileDetails>
-              <StyledUserImageContainer>
-                <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />
-              </StyledUserImageContainer>
+              <StyledStatsContainer><div>Owned Plants:</div>
+                <StyledStatNumber>{ownedPlantsCount}</StyledStatNumber></StyledStatsContainer>
               <StyledUserDescription>
                 <StyledSmallText>Email:</StyledSmallText> {loggedInUser.email}
                 <StyledPrimaryButton type="button" onClick={() => navigate("/editPassword")}>
@@ -127,6 +137,9 @@ export default function PlantView() {
                 </StyledPrimaryButton>
                 <StyledDeleteButton onClick={() => setModal(true)}>Logout</StyledDeleteButton>
               </StyledUserDescription>
+              <StyledStatsContainer><div>Cared for Plants:</div>
+                <StyledStatNumber>{caredForPlantsCount}</StyledStatNumber>
+              </StyledStatsContainer>
             </StyledUserProfileDetails>
           </StyledUserProfileContainer>
         </StyledMainContainer>

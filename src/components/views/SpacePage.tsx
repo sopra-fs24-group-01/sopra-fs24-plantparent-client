@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   getAllPlantsSpace,
   getStatus, selectAllSpacePlants,
-  selectLoggedInUser, selectPlantsOfSelectedSpace, selectSpaceById,
+  selectLoggedInUser, selectPlantsOfSelectedSpace, selectSpaceById, updateGetAllPlantsOwned,
 } from "../../store/appSlice";
 import { StyledMainContainer, StyledMainContainerContainer } from "./Home";
 import { Plant } from "../../types";
@@ -115,7 +115,7 @@ const StyledDeleteButtonContainer = styled.div`
 `;
 
 
-function SpacePage() {
+export default React.memo(function SpacePage() {
   const user = useAppSelector(selectLoggedInUser);
   const status = useAppSelector(getStatus);
   const { spaceId } = useParams<{ spaceId: string }>();
@@ -136,7 +136,7 @@ function SpacePage() {
     return () => {
       clearInterval(timeoutId);
     };
-  }, []);
+  }, [spaceId]);
 
   useEffect(() => {
     getPlants()
@@ -149,10 +149,15 @@ function SpacePage() {
 
   function getPlants() {
     dispatch(getAllPlantsSpace(Number(spaceId)));
+    dispatch(updateGetAllPlantsOwned(user.id));
+    setReloadPlants(true);
+    setReloadUsers(true);
   }
 
   async function getAllPlants() {
-    return await getAllPlantsOwned(user.id);
+    const allPlantsOwned = await getAllPlantsOwned(user.id);
+
+    return allPlantsOwned.filter((plant: any) => plant.space === null);
   }
 
   async function confirmDelete() {
@@ -208,6 +213,7 @@ function SpacePage() {
                   ignoreId={space.spaceOwner.id}
                   itemName={"user"}
                   AddSVG={AddUserSVG}
+                  tooltip={"Add a user to space"}
                   right={true}
                   top={true}/>}
                 <ItemsComponent
@@ -247,6 +253,7 @@ function SpacePage() {
                     ignoreId={99999999999999999999999999}
                     itemName={"plant"}
                     AddSVG={AddPlantSVG}
+                    tooltip={"Add a plant to space"}
                     right={true}
                     top={true}/>}
                 <ItemsComponent
@@ -272,6 +279,4 @@ function SpacePage() {
       }
     </>
   );
-}
-
-export default SpacePage;
+})

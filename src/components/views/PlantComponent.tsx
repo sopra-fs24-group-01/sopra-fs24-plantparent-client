@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { memo, ReactElement, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { ReactComponent as ImagePlaceholderSVG } from "../../assets/image_placeholder.svg";
 import { calculateDifferenceInDays, isInThePast } from "../../helpers/util";
@@ -27,7 +27,7 @@ import { RainAnimation } from "./RainAnimationComponent";
 import { CaringAnimation } from "./CaringAnimationComponent";
 
 
-const StyledPlantComponentContainer = styled.div<{color: string, $light?: boolean}>`
+const StyledPlantComponentContainer = styled.div<{ color: string, $light?: boolean }>`
   display: flex;
   align-items: center;
   flex-direction: row;
@@ -38,11 +38,11 @@ const StyledPlantComponentContainer = styled.div<{color: string, $light?: boolea
   height: 250px;
   position: relative;
   background-color: ${props => props.color};
-  
+
   ${props => props.$light && css`
     width: calc(50% - 50px);
   `};
-  
+
   &:hover {
     border-width: 3px;
   }
@@ -62,14 +62,14 @@ const StyledMoodContainer = styled.div`
   right: 8px;
 `;
 
-export const StyledPlantTitle = styled.div<{$underline?: boolean}>`
+export const StyledPlantTitle = styled.div<{ $underline?: boolean }>`
   color: #83b271;
   font-size: 2rem;
   margin: 0 auto;
   ${props => (props.$underline) && css`
     text-decoration: underline;
   `};
-  
+
 
   &:hover {
     ${props => (props.$underline) && css`
@@ -79,7 +79,7 @@ export const StyledPlantTitle = styled.div<{$underline?: boolean}>`
   }
 `;
 
-const StyledPlantMainInfo = styled.div<{$light?: boolean}>`
+const StyledPlantMainInfo = styled.div<{ $light?: boolean }>`
   display: flex;
   flex-direction: column;
   font-size: 1.25rem;
@@ -128,10 +128,10 @@ const CaringSVGContainer = styled.div<{ $hover?: boolean }>`
     ${props => props.$hover && css`
       cursor: pointer;
       scale: 0.95;`
-}
+    }
     ${props => !props.$hover && css`
       cursor: not-allowed;`
-}
+    }
   }
 `;
 
@@ -179,9 +179,9 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
 
   function action() {
     if (watering) {
-      waterPlant(plantId).then(() => dispatch(updatePlantInPlantStore({plantId: plantId, animate: false})));
+      waterPlant(plantId).then(() => dispatch(updatePlantInPlantStore({ plantId: plantId, animate: false })));
     } else {
-      careForPlant(plantId).then(() => dispatch(updatePlantInPlantStore({plantId: plantId, animate: false})));
+      careForPlant(plantId).then(() => dispatch(updatePlantInPlantStore({ plantId: plantId, animate: false })));
     }
     setModal(false);
   }
@@ -189,7 +189,7 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
   return (
     <>
       {modal && <Modal setModal={setModal} action={action}
-        text={`Are you sure you ${watering ? "watered" : "cared for"} the plant?`} />}
+                       text={`Are you sure you ${watering ? "watered" : "cared for"} the plant?`} />}
       <StyledScheduleContainer>
         {showText &&
           <StyledSchedule>
@@ -215,7 +215,12 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
   );
 }
 
-export default function PlantComponent({ plantId, userId, light }: { plantId: number, userId: number, light?: boolean }) {
+export default React.memo(function PlantComponent({ plantId, userId, light }: {
+  plantId: number,
+  userId: number,
+  light?: boolean
+}) {
+  const navigate = useNavigate();
   const plant = useAppSelector(state => selectPlantById(state, plantId));
   const plantWatered = useAppSelector(getPlantWatered);
   const plantCaredFor = useAppSelector(getPlantCaredFor);
@@ -225,20 +230,27 @@ export default function PlantComponent({ plantId, userId, light }: { plantId: nu
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    setShowRain(plantWatered === plantId);
+    dispatch(updatePlantInPlantStore({ plantId: plantId, animate: false }));
+
     if (plantWatered === plantId) {
+      setShowRain(true);
       setTimeout(() => dispatch(resetPlantWatered()), 5000);
+    } else {
+      setShowRain(false);
     }
-  }, [plantWatered]);
 
-  useEffect(() => {
-    setShowCaringAnimation(plantCaredFor === plantId);
     if (plantCaredFor === plantId) {
+      setShowCaringAnimation(true);
       setTimeout(() => dispatch(resetPlantCaredFor()), 5000);
+    } else {
+      setShowCaringAnimation(false);
     }
-  }, [plantCaredFor]);
+  }, [plantId, plantWatered, plantCaredFor]);
 
-  const navigate = useNavigate();
+  if (!plant) {
+    return <div> Loading... </div>;
+  }
+
   let mood = "happy";
   // next watering date or next caring date in the past
   if ((isInThePast(plant.nextWateringDate) && !isInThePast(plant.nextCaringDate)) ||
@@ -251,9 +263,11 @@ export default function PlantComponent({ plantId, userId, light }: { plantId: nu
   }
 
   return (
-    <StyledPlantComponentContainer color={backgroundColor} $light={light} onClick={() => navigate("/plant/" + plant.plantId)}>
+    <StyledPlantComponentContainer color={backgroundColor} $light={light}
+      onClick={() => navigate("/plant/" + plant.plantId)}>
       {showRain && <RainAnimation key={"rainAnimation_" + plantId} plantName={plant.plantName} large={false} />}
-      {showCaringAnimation && <CaringAnimation key={"caringAnimation_" + plantId} plantName={plant.plantName} large={false}/>}
+      {showCaringAnimation &&
+        <CaringAnimation key={"caringAnimation_" + plantId} plantName={plant.plantName} large={false} />}
       <StyledMoodContainer>
         {mood === "happy" && <HappyFaceSVG style={{ color: "#83b271", width: "50px", height: "50px" }} />}
         {mood === "neutral" && <NeutralFaceSVG style={{ color: "orange", width: "50px", height: "50px" }} />}
@@ -268,13 +282,14 @@ export default function PlantComponent({ plantId, userId, light }: { plantId: nu
           <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />}
         {plant.plantImageUrl &&
           <img src={plant.plantImageUrl} style={{ width: "200px", height: "200px" }} />}
-        <StyledPlantTitle $underline={true} onClick={() => navigate("/plant/" + plant.plantId)}>{plant.plantName}</StyledPlantTitle>
+        <StyledPlantTitle $underline={true}
+          onClick={() => navigate("/plant/" + plant.plantId)}>{plant.plantName}</StyledPlantTitle>
       </StyledPlantImageContainer>
       <StyledPlantMainInfo $light={light}>
         <StyledPlantDescription>{plant.species}</StyledPlantDescription>
         <StyledDividerSmall />
         {plant.careInstructions}
-        {!light && 
+        {!light &&
           <>
             <StyledDividerSmall style={{ marginBottom: "auto" }} />
             <Schedule plantId={plant.plantId} userId={userId} text={"Next watering date:"} date={plant.nextWateringDate}
@@ -287,4 +302,4 @@ export default function PlantComponent({ plantId, userId, light }: { plantId: nu
       </StyledPlantMainInfo>
     </StyledPlantComponentContainer>
   );
-}
+})
