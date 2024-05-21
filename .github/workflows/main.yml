@@ -36,6 +36,7 @@ jobs:
           node-version: "20.x"
       - run: npm install
       - run: |
+          export REACT_APP_BACKEND_BASEURL=https://sopra-fs24-group-01-server.oa.r.appspot.com/
           export REACT_APP_WEATHER_API_KEY=${{ secrets.REACT_APP_WEATHER_API_KEY }}
           npm run build
 
