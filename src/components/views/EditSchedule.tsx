@@ -31,6 +31,7 @@ export default function EditPlant() {
   const [lastCaringDate, setLastCaringDate] = useState<string>("");
   const [wateringInterval, setWateringInterval] = useState<number>(0);
   const [caringInterval, setCaringInterval] = useState<number>(0);
+  const [enableButton, setEnableButton] = useState<boolean>(false);
 
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -47,6 +48,24 @@ export default function EditPlant() {
 
     fetchPlant();
   }, [plantId]);
+
+  useEffect(() => {
+    if (plant !== null) {
+      checkEntries();
+    }
+
+  }, [lastWateringDate, lastCaringDate, wateringInterval, caringInterval]);
+
+  function checkEntries() {
+    if(lastWateringDate !== formatDateYMD(plant.lastWateringDate) ||
+      lastCaringDate !== formatDateYMD(plant.lastCaringDate) ||
+      wateringInterval !== plant.wateringInterval ||
+      caringInterval !== plant.caringInterval) {
+      setEnableButton(true);
+    } else {
+      setEnableButton(false);
+    }
+  }
 
   async function doEditPlant(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -132,10 +151,7 @@ export default function EditPlant() {
               value={caringInterval}
               onChange={setCaringInterval}
               tooltip={"How often does this plant need to be cared for? (in days)"}/>
-            <StyledPrimaryButton disabled={
-              (lastWateringDate === "" || wateringInterval === null || lastCaringDate === "" || false)
-              || (lastWateringDate === plant.lastWateringDate && wateringInterval === plant.wateringInterval && lastCaringDate === plant.lastCaringDate && caringInterval === plant.caringInterval)}
-            type="submit">Save Changes</StyledPrimaryButton>
+            <StyledPrimaryButton disabled={!enableButton} type="submit">Save Changes</StyledPrimaryButton>
             <StyledPrimaryButton onClick={() => navigate("/plant/" + plantId)}>Cancel</StyledPrimaryButton>
             {error && <StyledError>{error}</StyledError>}
           </StyledForm>
