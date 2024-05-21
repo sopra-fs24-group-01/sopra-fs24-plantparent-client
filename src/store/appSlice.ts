@@ -289,22 +289,22 @@ function updatePlantsOfUser(user: User, state: RootState) {
   let plantWatered = 0;
   let plantCaredFor = 0;
   const fullPlantsOwned: PlantFull[] = user.plantsOwned.map((plant) => {
-    const oldPlant = selectPlantById(state, plant.plantId);
-    if (oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
+    const { watered, caredFor } = plantCheck(plant, state);
+    if (watered) {
       plantWatered = plant.plantId;
     }
-    if (oldPlant && oldPlant.lastCaringDate !== plant.lastCaringDate) {
+    if (caredFor) {
       plantCaredFor = plant.plantId;
     }
 
     return { ...plant, owner: user, caretakers: [] };
   });
   const fullPlantsCaredFor: PlantFull[] = user.plantsCaredFor.map((plant) => {
-    const oldPlant = selectPlantById(state, plant.plantId);
-    if (oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
+    const { watered, caredFor } = plantCheck(plant, state);
+    if (watered) {
       plantWatered = plant.plantId;
     }
-    if (oldPlant && oldPlant.lastCaringDate !== plant.lastCaringDate) {
+    if (caredFor) {
       plantCaredFor = plant.plantId;
     }
 
@@ -318,11 +318,11 @@ function updatePlants(plants: PlantFull[], state: RootState) {
   let plantWatered = 0;
   let plantCaredFor = 0;
   const newPlants = plants.map((plant) => {
-    const oldPlant = selectPlantById(state, plant.plantId);
-    if (oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
+    const { watered, caredFor } = plantCheck(plant, state);
+    if (watered) {
       plantWatered = plant.plantId;
     }
-    if (oldPlant && oldPlant.lastCaringDate !== plant.lastCaringDate) {
+    if (caredFor) {
       plantCaredFor = plant.plantId;
     }
 
@@ -333,17 +333,34 @@ function updatePlants(plants: PlantFull[], state: RootState) {
 }
 
 function updatePlant(plant: PlantFull, state: RootState, animate: boolean) {
-  let plantWatered = 0;
-  let plantCaredFor = 0;
-  const oldPlant = selectPlantById(state, plant.plantId);
-  if (animate && oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
-    plantWatered = plant.plantId;
-  }
-  if (animate && oldPlant && oldPlant.lastCaringDate !== plant.lastCaringDate) {
-    plantCaredFor = plant.plantId;
-  }
+  const { watered, caredFor } = plantCheck(plant, state);
+
+  const plantWatered = watered ? plant.plantId : 0;
+  const plantCaredFor = caredFor ? plant.plantId : 0;
 
   return { plant, plantWatered, plantCaredFor };
+}
+
+function plantCheck(plant: PlantFull | Plant, state: RootState) {
+  let watered = false;
+  let caredFor = false;
+  const oldPlant = selectPlantById(state, plant.plantId);
+  if (oldPlant && oldPlant.lastWateringDate !== plant.lastWateringDate) {
+    const oldWateringDate = new Date(oldPlant.lastWateringDate);
+    const newWateringDate = new Date(plant.lastWateringDate);
+    if (oldWateringDate < newWateringDate) {
+      watered = true;
+    }
+  }
+  if (oldPlant && oldPlant.lastCaringDate !== plant.lastCaringDate) {
+    const oldCaringDate = new Date(oldPlant.lastCaringDate);
+    const newCaringDate = new Date(plant.lastCaringDate);
+    if (oldCaringDate < newCaringDate) {
+      caredFor = true;
+    }
+  }
+
+  return { watered, caredFor };
 }
 
 export const { clearError, resetPlantWatered, resetPlantCaredFor, logoutUser } = appSlice.actions;
@@ -387,7 +404,7 @@ export const selectOwnedPlants = createSelector(
       const bNextCaringDate = new Date(b.nextCaringDate);
       const aNextWateringDate = new Date(a.nextWateringDate);
       const bNextWateringDate = new Date(b.nextWateringDate);
-      if ((aNextCaringDate < bNextCaringDate) || (aNextWateringDate < bNextWateringDate)) {
+      if ((aNextWateringDate < bNextWateringDate) || (aNextCaringDate < bNextCaringDate)) {
         return -1;
       } else {
         return 1;
