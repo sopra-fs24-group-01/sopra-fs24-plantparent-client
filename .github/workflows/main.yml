@@ -35,7 +35,9 @@ jobs:
         with:
           node-version: "20.x"
       - run: npm install
-      - run: npm run build
+      - run: |
+          export REACT_APP_WEATHER_API_KEY=${{ secrets.REACT_APP_WEATHER_API_KEY }}
+          npm run build
 
       - name: Authenticate to Google
         uses: google-github-actions/auth@v2
