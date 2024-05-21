@@ -128,10 +128,10 @@ const CaringSVGContainer = styled.div<{ $hover?: boolean }>`
     ${props => props.$hover && css`
       cursor: pointer;
       scale: 0.95;`
-    }
+}
     ${props => !props.$hover && css`
       cursor: not-allowed;`
-    }
+}
   }
 `;
 
@@ -189,7 +189,7 @@ export function Schedule({ plantId, userId, text, date, svg, watering, showText 
   return (
     <>
       {modal && <Modal setModal={setModal} action={action}
-                       text={`Are you sure you ${watering ? "watered" : "cared for"} the plant?`} />}
+        text={`Are you sure you ${watering ? "watered" : "cared for"} the plant?`} />}
       <StyledScheduleContainer>
         {showText &&
           <StyledSchedule>
