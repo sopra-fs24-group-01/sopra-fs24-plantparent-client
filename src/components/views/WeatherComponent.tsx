@@ -58,6 +58,10 @@ export function WeatherComponent({ location }: { location: { latitude: number, l
     return <div>Loading weather data...</div>
   }
 
+  if (weatherData.current === undefined) {
+    return <></>
+  }
+
   return (
     <StyledWeatherAndLocationContainer>
       <StyledWeatherContainer>
