@@ -5,6 +5,7 @@ import styled, { css } from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAppSelector } from "hooks";
 import { selectLoggedInUser } from "store/appSlice";
+import { WeatherComponent } from "./WeatherComponent";
 
 const StyledHeaderContainer = styled.div`
   width: 100vw;
@@ -98,6 +99,7 @@ function Header() {
 
   return (
     <StyledHeaderContainer>
+      <WeatherComponent />
       <StyledLogoContainerHeader onClick={() => navigate("/")}>
         <LogoSVG style={{height: "100%", maxWidth: "100%"}} />
       </StyledLogoContainerHeader>
