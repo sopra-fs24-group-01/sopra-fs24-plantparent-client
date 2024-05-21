@@ -232,6 +232,9 @@ export default React.memo(function PlantComponent({ plantId, userId, light }: {
   useEffect(() => {
     dispatch(updatePlantInPlantStore({ plantId: plantId, animate: false }));
 
+  }, [plantId]);
+
+  useEffect(() => {
     if (plantWatered === plantId) {
       setShowRain(true);
       setTimeout(() => dispatch(resetPlantWatered()), 5000);
@@ -245,7 +248,7 @@ export default React.memo(function PlantComponent({ plantId, userId, light }: {
     } else {
       setShowCaringAnimation(false);
     }
-  }, [plantId, plantWatered, plantCaredFor]);
+  }, [plantWatered, plantCaredFor]);
 
   if (!plant) {
     return <div> Loading... </div>;
