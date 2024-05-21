@@ -1,26 +1,47 @@
 import React, { useEffect, useState } from "react";
 import { getWeatherData } from "../../service/weatherService";
+import styled from "styled-components";
 
+const StyledWeatherAndLocationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+`;
 
-export function WeatherComponent() {
-  const [location , setLocation] = useState({ latitude: 47.3769, longitude: 8.5417});
-  const [weatherData, setWeatherData] = useState<any>(null);
-  function getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
-        });
-      });
-    } else {
-      console.log("Geolocation is not supported by this browser.");
-    }
+const StyledWeatherContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const StyledWeatherIconContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 1rem;
+  font-style: italic;
+  max-height: 60px;
+  
+  img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: -5px
   }
+`;
 
-  useEffect(() => {
-    getLocation();
-  }, [])
+const StyledWeatherTemp = styled.div`
+  font-size: 1.5rem;
+  max-height: 60px;
+  text-align: center;
+  align-content: center;
+  margin-left: -50px;
+`;
+
+const StyledWeatherLocation = styled.div`
+  font-weight: bold;
+`;
+
+export function WeatherComponent({ location }: { location: { latitude: number, longitude: number } }) {
+  const [weatherData, setWeatherData] = useState<any>(null);
 
   useEffect(() => {
     const weatherData = getWeatherData(location);
@@ -30,16 +51,19 @@ export function WeatherComponent() {
   }, [location])
 
   if (!weatherData) {
-    return <div>Loading...</div>
+    return <div>Loading weather data...</div>
   }
 
   return (
-    <div>
-      TempC: {weatherData.current.temp_c}
-      TempF: {weatherData.current.temp_f}
-      Wind: {weatherData.current.wind_kph}
-      Condition: {weatherData.current.condition.text}
-      Icon: <img src={"https://" + weatherData.current.condition.icon} alt="weather icon"/>
-    </div>
+    <StyledWeatherAndLocationContainer>
+      <StyledWeatherContainer>
+        <StyledWeatherIconContainer>
+          <img src={"https://" + weatherData.current.condition.icon} alt="weather icon"/>
+          {weatherData.current.condition.text}
+        </StyledWeatherIconContainer>
+        <StyledWeatherTemp title={weatherData.current.temp_f + "°F"}>{weatherData.current.temp_c}°C</StyledWeatherTemp>
+      </StyledWeatherContainer>
+      <StyledWeatherLocation>{weatherData.location.name},{weatherData.location.country}</StyledWeatherLocation>
+    </StyledWeatherAndLocationContainer>
   );
 }

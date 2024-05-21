@@ -1,10 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import { ReactComponent as ProfileSVG } from "../../assets/person-circle.svg";
 import styled, { css } from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAppSelector } from "hooks";
-import { selectLoggedInUser } from "store/appSlice";
 import { WeatherComponent } from "./WeatherComponent";
 
 const StyledHeaderContainer = styled.div`
@@ -61,7 +59,7 @@ const StyledNavLink = styled.div<{$active?: boolean}>`
 
 const StyledDateHeader = styled.div`
   margin: auto;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
 `;
 
@@ -80,9 +78,28 @@ const StyledIconContainer = styled.div`
 `;
 
 function Header() {
-  const location = useLocation();
-  const pathname = location.pathname;
-  const loggedInUser = useAppSelector(selectLoggedInUser);
+  const urlLocation = useLocation();
+  const pathname = urlLocation.pathname;
+  const [location , setLocation] = useState({ latitude: 47.3769, longitude: 8.5417});
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        });
+      }, (error) => {
+        console.log("Error Code = " + error.code);
+        console.log("Error Message = " + error.message);
+      });
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  }
+
+  useEffect(() => {
+    getLocation();
+  }, [])
 
   const navigate = useNavigate();
 
@@ -99,13 +116,13 @@ function Header() {
 
   return (
     <StyledHeaderContainer>
-      <WeatherComponent />
       <StyledLogoContainerHeader onClick={() => navigate("/")}>
         <LogoSVG style={{height: "100%", maxWidth: "100%"}} />
       </StyledLogoContainerHeader>
       <StyledNavLink $active={pathname === "/"} onClick={() => navigate("/")}>Home</StyledNavLink>
       <StyledNavLink $active={pathname === "/myPlants"} onClick={() => navigate("/myPlants")}>My Plants</StyledNavLink>
       <StyledDateHeader>{formattedDate}</StyledDateHeader>
+      <WeatherComponent location={location} />
       <StyledIconContainer onClick={() => navigate("/profile")}>
         <ProfileSVG style={{width: "50px", height: "50px"}} />
       </StyledIconContainer>
