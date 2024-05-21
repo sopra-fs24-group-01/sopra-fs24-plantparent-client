@@ -222,20 +222,32 @@ export const appSlice = createSlice({
         state.error = null;
       })
       .addCase(updatePlantInPlantStore.fulfilled, (state, { payload }) => {
+        let plantUpdated = false;
         const newPlantsOwned = state.plantsOwned.map((plant) => {
           if (plant.plantId === payload.plant.plantId) {
+            plantUpdated = true;
+
             return payload.plant;
           } else {
             return plant;
           }
         });
         const newPlantsCaredFor = state.plantsCaredFor.map((plant) => {
-          if (plant.plantId === payload.plant.plantId) {
+          if (!plantUpdated && plant.plantId === payload.plant.plantId) {
+            plantUpdated = true;
+
             return payload.plant;
           } else {
             return plant;
           }
         });
+        if (!plantUpdated) {
+          if (state.loggedInUser.id === payload.plant.owner.id) {
+            newPlantsOwned.push(payload.plant);
+          } else {
+            newPlantsCaredFor.push(payload.plant);
+          }
+        }
         state.plantsOwned = newPlantsOwned;
         state.plantsCaredFor = newPlantsCaredFor;
         state.plantWatered = payload.plantWatered;

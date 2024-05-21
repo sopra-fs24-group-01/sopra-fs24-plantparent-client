@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   getAllPlantsSpace,
   getStatus, selectAllSpacePlants,
-  selectLoggedInUser, selectPlantsOfSelectedSpace, selectSpaceById,
+  selectLoggedInUser, selectPlantsOfSelectedSpace, selectSpaceById, updateGetAllPlantsOwned,
 } from "../../store/appSlice";
 import { StyledMainContainer, StyledMainContainerContainer } from "./Home";
 import { Plant } from "../../types";
@@ -115,7 +115,7 @@ const StyledDeleteButtonContainer = styled.div`
 `;
 
 
-function SpacePage() {
+export default React.memo(function SpacePage() {
   const user = useAppSelector(selectLoggedInUser);
   const status = useAppSelector(getStatus);
   const { spaceId } = useParams<{ spaceId: string }>();
@@ -149,6 +149,9 @@ function SpacePage() {
 
   function getPlants() {
     dispatch(getAllPlantsSpace(Number(spaceId)));
+    dispatch(updateGetAllPlantsOwned(user.id));
+    setReloadPlants(true);
+    setReloadUsers(true);
   }
 
   async function getAllPlants() {
@@ -276,6 +279,4 @@ function SpacePage() {
       }
     </>
   );
-}
-
-export default SpacePage;
+})
