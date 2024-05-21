@@ -152,7 +152,9 @@ function SpacePage() {
   }
 
   async function getAllPlants() {
-    return await getAllPlantsOwned(user.id);
+    const allPlantsOwned = await getAllPlantsOwned(user.id);
+
+    return allPlantsOwned.filter((plant: any) => plant.space === null);
   }
 
   async function confirmDelete() {

@@ -382,8 +382,8 @@ export function addPlantToSpace(spaceId: number, plantId: number) {
   })
     .then(response => {
       if (!response.ok) {
-        return response.text().then(err => {
-          throw new Error(err);
+        return response.json().then(err => {
+          throw new Error(err.message);
         });
       }
     });

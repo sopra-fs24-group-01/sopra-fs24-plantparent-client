@@ -104,7 +104,7 @@ export function ItemsSelectorComponent({
 
   useEffect(() => {
     getItems().then();
-  }, []);
+  }, [itemId]);
 
   useEffect(() => {
     if (reloadItems) {
@@ -118,6 +118,8 @@ export function ItemsSelectorComponent({
         setReloadItems(true);
         setShowSelectItems(false);
       });
+    }).catch((err) => {
+      window.alert(err);
     });
   }
 
