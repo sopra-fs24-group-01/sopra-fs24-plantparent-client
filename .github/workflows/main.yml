@@ -50,7 +50,7 @@ jobs:
           version: v1
           credentials: ${{ secrets.GCP_SERVICE_CREDENTIALS }}
           env_vars: |-
-            WEATHER_API_KEY=${{ secrets.WEATHER_API_KEY }}
+            WEATHER_API_KEY='${{ secrets.WEATHER_API_KEY }}'
 
       - name: Test
         run: curl "${{ steps.deploy.outputs.url }}"
