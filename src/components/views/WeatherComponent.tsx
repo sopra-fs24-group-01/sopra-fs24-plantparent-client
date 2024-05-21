@@ -6,11 +6,13 @@ const StyledWeatherAndLocationContainer = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
+  margin-right: 15px;
 `;
 
 const StyledWeatherContainer = styled.div`
   display: flex;
   justify-content: center;
+  position: relative;
 `;
 
 const StyledWeatherIconContainer = styled.div`
@@ -20,6 +22,7 @@ const StyledWeatherIconContainer = styled.div`
   font-size: 1rem;
   font-style: italic;
   max-height: 60px;
+  position: relative;
   
   img {
     width: 50px;
@@ -33,7 +36,8 @@ const StyledWeatherTemp = styled.div`
   max-height: 60px;
   text-align: center;
   align-content: center;
-  margin-left: -50px;
+  position: absolute;
+  left: 50px;
 `;
 
 const StyledWeatherLocation = styled.div`
@@ -60,10 +64,10 @@ export function WeatherComponent({ location }: { location: { latitude: number, l
         <StyledWeatherIconContainer>
           <img src={"https://" + weatherData.current.condition.icon} alt="weather icon"/>
           {weatherData.current.condition.text}
+          <StyledWeatherTemp title={weatherData.current.temp_f + "°F"}>{weatherData.current.temp_c}°C</StyledWeatherTemp>
         </StyledWeatherIconContainer>
-        <StyledWeatherTemp title={weatherData.current.temp_f + "°F"}>{weatherData.current.temp_c}°C</StyledWeatherTemp>
       </StyledWeatherContainer>
-      <StyledWeatherLocation>{weatherData.location.name},{weatherData.location.country}</StyledWeatherLocation>
+      <StyledWeatherLocation>{weatherData.location.name}, {weatherData.location.country}</StyledWeatherLocation>
     </StyledWeatherAndLocationContainer>
   );
 }
