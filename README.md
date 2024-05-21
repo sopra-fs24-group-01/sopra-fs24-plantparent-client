@@ -55,23 +55,28 @@ Also make sure to have:
 1. Clone the repository:
     ```bash
     git clone https://github.com/sopra-fs24-group-01/sopra-fs24-plantparent-client.git
+    ```
 
 2. Navigate to the project directory:
     ```bash
     cd sopra-fs24-plantparent-client
+    ```
 
 3. Install dependencies:
     ```bash
     npm install
+    ```
 
 ## Usage
 1. To start the development client:
     ```bash
     npm start
+    ```
 
 2. Build for production:
     ```bash
     npm run build
+    ```
 
 ## Contribution
 Developers are encouraged to push to feature branches and create pull requests for code reviews. Ensure that all merge conflicts are resolved before requesting a review. 
