@@ -127,7 +127,7 @@ export function ItemsComponent({
               return (
                 <StyledItemContainer key={i.id}>{i.name}
                   {edit &&
-                  <div title="Remove {itemName}">
+                  <div title={"Remove " + itemName}>
                     <RemoveSVG onClick={() => removeItemFromMainItem(Number(itemId), Number(i.id))}
                       style={{ width: "30px", height: "30px" }} />
                   </div>}
