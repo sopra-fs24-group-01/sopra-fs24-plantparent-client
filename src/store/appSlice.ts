@@ -367,7 +367,9 @@ export const selectAllPlants = createSelector(
       const bNextCaringDate = new Date(b.nextCaringDate);
       const aNextWateringDate = new Date(a.nextWateringDate);
       const bNextWateringDate = new Date(b.nextWateringDate);
-      if ((aNextCaringDate < bNextCaringDate) || (aNextWateringDate < bNextWateringDate)) {
+
+
+      if ((aNextWateringDate < bNextWateringDate) || (aNextCaringDate < bNextCaringDate)) {
         return -1;
       } else {
         return 1;
@@ -417,6 +419,10 @@ export const getPlantWatered = (state: RootState) => state.appData.plantWatered;
 export const getPlantCaredFor = (state: RootState) => state.appData.plantCaredFor;
 
 export const getSpacesOfUser = (state: RootState) => state.appData.spaces;
+
+export const getOwnedPlantsCount = (state: RootState) =>  state.appData.loggedInUser.plantsOwned.length;
+
+export const getCaredFOrPlantsCount = (state: RootState) =>  state.appData.loggedInUser.plantsCaredFor.length;
 
 export const selectSpaceById = (state: RootState, spaceId: number) => {
   return state.appData.spaces.find((space) => space.spaceId === spaceId);
