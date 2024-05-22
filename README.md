@@ -13,11 +13,9 @@
 
 - **Task Scheduling**: Schedule watering and other care tasks for each plant.
 
-- **Notifications**: Receive notifications when a plant's care is overdue. This ensures that all plants receive the attention they need to thrive.
-
 - **Spaces**: Organize your plants into customizable spaces based on their location in your home or office.
 
-- **Caretaker Coordination**: Coordinate with other caretakers to ensure that all plants are properly cared for. You can assign tasks to different caretakers and track their completion.
+- **Caretaker Coordination**: Coordinate with other caretakers to ensure that all plants are properly cared for.
 
 ## Technologies
 **PlantParent** leverages a range of powerful technologies to ensure robust and scalable client-side functionality:
