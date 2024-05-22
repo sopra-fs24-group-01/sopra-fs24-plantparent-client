@@ -65,6 +65,21 @@ Also make sure to have:
     npm install
     ```
 
+4. Set up the .env file (necessary for local development client)
+    Create a new file in the root directory of the project and name it .env. This file will store your environment variables. Add the following lines to the .env file:
+
+    * To connect to the server deployed on GCP:
+
+    - `REACT_APP_BACKEND_BASEURL=https://sopra-fs24-group-01-server.oa.r.appspot.com/`
+
+    * Or to connect to a locally running server:
+
+    - `REACT_APP_BACKEND_BASEURL=http://localhost:8080/`
+
+    * And finally, your weather API key:
+
+    - `REACT_APP_WEATHER_API_KEY=677fb7811d5f4c15b2392205242105`
+
 ## Usage
 1. To start the development client:
     ```bash
