@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
+  appError,
   getPlantCaredFor, getPlantWatered, getStatus, resetPlantCaredFor,
   resetPlantWatered, selectColorById, selectLoggedInUser, selectPlantById,
   updatePlantInPlantStore
@@ -36,6 +37,7 @@ import { ReactComponent as NeutralFaceSVG } from "../../assets/emoji-neutral-fil
 import { ReactComponent as AngryFaceSVG } from "../../assets/emoji-dizzy-fill.svg";
 import { ReactComponent as KeySVG } from "../../assets/key.svg";
 import { ReactComponent as HouseSVG } from "../../assets/house-door.svg";
+import { StyledError } from "./Login";
 
 
 const StyledMainContainer = styled.div<{$bgColor: string }>`
@@ -259,6 +261,7 @@ TextContainer.propTypes = {
 const UploadAndDisplayImage = () => {
   const fileInput = useRef(null);
   const { plantId } = useParams<{ plantId: string }>();
+  const [error, setError] = useState(null);
 
   const handleButtonClick = () => {
     // trigger the click event of the hidden file input
@@ -270,10 +273,24 @@ const UploadAndDisplayImage = () => {
     const file = event.target.files[0];
 
     // call your uploadImage function
-    uploadImage(Number(plantId), file).then(() => {
-      // reload the page
-      window.location.reload();
-    });
+    uploadImage(Number(plantId), file)
+      .then(() => {
+        // reload the page
+        window.location.reload();
+      })
+      .catch((error) => { // Add this block
+        // Parse the error response
+        const errorResponse = JSON.parse(error.message);
+
+        // Extract the specific error message
+        const errorMessage = errorResponse.message;
+
+        // Log the specific error message to the console
+        console.log("Error uploading the file: ", errorMessage);
+
+        // Store the specific error message in the error state variable
+        setError(errorMessage);
+      });
   };
 
   return (
@@ -286,6 +303,8 @@ const UploadAndDisplayImage = () => {
         style={{ display: "none" }}
         onChange={handleFileChange}
       />
+      <div>Supported file types: .png, .jpeg, .jpg</div>
+      {error && <StyledError>{error}</StyledError>}
     </>
   );
 };

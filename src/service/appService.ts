@@ -98,13 +98,15 @@ export function uploadImage(plantId: number, file: File) {
     // including the necessary multipart boundary
     body: formData,
   })
-    .then(response => response.json())
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.error("Error uploading image:", error);
-    });
+  .then(response => {
+    if (!response.ok) {
+      return response.text().then(err => {
+        throw new Error(err);
+      });
+    } else {
+      return response.json();
+    }
+  });
 }
 
 export function getAllUsers(): Promise<User[]> {
