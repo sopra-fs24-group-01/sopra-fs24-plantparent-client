@@ -70,15 +70,15 @@ Also make sure to have:
 
     * To connect to the server deployed on GCP:
 
-    - `REACT_APP_BACKEND_BASEURL=https://sopra-fs24-group-01-server.oa.r.appspot.com/`
+    `REACT_APP_BACKEND_BASEURL=https://sopra-fs24-group-01-server.oa.r.appspot.com/`
 
     * Or to connect to a locally running server:
 
-    - `REACT_APP_BACKEND_BASEURL=http://localhost:8080/`
+    `REACT_APP_BACKEND_BASEURL=http://localhost:8080/`
 
     * And finally, your weather API key:
 
-    - `REACT_APP_WEATHER_API_KEY=677fb7811d5f4c15b2392205242105`
+    `REACT_APP_WEATHER_API_KEY=677fb7811d5f4c15b2392205242105`
 
 ## Usage
 1. To start the development client:
