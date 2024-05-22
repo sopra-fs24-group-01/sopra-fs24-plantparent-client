@@ -82,8 +82,9 @@ export default function SignUp() {
             value={email}
             $validInput={isInputValid}
             placeholder="Email"
-            onBlur={(event) => validateEmail(event.target.value)}
-            onChange={(event) => setEmail(event.target.value)} />
+            onChange={(event) => {
+              setEmail(event.target.value);
+              validateEmail(event.target.value);}} />
           <StyledInputField id="password"
             type="password"
             value={password}
@@ -95,8 +96,9 @@ export default function SignUp() {
             value={confirmPassword}
             $validInput={isValidPWConfirm}
             placeholder="Confirm password"
-            onBlur={(event) => validateConfirmPassword(event.target.value)}
-            onChange={(event) => setConfirmPassword(event.target.value)} />
+            onChange={(event) => {
+              setConfirmPassword(event.target.value);
+              validateConfirmPassword(event.target.value); }}/>
           <StyledPrimaryButton disabled={!isInputValid || !username || !password || !confirmPassword || !email || !isValidPWConfirm}
             type="submit">Sign Up</StyledPrimaryButton>
           <StyledP>Already have an account? <StyledLink onClick={() => navigate("/login")}>Sign
