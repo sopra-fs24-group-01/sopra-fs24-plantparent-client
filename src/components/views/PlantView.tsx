@@ -268,29 +268,25 @@ const UploadAndDisplayImage = () => {
     fileInput.current.click();
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     // get the selected file
     const file = event.target.files[0];
 
-    // call your uploadImage function
-    uploadImage(Number(plantId), file)
-      .then(() => {
-        // reload the page
-        window.location.reload();
-      })
-      .catch((error) => { // Add this block
-        // Parse the error response
-        const errorResponse = JSON.parse(error.message);
+    try {
+      await uploadImage(Number(plantId), file);
+    } catch (error) {
+      // Parse the error response
+      const errorResponse = JSON.parse(error.message);
 
-        // Extract the specific error message
-        const errorMessage = errorResponse.message;
+      // Extract the specific error message
+      const errorMessage = errorResponse.message;
 
-        // Log the specific error message to the console
-        console.log("Error uploading the file: ", errorMessage);
+      // Log the specific error message to the console
+      console.log("Error uploading the file: ", errorMessage);
 
-        // Store the specific error message in the error state variable
-        setError(errorMessage);
-      });
+      // Store the specific error message in the error state variable
+      setError(errorMessage);
+    }
   };
 
   return (
