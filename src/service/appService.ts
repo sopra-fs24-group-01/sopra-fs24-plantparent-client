@@ -97,8 +97,11 @@ export function getAllUsers(): Promise<User[]> {
 
 
 /****************************** PLANT STUFF ******************************/
-export function createPlant(plant: Plant) {
-  return fetch(baseurl + "plants", {
+export function createPlant(plant: Plant, spaceId?: number) {
+  const url = spaceId ? baseurl + "plants?spaceId=" + spaceId : baseurl + "plants";
+  console.log(url);
+
+  return fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
