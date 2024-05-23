@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import {
   StyledError,
@@ -8,17 +8,14 @@ import {
   StyledLogoContainerLarge,
   StyledMainContainer, StyledPrimaryButton,
 } from "./Login";
-import { PlantFull, PlantSimple, Space, SpaceSimple } from "../../types";
+import { SpaceSimple } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
   appError,
   getSpaces,
-  getStatus,
   selectLoggedInUser,
-  selectPlantById,
-  selectSpaceById,
 } from "../../store/appSlice";
-import { createSpace, getPlantById, getSpace, updatePlant, updateSpace } from "../../service/appService";
+import { createSpace } from "../../service/appService";
 import styled from "styled-components";
 import { InputFieldComponent } from "./InputFieldComponent";
 import { StyledDeleteButton } from "./PlantView";
@@ -37,7 +34,6 @@ export default function CreateSpace() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const errorMsg = useAppSelector(appError);
-
 
 
   useEffect(() => {
