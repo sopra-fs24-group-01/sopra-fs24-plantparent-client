@@ -82,31 +82,6 @@ export function updateUser(user: UserSimple): Promise<User> {
     });
 }
 
-export function uploadImage(plantId: number, file: File) {
-  // Create a new FormData instance
-  const formData = new FormData();
-
-  // Append the image file to the FormData instance
-  formData.append("image", file);
-
-  // Construct the URL
-  const url = baseurl + "plants/" + plantId + "/image";
-
-  return fetch(url, {
-    method: "POST",
-    // Remove the Content-Type header, the browser will set it automatically
-    // including the necessary multipart boundary
-    body: formData,
-  })
-    .then(response => response.json())
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.error("Error uploading image:", error);
-    });
-}
-
 export function getAllUsers(): Promise<User[]> {
   return fetch(baseurl + "users")
     .then(response => {
@@ -122,8 +97,11 @@ export function getAllUsers(): Promise<User[]> {
 
 
 /****************************** PLANT STUFF ******************************/
-export function createPlant(plant: Plant) {
-  return fetch(baseurl + "plants", {
+export function createPlant(plant: Plant, spaceId?: number) {
+  const url = spaceId ? baseurl + "plants?spaceId=" + spaceId : baseurl + "plants";
+  console.log(url);
+
+  return fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -266,6 +244,36 @@ export function getAllPlantsCaredFor(userId: number): Promise<PlantFull[]> {
     });
 }
 
+
+export function uploadImage(plantId: number, file: File) {
+  // Create a new FormData instance
+  const formData = new FormData();
+
+  // Append the image file to the FormData instance
+  formData.append("image", file);
+
+  // Construct the URL
+  const url = baseurl + "plants/" + plantId + "/image";
+
+  return fetch(url, {
+    method: "POST",
+    body: formData,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
+  })
+    .then(response => {
+      if (response.ok) {
+
+        return response;
+      } else {
+
+        return response.text().then(err => {
+          throw new Error(err);
+        });
+      }
+    });
+}
 
 /****************************** SPACE STUFF ******************************/
 export function getSpace(spaceId: number): Promise<Space> {

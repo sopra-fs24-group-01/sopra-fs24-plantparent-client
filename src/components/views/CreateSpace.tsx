@@ -38,6 +38,8 @@ export default function CreateSpace() {
   const dispatch = useAppDispatch();
   const errorMsg = useAppSelector(appError);
 
+
+
   useEffect(() => {
     if (errorMsg) {
       setError(errorMsg);
@@ -63,6 +65,7 @@ export default function CreateSpace() {
       dispatch(getSpaces(user.id));
       navigate("/");
     } catch (err) {
+      setError(err.message)
       console.log(err);
     }
   }

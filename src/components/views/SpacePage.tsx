@@ -190,7 +190,7 @@ export default React.memo(function SpacePage() {
             </StyledSpacesPlantsContainer>
             <StyledPrimaryButtonSpace
               disabled={false}
-              onClick={() => navigate("/createPlant")}>Create new plant</StyledPrimaryButtonSpace>
+              onClick={() => navigate("/createPlant/" + space.spaceId)}>Create new plant</StyledPrimaryButtonSpace>
             <StyledSelectorContainerContainer>
               <StyledSelectorContainer>
                 {user.id === space.spaceOwner.id &&

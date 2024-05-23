@@ -1,65 +1,119 @@
-# SoPra FS24 - Client Template with build pack
+# PlantParent
 
-## Getting started
+## Introduction
+**PlantParent** is a comprehensive houseplant management system designed to simplify and enhance the way users interact with their plants. Motivated by the challenges plant owners face in maintaining the health of their green companions, our application provides a user-friendly platform for users to create detailed profiles for each of their plants, schedule watering and caring tasks, and coordinate with other caretakers. The application allows users to organize their plants into customizable spaces, making it easier to manage plant care efficiently. Equipped with a notification system to alert users when a plant's care is overdue, **PlantParent** ensures that all plants receive the attention they need to thrive. Our goal is to foster a more engaged and informed community of plant enthusiasts, making plant care a seamless part of their daily lives.
 
-Read and go through these Tutorials. It will make your life easier:)
+## Features
 
-- Read the React [Docs](https://react.dev/learn)
-- Do this React [Getting Started](https://react.dev/learn/tutorial-tic-tac-toe) Tutorial (it doesn't assume any existing React knowledge)
-- Get an Understanding of [CSS](https://www.w3schools.com/Css/), [SCSS](https://sass-lang.com/documentation/syntax), and [HTML](https://www.w3schools.com/html/html_intro.asp)!
+**PlantParent** comes with a variety of features designed to make plant care easier and more enjoyable:
 
-Next, there are two other technologies that you should look at:
+- **User Management**: Manage user accounts with features such as registration, login, and profile editing.
 
-* [react-router-dom](https://reactrouter.com/en/main/start/concepts) offers declarative routing for React. It is a collection of navigational components that fit nicely with the application. 
-* [react-hooks](https://blog.logrocket.com/using-hooks-react-router/) let you access the router's state and perform navigation from inside your components.
+- **Plant Profiles**: Create detailed profiles for each of your plants, including their name, species, watering schedule, and more. You can also upload images of your plants.
 
-## Prerequisites and Installation
-For your local development environment, you will need Node.js.\
-We urge you to install the exact version **v20.11.0** which comes with the npm package manager. You can download it [here](https://nodejs.org/download/release/v20.11.0/).\
-If you are confused about which download to choose, feel free to use these direct links:
+- **Task Scheduling**: Schedule watering and other care tasks for each plant.
+
+- **Spaces**: Organize your plants into customizable spaces based on their location in your home or office.
+
+- **Caretaker Coordination**: Coordinate with other caretakers to ensure that all plants are properly cared for.
+
+## Technologies
+**PlantParent** leverages a range of powerful technologies to ensure robust and scalable client-side functionality:
+
+- **JavaScript & React**: React is a front-end JavaScript library that uses components to create user interfaces.
+    - **React Router**: React Router allows you to handle routing in your React application, enabling the creation of single-page applications with navigation along different paths.
+    - **React Hooks**: With Hooks, you can extract stateful logic from a component so it can be tested independently and reused.
+- **Redux**: Redux is a predictable state container for JavaScript applications. In this project, Redux is used for managing application state.
+- **Fetch API**: The Fetch API, a built-in browser feature for executing HTTP requests, is utilized in this project to facilitate communication with the backend.
+- **Google Cloud Platform (GCP) & App Engine**: The production version of this front-end is hosted on GCP's App Engine.
+- **GitHub Actions**: Github Actions allows for continious intergration and deployment (CI/CD) by building, testing and deploying every commit to GCP.
+
+## Prerequisites
+You will need Node.js for local development. We recommend installing version **v20.11.0**. You can download it [here](https://nodejs.org/download/release/v20.11.0/).
+
+Or download it directly using these links:
 
 - **MacOS:** [node-v20.11.0.pkg](https://nodejs.org/download/release/v20.11.0/node-v20.11.0.pkg)
 - **Windows 32-bit:** [node-v20.11.0-x86.msi](https://nodejs.org/download/release/v20.11.0/node-v20.11.0-x86.msi)
 - **Windows 64-bit:** [node-v20.11.0-x64.msi](https://nodejs.org/download/release/v20.11.0/node-v20.11.0-x64.msi)
 - **Linux:** [node-v20.11.0.tar.xz](https://nodejs.org/dist/v20.11.0/node-v20.11.0-linux-x64.tar.xz) (use this [installation guide](https://github.com/nodejs/help/wiki/Installation#how-to-install-nodejs-via-binary-archive-on-linux) if you are new to Linux)
 
-If you happen to have a package manager the following commands can be used:
+If you have a package manager the following commands can be used as well:
 
 - **Homebrew:** `brew install node@20.11.0`
 - **Chocolatey:** `choco install nodejs-lts --version=20.11.0`
 
-After the installation, update the npm package manager to **10.4.0** by running ```npm install -g npm@10.4.0```\
-You can ensure the correct version of node and npm by running ```node -v``` and ```npm --version```, which should give you **v20.11.0** and **10.4.0** respectively.\
-Before you start your application for the first time, run this command to install all other dependencies, including React:
+Also make sure to have:
 
-```npm install```
+- Access to the [GitHub project](https://github.com/sopra-fs24-group-01) and [GitHub repo](https://github.com/sopra-fs24-group-01/sopra-fs24-plantparent-client) for the CI/CD Pipeline.
+- Access to the GCP project `sopra-fs24-group-01-client`
 
-Next, you can start the app with:
+## Installation
 
-```npm run dev```
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/sopra-fs24-group-01/sopra-fs24-plantparent-client.git
+    ```
 
-Now you can open [http://localhost:3000](http://localhost:3000) to view it in the browser.\
-Notice that the page will reload if you make any edits. You will also see any lint errors in the console (use a Chrome-based browser).\
-The client will send HTTP requests to the server which can be found [here](https://github.com/HASEL-UZH/sopra-fs24-template-server).\
-In order for these requests to work, you need to install and start the server as well.
+2. Navigate to the project directory:
+    ```bash
+    cd sopra-fs24-plantparent-client
+    ```
 
-### Testing
-Testing is optional, and you can run the tests with `npm run test`\
-This launches the test runner in an interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. Install dependencies:
+    ```bash
+    npm install
+    ```
 
-> For macOS user running into a 'fsevents' error: https://github.com/jest-community/vscode-jest/issues/423
+4. Set up the .env file (necessary for local development client)
+    Create a new file in the root directory of the project and name it .env. This file will store your environment variables. Add the following lines to the .env file:
 
-### Build
-Finally, `npm run build` builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance:\
-The build is minified, and the filenames include hashes.<br>
+    * To connect to the server deployed on GCP:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    `REACT_APP_BACKEND_BASEURL=https://sopra-fs24-group-01-server.oa.r.appspot.com/`
 
-## Learn More
+    * Or to connect to a locally running server (8080 is the default port, you might need to adjust it depending on 
+    * your setup):
 
-To learn React, check out the [React documentation](https://react.dev/).
+    `REACT_APP_BACKEND_BASEURL=http://localhost:8080/`
 
+    * And finally, your weather API key (this step is optional, the app also works without an API key, but then no 
+    * weather data is displayed):
 
-> Thanks to Lucas Pelloni Kyrill Hux and Marco Leder for working on the template.
+    `REACT_APP_WEATHER_API_KEY=<WeatherAPIKey>`
+        
+> **Note:** To generate a free api key, go to the [WeatherAPI website](https://www.weatherapi.com/) and create a free 
+> account. Go to your dashboard and generate a new API key if you haven't already. Paste the key in the .env file, and 
+> restart the development server.
+
+## Usage
+1. To start the development client:
+    ```bash
+    npm start
+    ```
+
+2. Build for production:
+    ```bash
+    npm run build
+    ```
+
+## Contribution
+Developers are encouraged to push to feature branches and create pull requests for code reviews. Ensure that all merge conflicts are resolved before requesting a review. 
+
+Please create feature branches from the `develop` branch.
+
+## Authors and Acknowledgement
+### Team Members:
+
+* Nordin Dari - Back-End Development - [NorDar](https://github.com/NorDar)
+* Daniel Gergely - Front-End Development - [Danielgergely](https://github.com/Danielgergely)
+* Lazaro Nicolas Hofmann - Front-End Development - [geringproduktiv](https://github.com/geringproduktiv)
+* Michael Sigg - Back-End Development - [M-Sigg](https://github.com/M-Sigg)
+
+### Acknowledgements:
+* Stefan Schuler: Special thanks to our TA for continuous guidance and feedback provided during development.
+* Prof. Thomas Fritz and the TA Team: Appreciation for the course materials as well as the provided SoPra templates. 
+
+## License
+
+This project is licensed under the Apache License 2.0

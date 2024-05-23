@@ -49,6 +49,10 @@ function App() {
           <Route path="/createPlant" element={<CreatePlant/>} />
         </Route>
 
+        <Route path="/createPlant/:spaceId" element={<LoginGuard/>}>
+          <Route path="/createPlant/:spaceId" element={<CreatePlant/>} />
+        </Route>
+
         <Route path="/editPlant/:plantId" element={<LoginGuard/>}>
           <Route path="/editPlant/:plantId" element={<EditPlant/>} />
         </Route>

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import {
   StyledError,
@@ -17,6 +17,8 @@ import { InputFieldComponent } from "./InputFieldComponent";
 
 
 export default function CreatePlant() {
+  const { spaceId } = useParams<{ spaceId: string }>();
+
   const user = useAppSelector(selectLoggedInUser);
   const [plantName, setPlantName] = useState<string>("");
   const [species, setSpecies] = useState<string>("");
@@ -26,8 +28,8 @@ export default function CreatePlant() {
   const [lastCaringDate, setLastCaringDate] = useState<string>("");
   const [caringInterval, setCaringInterval] = useState<string>("");
   const [error, setError] = useState("");
-
   const navigate = useNavigate();
+
 
   async function doCreatePlant(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -56,8 +58,12 @@ export default function CreatePlant() {
       plantImageUrl: "",
     };
     try {
-      await createPlant(plant);
-      navigate("/");
+      await createPlant(plant, Number(spaceId));
+      if (spaceId !== undefined) {
+        navigate(`/spaces/${spaceId}`);
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       console.log(err);
       setError(err.message);

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
+  appError,
   getPlantCaredFor, getPlantWatered, getStatus, resetPlantCaredFor,
   resetPlantWatered, selectColorById, selectLoggedInUser, selectPlantById,
   updatePlantInPlantStore
@@ -36,6 +37,7 @@ import { ReactComponent as NeutralFaceSVG } from "../../assets/emoji-neutral-fil
 import { ReactComponent as AngryFaceSVG } from "../../assets/emoji-dizzy-fill.svg";
 import { ReactComponent as KeySVG } from "../../assets/key.svg";
 import { ReactComponent as HouseSVG } from "../../assets/house-door.svg";
+import { StyledError } from "./Login";
 
 
 const StyledMainContainer = styled.div<{$bgColor: string }>`
@@ -259,21 +261,32 @@ TextContainer.propTypes = {
 const UploadAndDisplayImage = () => {
   const fileInput = useRef(null);
   const { plantId } = useParams<{ plantId: string }>();
+  const [error, setError] = useState(null);
 
   const handleButtonClick = () => {
     // trigger the click event of the hidden file input
     fileInput.current.click();
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     // get the selected file
     const file = event.target.files[0];
 
-    // call your uploadImage function
-    uploadImage(Number(plantId), file).then(() => {
-      // reload the page
-      window.location.reload();
-    });
+    try {
+      await uploadImage(Number(plantId), file);
+    } catch (error) {
+      // Parse the error response
+      const errorResponse = JSON.parse(error.message);
+
+      // Extract the specific error message
+      const errorMessage = errorResponse.message;
+
+      // Log the specific error message to the console
+      console.log("Error uploading the file: ", errorMessage);
+
+      // Store the specific error message in the error state variable
+      setError(errorMessage);
+    }
   };
 
   return (
@@ -286,6 +299,8 @@ const UploadAndDisplayImage = () => {
         style={{ display: "none" }}
         onChange={handleFileChange}
       />
+      <div>Supported file types: .png, .jpeg, .jpg</div>
+      {error && <StyledError>{error}</StyledError>}
     </>
   );
 };
@@ -402,7 +417,7 @@ export default function PlantView() {
             <StyledPlantProfileDetails>
               <StyledPlantImageContainer>
                 {plant.plantImageUrl ?
-                  <img alt={"plant image"} src={plant.plantImageUrl} style={{ width: "200px", height: "200px" }} /> :
+                  <img alt={"plant image"} src={plant.plantImageUrl} style={{ width: "200px", height: "200px", objectFit: "cover" }} /> :
                   <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />}
                 {user.id === plant.owner.id &&
                 <UploadAndDisplayImage />}
