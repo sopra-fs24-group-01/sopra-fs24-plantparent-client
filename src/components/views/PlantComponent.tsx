@@ -281,10 +281,9 @@ export default React.memo(function PlantComponent({ plantId, userId, light }: {
         {userId !== plant.owner.id && <KeySVG style={{ color: "#83b271", width: "40px", height: "40px" }} />}
       </StyledOwnerContainer>
       <StyledPlantImageContainer>
-        {!plant.plantImageUrl &&
+        {plant.plantImageUrl ?
+          <img alt={"plant image"} src={plant.plantImageUrl} style={{ width: "200px", height: "200px", objectFit: "cover" }} /> :
           <ImagePlaceholderSVG style={{ width: "200px", height: "200px" }} />}
-        {plant.plantImageUrl &&
-          <img src={plant.plantImageUrl} style={{ width: "200px", height: "200px" }} />}
         <StyledPlantTitle $underline={true}
           onClick={() => navigate("/plant/" + plant.plantId)}>{plant.plantName}</StyledPlantTitle>
       </StyledPlantImageContainer>
