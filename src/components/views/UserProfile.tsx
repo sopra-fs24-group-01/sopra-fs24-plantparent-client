@@ -2,19 +2,16 @@ import React, { useEffect, useState } from "react";
 import Header from "./Header";
 import styled, { css } from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { useNavigate, useParams } from "react-router-dom";
-import { ReactComponent as ImagePlaceholderSVG } from "../../assets/image_placeholder.svg";
+import { useNavigate } from "react-router-dom";
 import {
   getCaredFOrPlantsCount,
   getOwnedPlantsCount,
   getStatus,
   logoutUser,
-  selectLoggedInUser,
+  selectLoggedInUser, updateUserRedux,
 } from "../../store/appSlice";
 import { StyledPlantTitle } from "./PlantComponent";
 import { ReactComponent as EditPlantSVG } from "../../assets/pencil-square.svg";
-import { User } from "../../types";
-import { deletePlantById, getUserById } from "../../service/appService";
 import { StyledPrimaryButton } from "./Login";
 import { StyledDeleteButton } from "./PlantView";
 import { Modal } from "./PopupMsgComponent";
@@ -104,6 +101,10 @@ export default function PlantView() {
   if (!loggedInUser) {
     return <div>Loading...</div>;
   }
+
+  useEffect(() => {
+    dispatch(updateUserRedux)
+  }, [])
 
   function confirmLogout() {
     setModal(false);

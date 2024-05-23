@@ -437,9 +437,9 @@ export const getPlantCaredFor = (state: RootState) => state.appData.plantCaredFo
 
 export const getSpacesOfUser = (state: RootState) => state.appData.spaces;
 
-export const getOwnedPlantsCount = (state: RootState) =>  state.appData.loggedInUser.plantsOwned.length;
+export const getOwnedPlantsCount = (state: RootState) =>  state.appData.plantsOwned.length;
 
-export const getCaredFOrPlantsCount = (state: RootState) =>  state.appData.loggedInUser.plantsCaredFor.length;
+export const getCaredFOrPlantsCount = (state: RootState) =>  state.appData.plantsCaredFor.length;
 
 export const selectSpaceById = (state: RootState, spaceId: number) => {
   return state.appData.spaces.find((space) => space.spaceId === spaceId);
