@@ -60,7 +60,6 @@ export default function SignUp() {
 
   function validateConfirmPassword(cpw: string) {
     const passwordsMatch = password === cpw;
-    console.log(passwordsMatch);
     setIsValidPWConfirm(passwordsMatch);
   }
 

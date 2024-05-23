@@ -72,13 +72,19 @@ Also make sure to have:
 
     `REACT_APP_BACKEND_BASEURL=https://sopra-fs24-group-01-server.oa.r.appspot.com/`
 
-    * Or to connect to a locally running server:
+    * Or to connect to a locally running server (8080 is the default port, you might need to adjust it depending on 
+    * your setup):
 
     `REACT_APP_BACKEND_BASEURL=http://localhost:8080/`
 
-    * And finally, your weather API key:
+    * And finally, your weather API key (this step is optional, the app also works without an API key, but then no 
+    * weather data is displayed):
 
-    `REACT_APP_WEATHER_API_KEY=677fb7811d5f4c15b2392205242105`
+    `REACT_APP_WEATHER_API_KEY=<WeatherAPIKey>`
+        
+> **Note:** To generate a free api key, go to the [WeatherAPI website](https://www.weatherapi.com/) and create a free 
+> account. Go to your dashboard and generate a new API key if you haven't already. Paste the key in the .env file, and 
+> restart the development server.
 
 ## Usage
 1. To start the development client:
