@@ -1,4 +1,4 @@
-import React, { memo, ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { ReactComponent as ImagePlaceholderSVG } from "../../assets/image_placeholder.svg";
 import { calculateDifferenceInDays, isInThePast } from "../../helpers/util";

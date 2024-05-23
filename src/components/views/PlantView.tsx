@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
-  appError,
   getPlantCaredFor, getPlantWatered, getStatus, resetPlantCaredFor,
   resetPlantWatered, selectColorById, selectLoggedInUser, selectPlantById,
   updatePlantInPlantStore

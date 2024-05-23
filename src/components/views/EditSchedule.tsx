@@ -18,7 +18,7 @@ import { StyledPageTitle } from "./EditPlant";
 
 
 export default function EditPlant() {
-  // get the logged in user from the store
+  // get the logged-in user from the store
   const user = useAppSelector(selectLoggedInUser);
   // get the status of the plants from the store
   const appStatus = useAppSelector(getStatus);
@@ -46,7 +46,7 @@ export default function EditPlant() {
       setCaringInterval(fetchedPlant.caringInterval);
     }
 
-    fetchPlant();
+    fetchPlant().then();
   }, [plantId]);
 
   useEffect(() => {

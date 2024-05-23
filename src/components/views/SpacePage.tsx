@@ -6,7 +6,7 @@ import { StyledPrimaryButton } from "./Login";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   getAllPlantsSpace,
-  getStatus, selectAllSpacePlants,
+  getStatus,
   selectLoggedInUser, selectPlantsOfSelectedSpace, selectSpaceById, updateGetAllPlantsOwned,
 } from "../../store/appSlice";
 import { StyledMainContainer, StyledMainContainerContainer } from "./Home";

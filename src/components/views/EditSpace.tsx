@@ -8,10 +8,10 @@ import {
   StyledLogoContainerLarge,
   StyledMainContainer, StyledPrimaryButton,
 } from "./Login";
-import { PlantFull, PlantSimple, Space, SpaceSimple } from "../../types";
+import { Space, SpaceSimple } from "../../types";
 import { useAppSelector } from "../../hooks";
-import { getStatus, selectLoggedInUser, selectPlantById, selectSpaceById } from "../../store/appSlice";
-import { getPlantById, getSpace, updatePlant, updateSpace } from "../../service/appService";
+import { getStatus, selectLoggedInUser } from "../../store/appSlice";
+import { getSpace, updateSpace } from "../../service/appService";
 import styled from "styled-components";
 import { InputFieldComponent } from "./InputFieldComponent";
 import { StyledDeleteButton } from "./PlantView";
@@ -24,7 +24,7 @@ export const StyledPageTitle = styled.h1`
 
 
 export default function EditSpace() {
-  // get the logged in user from the store
+  // get the logged-in user from the store
   const user = useAppSelector(selectLoggedInUser);
   // capture the plantId from the URL
   const { spaceId } = useParams<{ spaceId: string }>();
@@ -42,7 +42,7 @@ export default function EditSpace() {
       setSpaceName(fetchedSpace.spaceName);
     }
 
-    fetchSpace();
+    fetchSpace().then();
   }, [spaceId]);
 
   async function doEditSpace(event: React.FormEvent<HTMLFormElement>) {

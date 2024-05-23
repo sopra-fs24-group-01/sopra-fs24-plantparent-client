@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ReactComponent as LogoSVG } from "../../assets/logo_no_bg.svg";
 import {
   StyledError,

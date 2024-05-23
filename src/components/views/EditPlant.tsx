@@ -10,11 +10,10 @@ import {
 } from "./Login";
 import { PlantFull, PlantSimple } from "../../types";
 import { useAppSelector } from "../../hooks";
-import { getStatus, selectLoggedInUser, selectPlantById } from "../../store/appSlice";
+import { getStatus, selectLoggedInUser } from "../../store/appSlice";
 import { getPlantById, updatePlant } from "../../service/appService";
 import styled from "styled-components";
 import { InputFieldComponent } from "./InputFieldComponent";
-import { StyledSecondaryButton } from "./QRCodeComponent";
 import { StyledDeleteButton } from "./PlantView";
 
 export const StyledPageTitle = styled.h1`
