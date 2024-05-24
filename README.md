@@ -106,16 +106,24 @@ Please create feature branches from the `develop` branch.
 
 1. **Login/Signup**
    A new user needs to register to use the application. An existing user logs in. The user is redirected to the home page where he/she finds an overview of all plants and spaces.
+   
+<img src="./readme-images/login-signup-user-flow.png" title="Login/Signup User Flow" alt="Showcasing the Login/Signup User Flow.">
 
 2. **Plants**
    On the home page, the user can create a new plant and set the name, watering/caring schedule. Once a plant is created, other caretakers can be assigned on the plant profile. Caretakers will be able to see the plant and fulfill watering/caring tasks.
+   
+<img src="./readme-images/plant-user-flow.png" title="Plant User Flow" alt="Showcasing the plant user flow.">
 
 3. **Tasks**
    A caretaker/owner can tick off a watering/caring task on the home page or specific plant profile. Consequently both the caretakers and owner are displayed a real-time animation. Furthermore, if the plant is in urgent need of care, the owner and caretakers are notified via mail.
+   
+<img src="./readme-images/task-user-flow.png" title="Task User Flow" alt="Showcasing the task user flow.">
 
 4. **Spaces**
    For a more efficient and structured organisation of plants, a user can create a space where he/she assigns plants. Additionally, the user can add caretakers to a space and the caretaker is assigned to all the plants in that space.
    
+<img src="./readme-images/space-user-flow.png" title="Space User Flow" alt="Showcasing the space user flow.">
+
 ## Roadmap
 Here are some of features we plan to implement in the future to enhance our application:
 1. **History of Events**
