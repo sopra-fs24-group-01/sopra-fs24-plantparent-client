@@ -126,9 +126,13 @@ Please create feature branches from the `develop` branch.
 
 ## Roadmap
 Here are some of features we plan to implement in the future to enhance our application:
-1. **History of Events**
+1. **History of Events**  
+   You can find more information in
+   the [User Story P7](https://github.com/sopra-fs24-group-01/sopra-fs24-plantparent-server/issues/10)
    * **Description**: Implement a feature to record and display the history of care events for each plant, such as watering or fertilizing. This will help users gain a better understanding of a plant's care history and identify potential areas for improvement in their care routine.
-2. **Feedback System**
+2. **Feedback System**  
+   You can find more information in
+   the [User Story P8](https://github.com/sopra-fs24-group-01/sopra-fs24-plantparent-server/issues/11)
    * **Description**: Allow users to post feedback directly on a plant's page or within a specific space. This feature will enable caretakers to share tips, provide feedback, and communicate effectively, fostering a collaborative environment for plant care.
 3. **Subtasks for Plant Care**
     * **Description**: Enhance the flexibility of scheduling care activities by allowing users to define specific tasks and subtasks, such as fertilizing, pruning, or repotting. This detailed task management will help users tailor care routines to the unique needs of each plant, ensuring optimal health and growth. 
